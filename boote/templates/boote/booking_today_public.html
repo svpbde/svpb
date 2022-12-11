@@ -4,15 +4,15 @@
 
 <style>
 
-#boatslist {  
-  border-collapse: collapse;
+.boatslist {  
+  border-collapse: separate;
   border: 1px solid #38678f;  
   background: white;
   width: 100%;
-  height: 95%;
-  
+  /*height: 95%;*/  
 }
-#boatslist th {
+
+.boatslist th {
   background: steelblue;  
   padding: 2px;  
   text-shadow: 0 1px 0 #38678f;
@@ -22,22 +22,24 @@
   transition: all 0.2s;
 }
 
-#boatslist th.date:nth-of-type(2n) {
+.boatslist th.date:nth-of-type(2n) {
 	background: #33678f;
 }
-{{ userid }}
-#boatslist th.date{
+
+.boatslist th.date{
   background: #537E8C; 
   text-align: left;   
 }
 
-#boatslist tr {
+.boatslist tr {
   border-bottom: 1px solid #ddd;
 }
-#boatslist tr:last-child {
+
+.boatslist tr:last-child {
   border-bottom: 0px;
 }
-#boatslist td {  
+
+.boatslist td {  
   padding: 1px;
   transition: all 0.2s;
   text-align: center;
@@ -46,57 +48,61 @@
   border-right: 1px solid black;
 }
 
-#boatslist td:nth-of-type(2n) {
+td.firstcol {
+	background: #568ebd;
+}
+
+.boatslist td:nth-of-type(2n) {
 	border-right: 1px solid #ccc;
 }
 	
 
-#boatslist td:first-child {
-  width: 12%;  
+.boatslist td:first-child {
+  width: 200px;  
 }
 
-#boatslist td:last-child {
+
+.boatslist td:last-child {
   border-right: 0px;  
 }
-#boatslist td.selected {
+
+.boatslist td.selected {
   background: #d7e4ef;  
 }
 
-#boatslist td.booked0 {
+.boatslist td.booked0 {
   background: #5CB85C;  
 }
 
-#boatslist td.booked1 {
+.boatslist td.booked1 {
   background: #F0AD4E; 
 }
 
-
-#boatslist td {
+.boatslist td {
   height: 30px;
-  width: 50px;
+  width: 30px;
+}
+
+.boatslist td.PRV {
+  background: #E4FF2E;  
   font-size: 60%;
 }
 
-#boatslist td.PRV {
-  background: #E4FF2E;  
+.boatslist td.REG {
+  background: #FF5151;
+  font-size: 60%;
 }
 
-#boatslist td.REG {
-  background: #FF5151;  
-}
-
-#boatslist td.AUS {
-  background: #54f3ff;  
+.boatslist td.AUS {
+  background: #54f3ff;
+  font-size: 60%;
 }
 
 span.tinyfont {
  font-size: 90%;
 }
 
-
-
-
-#boatslist td input {  
+.boatslist td input {  
   background: none;
   outline: none;
   border: 0;
@@ -104,7 +110,7 @@ span.tinyfont {
   height: 100%;
 }
 
-#boatslist td input:focus {
+.boatslist td input:focus {
   box-shadow: 0 1px 0 steelblue;
   color: steelblue;
 }
@@ -116,50 +122,95 @@ span.tinyfont {
   background: steelblue;
   color: white;
 }
-#boatslist .heavyTable {
+.boatslist .heavyTable {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: float 5s infinite;
 }
 
+
 body,table {
 }
 
+
+.boat_summary {
+	height: 33%;
+        display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.boat_summary  h1 {
+ 	font-size: xx-large;
+	margin-left: 20px;
+	color: #4e4e4e;
+}
+
+.boat_summary  h2 {
+        font-size: large;
+        margin-left: 20px;
+        color: gray;
+}
+
+.tab {
+	position: absolute;
+}
+
+
 </style>
 
-<SCRIPT language=JavaScript1.2>
-var speed=1
+<!-- Automatically Reload Page -->
+<script>
+  
+  function initialize(){
+	console.log('Init');
+	setInterval(switchTab, 10000)
+  }
 
-var currentpos=0,alt=1,curpos1=0,curpos2=-1,oldpos=0
+  function switchTab() {
+        var nextTab = 1;
+	var currentTab = 1;
 
-function initialize(){
-	startit()
-}
+	{% if request.GET.tab %}
+	  currentTab = {{request.GET.tab}};
+	{% endif %}
 
-function scrollwindow(){
-		oldpos = document.body.scrollTop				
-		currentpos=oldpos+speed		
-		window.scroll(0,currentpos)
-		if (document.body.scrollTop==oldpos)
-			speed=-speed		
-}
+        if (currentTab) {
+		nextTab = currentTab+1;
+	}
+	if (nextTab>4) nextTab = 1;
+	window.location.href = '/boote/booking/today/public/?tab='+nextTab;
 
-function startit(){
-	setInterval("scrollwindow()",200)
-}
+  }
 
-window.onload=initialize
-
-</SCRIPT>
-
+  window.onload=initialize
+</script>
 
 <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+
+
+ <!-- Configuring Web Application -->
+ <link rel="manifest" href="/static/boote/manifest.json">
+ <meta name="apple-mobile-web-app-capable" content="yes" />
+ <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+ <meta name="apple-mobile-web-app-title" content="SVPB Reservierungen">
+ <link rel="apple-touch-startup-image" href="/assets/favicon/favicon300.png">
+
 </head>
 <body>
 
-
-
-
-<TABLE id='boatslist'>
+{% if request.GET.tab == "1" or not request.GET.tab %}
+<!-- CONGER -->
+<DIV id="tab_1" class="tab">
+	<div class="boat_summary">
+		<img src='https://mein.svpb.de/media/conger.jpg'/>
+		<div>
+			<h2>Reservierungen</h2>
+			<h1>Conger</h1>
+			<h2>Stand: {{date}} </h2>
+		</div>
+	</div>
+<TABLE class='boatslist'>
  <thead>
         <tr>
             <th>Boot</th>
@@ -181,8 +232,9 @@ window.onload=initialize
  </thead>
 
 {% for boat, overviewday in bookings %}
-  <TR>
-    <TD style='font-size:70%'> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
+ {% if boat.type.name == "Conger" %}
+ <TR>
+    <TD class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
      {% for userid, usertag, type in overviewday %}
     	{% if userid %}
       	<TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
@@ -191,9 +243,165 @@ window.onload=initialize
       	{% endif %}
     {% endfor %}
   </TR>
-{% endfor %}
+{% endif %}
+  {% endfor %}
 </TABLE>
-Stand: {{ date }}
+</DIV>
+{% endif %}
+
+
+{% if request.GET.tab == "2" %}
+<!-- MARINER 19 -->
+<DIV id="tab_2" class="tab">
+  <div class="boat_summary">
+                <img src='https://www.svpb.de/fileadmin/_processed_/csm_2df2e6d8-4e7a-4612-b60e-79629591e695_b1dd30e04d.jpg'/>
+                <div>
+  			<h2>Reservierungen</h2>
+                        <h1>Mariner 19</h1>
+  			<h2>Stand: {{date}}</h2>
+                </div>
+        </div>
+<TABLE class='boatslist'>
+ <thead>
+        <tr>
+            <th>Boot</th>
+            <th class="date" colspan="2">08:00</th>
+            <th class="date" colspan="2">09:00</th>
+            <th class="date" colspan="2">10:00</th>
+            <th class="date" colspan="2">11:00</th>
+            <th class="date" colspan="2">12:00</th>
+            <th class="date" colspan="2">13:00</th>
+            <th class="date" colspan="2">14:00</th>
+            <th class="date" colspan="2">15:00</th>
+            <th class="date" colspan="2">16:00</th>
+            <th class="date" colspan="2">17:00</th>
+            <th class="date" colspan="2">18:00</th>
+            <th class="date" colspan="2">19:00</th>
+            <th class="date" colspan="2">20:00</th>
+            <th class="date" colspan="2">21:00</th>
+         </tr>
+ </thead>
+
+{% for boat, overviewday in bookings %}
+ {% if boat.type.name == "Mariner 19" %}
+ <TR>
+    <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
+     {% for userid, usertag, type in overviewday %}
+        {% if userid %}
+        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        {% else %}
+        <TD class='booked0'>&nbsp</TD>
+        {% endif %}
+    {% endfor %}
+  </TR>
+{% endif %}
+  {% endfor %}
+</TABLE>
+</DIV>
+{% endif %}
+
+
+{% if request.GET.tab == "3" %}
+<!-- OTHER -->
+<DIV id="tab_3" class="tab">
+        <div class="boat_summary">
+                <img src='https://www.svpb.de/fileadmin/_processed_/csm_IMG_0265_1e0b8dc0e8.jpg'/>
+                <div>
+                        <h2>Reservierungen</h2>
+                        <h1>Andere Boote</h1>
+ 			<h2>Stand: {{date}} </h2>
+		</div>
+        </div>
+<TABLE class='boatslist'>
+ <thead>
+        <tr>
+            <th>Boot</th>
+            <th class="date" colspan="2">08:00</th>
+            <th class="date" colspan="2">09:00</th>
+            <th class="date" colspan="2">10:00</th>
+            <th class="date" colspan="2">11:00</th>
+            <th class="date" colspan="2">12:00</th>
+            <th class="date" colspan="2">13:00</th>
+            <th class="date" colspan="2">14:00</th>
+            <th class="date" colspan="2">15:00</th>
+            <th class="date" colspan="2">16:00</th>
+            <th class="date" colspan="2">17:00</th>
+            <th class="date" colspan="2">18:00</th>
+            <th class="date" colspan="2">19:00</th>
+            <th class="date" colspan="2">20:00</th>
+            <th class="date" colspan="2">21:00</th>
+         </tr>
+ </thead>
+
+{% for boat, overviewday in bookings %}
+ {% if boat.type.name != "Mariner 19" and  boat.type.name != "Conger" and  boat.type.name != "Bootskran"  %}
+ <TR>
+    <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
+     {% for userid, usertag, type in overviewday %}
+        {% if userid %}
+        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        {% else %}
+        <TD class='booked0'>&nbsp</TD>
+        {% endif %}
+    {% endfor %}
+  </TR>
+{% endif %}
+  {% endfor %}
+</TABLE>
+</DIV>
+{% endif %}
+
+
+{% if request.GET.tab == "4" %}
+<!-- BOOTSKRAN -->
+<DIV id="tab_4" class="tab">
+	<div class="boat_summary">
+                <img src='https://www.svpb.de/fileadmin/_processed_/csm_IMG_0265_1e0b8dc0e8.jpg'/>
+                <div>
+			<h2>Reservierungen</h2>
+                        <h1>Bootskran</h1>
+			<h2>Stand: {{date}} </h2>
+		</div>
+        </div>
+<TABLE class='boatslist'>
+ <thead>
+        <tr>
+            <th>Boot</th>
+            <th class="date" colspan="2">08:00</th>
+            <th class="date" colspan="2">09:00</th>
+            <th class="date" colspan="2">10:00</th>
+            <th class="date" colspan="2">11:00</th>
+            <th class="date" colspan="2">12:00</th>
+            <th class="date" colspan="2">13:00</th>
+            <th class="date" colspan="2">14:00</th>
+            <th class="date" colspan="2">15:00</th>
+            <th class="date" colspan="2">16:00</th>
+            <th class="date" colspan="2">17:00</th>
+            <th class="date" colspan="2">18:00</th>
+            <th class="date" colspan="2">19:00</th>
+            <th class="date" colspan="2">20:00</th>
+            <th class="date" colspan="2">21:00</th>
+         </tr>
+ </thead>
+
+{% for boat, overviewday in bookings %}
+ {% if boat.type.name == "Bootskran" %}
+ <TR>
+    <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
+     {% for userid, usertag, type in overviewday %}
+        {% if userid %}
+        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        {% else %}
+        <TD class='booked0'>&nbsp</TD>
+        {% endif %}
+    {% endfor %}
+  </TR>
+{% endif %}
+  {% endfor %}
+</TABLE>
+</DIV>
+{% endif %}
+
 
 
 </body>
