@@ -1,5 +1,4 @@
 {% load static %}
-{% load django_select2_tags %}
 {% load i18n %}
 
 {% load render_table from django_tables2 %}
@@ -17,7 +16,6 @@
 <script src="{% static "datepicker/js/bootstrap-datepicker.js"%}"></script>
 <script src="{% static "datepicker/js/locales/bootstrap-datepicker.de.js"%}" charset="UTF-8"></script>
 
-{% import_django_select2_js %}
 
 <title>
 {% block title %}
@@ -33,7 +31,6 @@ SVPB -- Die kleine Webseite zur Vereinsunterstützung
 <link rel="stylesheet" href="{% static "bootstrap/css/mybuttons.css"%}" type="text/css" />
 <link id="bsdp-css" href="{% static "datepicker/css/datepicker3.css"%}" rel="stylesheet">
 
-{% import_django_select2_css %}
 
 <link id="select2-bootstrap-css" href="{% static "bootstrap/css/select2-bootstrap.css"%}" rel="stylesheet">
 {# <link href="{% static "test.css"%}" rel="stylesheet"> #}
