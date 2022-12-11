@@ -25,14 +25,17 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'svpbdata',                      # Or path to database file if using sqlite3.
+        # Use postgresql in production
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Use file-based db for local testing and debugging
+        'ENGINE': 'django.db.backends.sqlite3',
+        # Database name (for sqlite3 this is the file name)
+        'NAME': 'svpb.sq',
         # The following settings are not used with sqlite3:
-        'USER': 'svpbdb',
-        'PASSWORD': 'XXXXX',
-        'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'USER': 'UserPlaceholder',
+        'PASSWORD': 'PasswordPlaceholder',
+        'HOST': '127.0.0.1',
+        'PORT': '',  # Set to empty string for default.
     }
 }
 
