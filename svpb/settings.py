@@ -9,7 +9,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 LOGIN_URL = "/login/"
 
 OFFLINE = False
-JAHRESENDE = True
+JAHRESENDE = False
 
 
 # DEBUG = False
@@ -40,7 +40,7 @@ DATABASES = {
     
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = [".svpb.de"]
+ALLOWED_HOSTS = [".svpb.de", "127.0.0.1", ".h00227.host-up.de"]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -109,10 +109,10 @@ SECRET_KEY = '26w5_t=fcjff6vk9$ee(03xa&+1c($ot1ixg)p-f(%v#ad$dqy'
 
 # List of callables that know how to import templates from various sources.
 # TEMPLATE_LOADERS = (
-#     'django.template.loaders.filesystem.Loader',
-#     'django.template.loaders.app_directories.Loader',
-# #     'django.template.loaders.eggs.Loader',
-# )
+#    'django.template.loaders.filesystem.Loader',
+#    'django.template.loaders.app_directories.Loader',
+#    'django.template.loaders.eggs.Loader',
+#)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth', 
@@ -141,6 +141,7 @@ TEMPLATES = [
         'DIRS': TEMPLATE_DIRS, 
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug' : True,
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
@@ -149,7 +150,8 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                'django.template.context_processors.tz',
+            'django.template.context_processors.tz',
+            'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -268,6 +270,9 @@ if SEND_TEST_EMAIL:
     except smtplib.SMTPException as e:
         print("test email FAILED: ", e)
 
+##
+## Migration to Phyton3
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 #####
 # XSendfilte interface
