@@ -15,5 +15,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Note that in addition to the standard django backend, post_office is used for
 # mass mailings (is explicitly imported where needed).
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-SEND_TEST_EMAIL = False
