@@ -198,8 +198,10 @@ JAHRESSTUNDEN = 12
 SELECT2_BOOTSTRAP = False
 AUTO_RENDER_SELECT2_STATICS = False
 
-IMPERSONATE_REDIRECT_URL = "/"
-IMPERSONATE_CUSTOM_ALLOW = "svpb.settings.user_is_vorstand"
+IMPERSONATE = {
+    'REDIRECT_URL': '/',
+    'CUSTOM_ALLOW':  'svpb.settings.user_is_vorstand',
+}
 
 # email settings:
 EMAIL_HOST = ''
