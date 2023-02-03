@@ -205,12 +205,4 @@ class Command(BaseCommand):
                          )
 
         workbook.close()
-        
-        # send_mail(subject,
-        #           body,
-        #           "mein@svpb.de",
-        #           ['holger.karl@uni-paderborn.de'],
-        #           fail_silently=False)
-
-
         translation.deactivate()

@@ -55,19 +55,6 @@ class Command(BaseCommand):
         send_mail(subject,
                   body,
                   "mein@svpb.de",
-                  ['holger.karl@uni-paderborn.de'],
+                  ['d.dimka89@gmail.com'],
                   fail_silently=False)
-
-
-        ## for kontakt, liste in kontaktKontext.iteritems():
-        ##     if kontakt.email:
-        ##         mail.send(
-        ##             [kontakt.email],
-        ##             template="upcomingJob-Kontakt",
-        ##             context={'liste': liste,
-        ##                      'verantwortlich': kontakt,
-        ##                      },
-        ##             )
-
-
         translation.deactivate()
