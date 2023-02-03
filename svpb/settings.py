@@ -169,8 +169,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = BASE_DIR / 'svpb/static'
-SENDFILE_ROOT = STATIC_ROOT / 'media/doc'
+STATIC_ROOT = BASE_DIR / 'static'
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/var/www/example.com/media/"
+MEDIA_ROOT = STATIC_ROOT / 'media'
+SENDFILE_ROOT = MEDIA_ROOT / 'doc'
 # Additional locations of static files
 STATICFILES_DIRS = [
     BASE_DIR / 'templates'
