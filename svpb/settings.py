@@ -14,13 +14,14 @@ DEBUG = True
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
-    ".svpb.de",
-    "127.0.0.1",
-    ".h00227.host-up.de"
+    '.svpb.de',
+    '127.0.0.1',
+    '.h00227.host-up.de'
     ]
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
+JAHRESSTUNDEN = 12
 OFFLINE = False
 JAHRESENDE = False
 
@@ -187,8 +188,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # this will only work with nginx, not in development setup - but that's not too important to test there
 SENDFILE_BACKEND = 'sendfile.backends.nginx'
 
-JAHRESSTUNDEN = 12
-
 # for select2:
 SELECT2_BOOTSTRAP = False
 AUTO_RENDER_SELECT2_STATICS = False
@@ -202,9 +201,9 @@ IMPERSONATE = {
 EMAIL_HOST = ''
 EMAIL_PORT = 465
 
-DEFAULT_FROM_EMAIL = "test@test.com"
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = "XXX"
+DEFAULT_FROM_EMAIL = 'test@test.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = 'XXX'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
