@@ -1,0 +1,16 @@
+[
+    {
+        "fields": {
+            "teamleader": null,
+            "gruppe": 1,
+            "aufgabe": "Feuchtfröhliche Bugfixsuche.",
+            "verantwortlich": 1,
+            "stunden": 12,
+            "datum": null,
+            "bemerkung": "Dies ist eine ganzjährige Testaufgabe.",
+            "anzahl": 1
+        },
+        "model": "arbeitsplan.aufgabe",
+        "pk": 1
+    }
+]

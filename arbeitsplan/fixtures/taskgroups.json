@@ -1,0 +1,11 @@
+[
+    {
+        "fields": {
+            "verantwortlich": 1,
+            "gruppe": "IT Team",
+            "bemerkung": "Hier kommen die Aufgabengruppen hin."
+        },
+        "model": "arbeitsplan.aufgabengruppe",
+        "pk": 1
+    }
+]
