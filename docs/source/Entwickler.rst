@@ -5,6 +5,14 @@
 Entwickler-Dokumentation
 ************************
 
+Bauen dieser Dokumentation
+==========================
+Diese Dokumentation kann mit Hilfe von `Sphinx <https://www.sphinx-doc.org/en/master/>`_ über einen Aufruf von :code:`make allversions` im Ordner docs gebaut werden.
+Dabei werden vier verschiedene pdf-Dokumente für die jeweiligen Zielgruppen gebaut.
+Die Auswahl der Zielgruppen ist über eine Sphinx extension (siehe docs/extensions) realisiert, welche die Sphinx-Option "-t" auswertet.
+Keine Angabe entspricht der Zielgruppe Mitglieder, ansonsten gibt es *teamleader*, *vorstand* und *entwickler*.
+Außerdem kann die Dokumentation im html-Format gebaut werden: :code:`make html SPHINXOPTS='-t entwickler'`.
+
 Struktur
 ========
 Die Applikation besteht aus drei Teilen - *arbeitsplan*, *boote* und *mitglieder*.
