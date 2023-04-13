@@ -35,11 +35,49 @@ wie in der `graph_models Dokumentation <https://django-extensions.readthedocs.io
     Klassendiagramm der models
 
 
-ToDos
-=====
+Commands
+========
 
-Generierte Dokumentation
-========================
+Die commands können z.B. als cronjobs ausgeführt werden.
+
+meldungConsistent
+-----------------
+.. automodule:: arbeitsplan.management.commands.meldungConsistent
+    :members:
+
+mitgliedExcel
+-------------
+.. automodule:: arbeitsplan.management.commands.mitgliedExcel
+    :members:
+
+reminderLeistungen
+------------------
+.. automodule:: arbeitsplan.management.commands.reminderLeistungen
+    :members:
+
+reservationEmails
+-----------------
+.. automodule:: arbeitsplan.management.commands.reservationEmails
+    :members:
+
+statistics
+----------
+.. automodule:: arbeitsplan.management.commands.statistics
+    :members:
+
+upcomingJob
+-----------
+.. automodule:: arbeitsplan.management.commands.upcomingJob
+    :members:
+
+yearendArbeitslast
+------------------
+.. automodule:: arbeitsplan.management.commands.yearendArbeitslast
+    :members:
+
+
+Arbeitsplan
+===========
 
 Models
 ------
@@ -49,7 +87,6 @@ Models
 
 Views
 -----
-
 
 .. automodule:: arbeitsplan.views
     :members:
@@ -67,3 +104,51 @@ Forms
     :members:
 
 
+Boote
+=====
+
+Models
+------
+
+.. automodule:: boote.models
+    :members:
+
+Views
+-----
+
+.. automodule:: boote.views
+    :members:
+
+Forms
+------
+
+.. automodule:: boote.forms
+    :members:
+
+
+Mitglieder
+==========
+
+Models
+------
+
+.. automodule:: mitglieder.models
+    :members:
+
+Views
+-----
+
+.. automodule:: mitglieder.views
+    :members:
+
+Tables
+------
+
+.. automodule:: mitglieder.tables
+    :members:
+
+Forms
+------
+
+.. automodule:: mitglieder.forms
+    :members:
