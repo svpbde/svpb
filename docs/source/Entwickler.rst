@@ -25,7 +25,7 @@ Klassendiagramm
 ---------------
 
 Eine Übersicht über die models gibt das Klassendiagramm in Abbildung :ref:`diagram-models`.
-Das Klassendiagramm kann mittels `python manage.py graph_models -a -g -o klassendiagramm.png` bzw. `.pdf` gebaut werden,
+Das Klassendiagramm kann mittels :code:`python manage.py graph_models -a -g -o klassendiagramm.png` bzw. `.pdf` gebaut werden,
 wie in der `graph_models Dokumentation <https://django-extensions.readthedocs.io/en/latest/graph_models.html>`_ beschrieben.
 
 .. _diagram-models:
