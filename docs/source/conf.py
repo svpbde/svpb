@@ -50,8 +50,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'SVPB'
-copyright = '2014, Holger Karl'
+project = 'mein SVPB'
+copyright = '2023, Segler-Verein Paderborn e.V.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,8 +197,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'SVPB.tex', 'SVPB Documentation',
-   'Holger Karl', 'manual'),
+  ('index', 'SVPB.tex', 'mein SVPB Dokumentation',
+   'Segler-Verein Paderborn e.V.', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -227,8 +227,8 @@ latex_show_pagerefs = True
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'svpb', 'SVPB Documentation',
-     ['Holger Karl'], 1)
+    ('index', 'svpb', 'mein SVPB Dokumentation',
+     ['Segler-Verein Paderborn e.V.'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -241,8 +241,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'SVPB', 'SVPB Documentation',
-   'Holger Karl', 'SVPB', 'One line description of project.',
+  ('index', 'SVPB', 'mein SVPB Dokumentation',
+   'Segler-Verein Paderborn e.V.', 'SVPB',
+   'Einige Django-Apps zur Organisation des Vereinslebens',
    'Miscellaneous'),
 ]
 
@@ -259,10 +260,10 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = 'SVPB'
-epub_author = 'Holger Karl'
-epub_publisher = 'Holger Karl'
-epub_copyright = '2014, Holger Karl'
+epub_title = 'mein SVPB Dokumenation'
+epub_author = 'Segler-Verein Paderborn e.V.'
+epub_publisher = 'Segler-Verein Paderborn e.V.'
+epub_copyright = '2023, Segler-Verein Paderborn e.V.'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
