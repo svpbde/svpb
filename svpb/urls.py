@@ -72,12 +72,12 @@ urlpatterns = [ # '',
         active_and_login_required(arbeitsplan.views.MediaChecks.as_view()),
         name="MediaCheck"),
 
-                       ## Impersonation of other users:
-    url(r'^impersonate/', include('impersonate.urls')),
-
+    # Impersonation of other users:
     url(r'^impersonate/liste/$',
         active_and_login_required(mitglieder.views.ImpersonateListe.as_view()),
-        name="arbeitsplan-impersonateListe", ),
+        name="arbeitsplan-impersonateListe",
+        ),
+    url(r'^impersonate/', include('impersonate.urls')),
 
                        # password reset; compare http://django-password-reset.readthedocs.org/en/latest/quickstart.html
     url(r'^reset/', include('password_reset.urls')),
