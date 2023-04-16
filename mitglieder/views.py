@@ -21,9 +21,8 @@ from django.shortcuts import redirect, get_object_or_404
 
 from django.contrib.auth.models import User, Group
 
-# TODO: fix for six 
-# from post_office import mail
-# from post_office.models import EmailTemplate
+from post_office import mail
+from post_office.models import EmailTemplate
 from pwgen import pwgen
 from sendfile import sendfile
 
