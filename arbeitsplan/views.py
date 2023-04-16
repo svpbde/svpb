@@ -22,6 +22,7 @@ from django.utils.timezone import utc
 from django.views.generic import UpdateView, DeleteView, TemplateView
 from django.views.generic import View, ListView, CreateView
 from post_office import mail
+from post_office.models import EmailTemplate
 
 # Arbeitsplan-Importe:
 from . import forms
@@ -2126,9 +2127,7 @@ class ErstelleZuteilungView(View):
 ########################
 
 class ListEmailTemplate(isVorstandMixin, ListView):
-    # TODO: fix with six 
-    # from post_office.models import EmailTemplate
-    # model = EmailTemplate
+    model = EmailTemplate
     template_name = "listEmail.html"
 
 class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
