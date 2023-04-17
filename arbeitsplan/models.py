@@ -178,7 +178,7 @@ class Mitglied (models.Model):
     arbeitslast = models.IntegerField(
         verbose_name="Arbeitslast (h/Jahr)",
         help_text="Wieviele Stunden pro Jahr muss dieses Mitglied arbeiten?",
-        default=10,
+        default=12,
         )
 
     def __str__(self):
