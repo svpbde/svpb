@@ -35,7 +35,7 @@ class Command(BaseCommand):
             user__date_joined__gte=midyear)
 
         for m in newmitglieder:
-            m.arbeitlast = settings.JAHRESSTUNDEN
+            m.arbeitslast = settings.JAHRESSTUNDEN
             m.save()
 
         # Mail:
