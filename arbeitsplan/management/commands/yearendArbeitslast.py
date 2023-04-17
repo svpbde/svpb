@@ -51,7 +51,7 @@ Für folgende Mitglieder wurden die Arbeitsstunden auf das Jahressoll gesetzt:
 Ist das nicht korrekt, bitte die entsprechenden Mitglieder direkt in der Webseite editieren.
 
 Rückfragen bitte an mein@svpb.de
-        """.format('\n'.join(['- ' + m.__unicode__() for m in newmitglieder]))
+        """.format('\n'.join(['- ' + str(m) for m in newmitglieder]))
 
 
         send_mail(subject,
