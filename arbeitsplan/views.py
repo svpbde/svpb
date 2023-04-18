@@ -27,7 +27,7 @@ from post_office.models import EmailTemplate
 # Arbeitsplan-Importe:
 from . import forms
 from .tables import *  # TODO: change import not to polute name space
-from svpb.settings import JAHRESSTUNDEN, SENDFILE_ROOT
+from django.conf import settings
 
 from sendfile import sendfile
 
@@ -1080,12 +1080,12 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
             # show users that can still accept more work
             qs = [q
                   for q in qs
-                  if q.mitglied.zugeteilteStunden() < JAHRESSTUNDEN]
+                  if q.mitglied.zugeteilteStunden() < settings.JAHRESSTUNDEN]
         elif "BU" in busy:
             # show users that are already busy
             qs = [q
                   for q in qs
-                  if q.mitglied.zugeteilteStunden() >= JAHRESSTUNDEN]
+                  if q.mitglied.zugeteilteStunden() >= settings.JAHRESSTUNDEN]
 
         return qs
 
@@ -2460,7 +2460,7 @@ class MediaChecks(View):
         vorstand, teamleader, ordinary member
         """
 
-        basepath = SENDFILE_ROOT
+        basepath = settings.SENDFILE_ROOT
 
         # print "in Meia checks: ", basepath
 

@@ -19,7 +19,7 @@ import sys
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../..'))
 sys.path.append(os.path.abspath('../extensions'))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "svpb.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
 
 # Setup Django
 import django

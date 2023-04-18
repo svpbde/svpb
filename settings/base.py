@@ -1,49 +1,19 @@
-# Django settings for svpb project.
-
+# Base Django settings for svpb project.
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '26w5_t=fcjff6vk9$ee(03xa&+1c($ot1ixg)p-f(%v#ad$dqy'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = [
-    '.svpb.de',
-    '127.0.0.1',
-    '.h00227.host-up.de'
-    ]
-
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-JAHRESSTUNDEN = 12
-OFFLINE = False
-JAHRESENDE = False
-
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = [
     # ('Your Name', 'your_email@example.com'),
 ]
-
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'svpb.sq',
-        # The following settings are not used with sqlite3:
-        'USER': 'UserPlaceholder',
-        'PASSWORD': 'PasswordPlaceholder',
-        'HOST': '127.0.0.1',
-        'PORT': '',  # Set to empty string for default.
-    }
-}
+JAHRESSTUNDEN = 12
+OFFLINE = False
+JAHRESENDE = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,7 +39,9 @@ INSTALLED_APPS = [
     'password_reset',
     'django_select2',
 ]
+
 CRISPY_TEMPLATE_PACK = "bootstrap3"
+
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -81,6 +53,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'svpb.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'svpb.wsgi.application'
 
 TEMPLATES = [
     {
@@ -111,9 +86,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'svpb.wsgi.application'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -153,28 +125,34 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 PHONENUMBER_DEFAULT_REGION = "DE"
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
 LOGIN_URL = '/login/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
 SENDFILE_URL = '/media/doc/'
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 STATIC_ROOT = BASE_DIR / 'static'
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
 MEDIA_ROOT = STATIC_ROOT / 'media'
 SENDFILE_ROOT = MEDIA_ROOT / 'doc'
+
 # Additional locations of static files
 STATICFILES_DIRS = [
     BASE_DIR / 'templates'
     ]
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = [
@@ -184,36 +162,15 @@ STATICFILES_FINDERS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# XSendfilte interface
-# this will only work with nginx, not in development setup - but that's not too important to test there
-SENDFILE_BACKEND = 'sendfile.backends.nginx'
-
 # for select2:
 SELECT2_BOOTSTRAP = False
 AUTO_RENDER_SELECT2_STATICS = False
 
 IMPERSONATE = {
     'REDIRECT_URL': '/',
-    'CUSTOM_ALLOW':  'svpb.settings.user_is_vorstand',
+    'CUSTOM_ALLOW':  'settings.base.user_is_vorstand',
 }
 
-# email settings:
-EMAIL_HOST = ''
-EMAIL_PORT = 465
-
-DEFAULT_FROM_EMAIL = 'test@test.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = 'XXX'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-
-# Use console mail backend for local testing and debugging
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Use the standard django SMTP backend for production
-# Note that in addition to the standard django backend, post_office is used for
-# mass mailings (is explicitly imported where needed).
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 def user_is_vorstand(request):
     return request.user.groups.filter(name="Vorstand")
