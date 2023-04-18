@@ -1,0 +1,43 @@
+from .base import *
+
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'SecretKeyPlaceholder'
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = [
+    '.svpb.de',
+    ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'svpbdata',
+        'USER': 'UserPlaceholder',
+        'PASSWORD': 'PasswordPlaceholder',
+        'HOST': '127.0.0.1',
+        'PORT': '',  # Set to empty string for default.
+    }
+}
+
+# email settings:
+EMAIL_HOST = 'EmailHostPlaceholder'
+EMAIL_PORT = 465
+DEFAULT_FROM_EMAIL = 'mein@svpb.de'
+EMAIL_HOST_USER = 'EmailUserPlaceholder'
+EMAIL_HOST_PASSWORD = 'EmailPasswordPlaceholder'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+# XSendfilte interface
+# this will only work with nginx, not in development setup
+# but that's not too important to test there
+SENDFILE_BACKEND = 'sendfile.backends.nginx'
+
+# Use the standard django SMTP backend for production
+# Note that in addition to the standard django backend, post_office is used for
+# mass mailings (is explicitly imported where needed).
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

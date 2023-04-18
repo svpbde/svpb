@@ -64,12 +64,12 @@ class isVorstandOrTeamleaderMixin(object):
 
 from svpb.forms import (LoginForm,
                         )
-from svpb.settings import OFFLINE, JAHRESENDE
+from django.conf import settings
 from arbeitsplan.models import Mitglied
 
 
 class SvpbLogin(FormView):
-    if OFFLINE:
+    if settings.OFFLINE:
         template_name = "home.html"
     else:
         template_name = "registration/justForm.html"
@@ -80,7 +80,7 @@ class SvpbLogin(FormView):
     def get_context_data(self, **kwargs):
         context = super(SvpbLogin, self).get_context_data(**kwargs)
         context['title'] = "Anmeldung"
-        if JAHRESENDE:
+        if settings.JAHRESENDE:
             context['intro_text'] = "Zur Zeit ist eine Anmeldung nur für Vorstände und Teamleiter möglich!"
         else:
             context['intro_text'] = ""
@@ -105,14 +105,14 @@ class SvpbLogin(FormView):
         if user is not None:
             succ = login(self.request, user)
 
-            if JAHRESENDE and not isVorstandOrTeamleader(user):
+            if settings.JAHRESENDE and not isVorstandOrTeamleader(user):
                 messages.warning(self.request,
                                  format_html("Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich."))
                 # make normal users go away
                 logout(self.request)
                 return redirect('/')
 
-            if JAHRESENDE:
+            if settings.JAHRESENDE:
                 messages.warning(self.request,
                                  format_html("Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direk Mitglieder einteilen!"))
 

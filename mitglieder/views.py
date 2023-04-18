@@ -40,7 +40,7 @@ from mitglieder.forms import (ActivateForm,
                               )
 from arbeitsplan.models import Mitglied
 from svpb.forms import MitgliederInactiveResetForm
-from svpb.settings import SENDFILE_ROOT
+from django.conf import settings
 from svpb.views import isVorstandMixin, isVorstand
 
 
@@ -151,11 +151,11 @@ def preparePassword(accountList=None):
     # remove an older letter first; ignore errors here
     import shutil, os
     try:
-        os.remove (os.path.join (SENDFILE_ROOT, 'letters.pdf'))
+        os.remove(os.path.join(settings.SENDFILE_ROOT, 'letters.pdf'))
     except:
         pass
 
-    shutil.move("letters.pdf", SENDFILE_ROOT)
+    shutil.move("letters.pdf", settings.SENDFILE_ROOT)
 
     return r
 
