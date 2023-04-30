@@ -2,7 +2,7 @@
     {
         "fields": {
             "status": "Er",
-            "mitgliedsnummer": "1",
+            "mitgliedsnummer": "00001",
             "zustimmungsDatum": "1899-12-31T23:07:00Z",
             "erstbenachrichtigt": false,
             "geburtsdatum": "1900-01-01",
@@ -19,5 +19,26 @@
         },
         "model": "arbeitsplan.mitglied",
         "pk": 1
+    },
+    {
+        "fields": {
+            "status": "Er",
+            "mitgliedsnummer": "00002",
+            "zustimmungsDatum": "1899-12-31T23:07:00Z",
+            "erstbenachrichtigt": false,
+            "geburtsdatum": "1900-01-01",
+            "gender": "W",
+            "ort": "xx",
+            "arbeitslast": 12,
+            "zuteilungBenachrichtigungNoetig": false,
+            "plz": "0",
+            "user": 2,
+            "festnetz": "",
+            "strasse": "xxx",
+            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "mobil": ""
+        },
+        "model": "arbeitsplan.mitglied",
+        "pk": 3
     }
 ]
