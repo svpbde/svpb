@@ -1,137 +1,152 @@
 [
     {
+        "model": "boote.boat",
+        "pk": 1,
         "fields": {
-            "name": "Vino",
-            "booking_remarks": "Unser Kielzugvogel steht den fortgeschrittenen Seglern in unserem Verein - nach Einweisung - zur Verfügung. Dieses Boot kann auch auf Regatten gesegelt werden.",
-            "photo": "boats_gallery/4f0c148b-2b23-4d7d-bae7-2344caf7f4f0.jpg",
-            "briefing": "",
-            "remarks": "Im Jubiläumsjahr 2011 stieß der Kielzugvogel \"Vino\" mit in unsere Vereinsflotte.",
             "owner": 1,
-            "club_boat": true,
             "type": 5,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 1
+            "photo": "boats_gallery/4f0c148b-2b23-4d7d-bae7-2344caf7f4f0.jpg",
+            "name": "Vino",
+            "active": true,
+            "briefing": "",
+            "remarks": "Im Jubiläumsjahr 2011 stieß der Kielzugvogel \"Vino\" mit in unsere Vereinsflotte. Egal ob Yardstickregatta, sportlicher Sonntagsausflug oder Regattatraining: Dieses Boot bietet für jeden anspruchsvollen Segler genau das Richtige.",
+            "club_boat": true,
+            "booking_remarks": "Unser Kielzugvogel steht den fortgeschrittenen Seglern in unserem Verein - nach Einweisung - zur Verfügung. Dieses Boot kann auch auf Regatten gesegelt werden."
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 2,
         "fields": {
-            "name": "Rothe (3804)",
-            "booking_remarks": "n/a",
+            "owner": 1,
+            "type": 3,
             "photo": "boats_gallery/bfc4a1be-e79a-4ea6-bd4e-ac82a48ac176.jpg",
+            "name": "Rothe (3804)",
+            "active": true,
             "briefing": "",
-            "remarks": "Das Boot mit solider Grundausstattung für das Freizeitsegeln.",
-            "owner": 1,
+            "remarks": "Das Boot mit solider Grundausstattung für's Freizeitsegeln, aber auch für angehende Regatta-Segler. Diese in der Ausbildung eingesetzten Jollen sind Ideal für unsere Segelschüler und haben dabei nicht zu viele \"Strippen\" an Bord. Ausserhalb der Ausbildung Ausbildung kannst Du die \"neue\" Rothe nutzen, wenn Du zuvor einmal eine Einweisung (Koordination durch Andree Cramer \"ancramer@t-online.de\") erhalten hast oder bereits Conger-Ranglisten-Segler bist/warst.",
             "club_boat": true,
-            "type": 3,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 2
+            "booking_remarks": "n/a"
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 3,
         "fields": {
-            "name": "Azzurro (3881)",
-            "booking_remarks": "Für fortgeschrittene Segler und auch zur Teilnahme an den bundesweit ausgetragenen Ranglisten-Regatten der Conger-Klassenvereinigung",
+            "owner": 1,
+            "type": 3,
             "photo": "boats_gallery/19da4751-b2ad-4e46-890c-5a45520c82b5.jpg",
+            "name": "Azzurro (3881)",
+            "active": true,
             "briefing": "",
-            "remarks": "Das Boot mit solider Grundausstattung für das Freizeitsegeln.",
-            "owner": 1,
+            "remarks": "Das Boot mit solider Grundausstattung für's Freizeitsegeln, aber auch für angehende Regatta-Segler. Diese in der Ausbildung eingesetzten Jollen sind Ideal für unsere Segelschüler und haben dabei nicht zu viele \"Strippen\" an Bord: ausserhalb der Ausbildung kannst Du \"Krümel\" nutzen, wenn Du zuvor einmal eine Einweisung (Koordination durch Andree Cramer \"ancramer@t-online.de\") erhalten hast oder bereits Conger-Ranglisten-Segler bist/warst.",
             "club_boat": true,
-            "type": 3,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 3
+            "booking_remarks": "Für fortgeschrittene Segler und auch zur Teilnahme an den bundesweit ausgetragenen Ranglisten-Regatten der Conger-Klassenvereinigung"
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 4,
         "fields": {
-            "name": "Mia (3791)",
-            "booking_remarks": "n/a",
+            "owner": 1,
+            "type": 3,
             "photo": "boats_gallery/4d7ac9a9-b639-48c0-ace4-fce45c3ca42d.jpg",
+            "name": "Mia (3791)",
+            "active": true,
             "briefing": "",
-            "remarks": "Das Boot mit solider Grundausstattung für das Freizeitsegeln.",
-            "owner": 1,
+            "remarks": "Das Boot mit solider Grundausstattung für's Freizeitsegeln, aber auch für angehende Regatta-Segler. Diese in der Ausbildung eingesetzten Jollen sind Ideal für unsere Segelschüler und haben dabei nicht zu viele \"Strippen\" an Bord: ausserhalb der Ausbildung kannst Du \"Krümel\" nutzen, wenn Du zuvor einmal eine Einweisung (Koordination durch Andree Cramer \"ancramer@t-online.de\") erhalten hast oder bereits Conger-Ranglisten-Segler bist/warst.",
             "club_boat": true,
-            "type": 3,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 4
+            "booking_remarks": "n/a"
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 5,
         "fields": {
-            "name": "Krümel (3834)",
-            "booking_remarks": "Für fortgeschrittene Segler und auch zur Teilnahme an den bundesweit ausgetragenen Ranglisten-Regatten der Conger-Klassenvereinigung",
+            "owner": 1,
+            "type": 3,
             "photo": "boats_gallery/7a378718-5996-4042-b5f5-a4e53067a837.jpg",
-            "briefing": "",
-            "remarks": "Das Boot mit solider Grundausstattung für das Freizeitsegeln.",
-            "owner": 2,
+            "name": "Krümel (3834)",
+            "active": true,
+            "briefing": "Andree Cramer (ancramer@t-online.de)",
+            "remarks": "Das Boot mit solider Grundausstattung für's Freizeitsegeln, aber auch für angehende Regatta-Segler. Diese in der Ausbildung eingesetzten Jollen sind Ideal für unsere Segelschüler und haben dabei nicht zu viele \"Strippen\" an Bord: ausserhalb der Ausbildung kannst Du \"Krümel\" nutzen, wenn Du zuvor einmal eine Einweisung (Koordination durch Andree Cramer \"ancramer@t-online.de\") erhalten hast oder bereits Conger-Ranglisten-Segler bist/warst.",
             "club_boat": true,
-            "type": 3,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 5
+            "booking_remarks": "Für fortgeschrittene Segler und auch zur Teilnahme an den bundesweit ausgetragenen Ranglisten-Regatten der Conger-Klassenvereinigung"
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 6,
         "fields": {
-            "name": "Azubine",
-            "booking_remarks": "Für fortgeschrittene Segler. Falls du mit dem Boot noch nicht gesegelt bist, ist eine Einweisung erforderlich. ",
+            "owner": 1,
+            "type": 2,
             "photo": "boats_gallery/2df2e6d8-4e7a-4612-b60e-79629591e695.jpg",
+            "name": "Azubine",
+            "active": true,
             "briefing": "",
-            "remarks": "Familienfreundliche Max136lle mit großem Cockpit (max. 8 Personen).",
-            "owner": 2,
+            "remarks": "Familienfreundliche Jolle mit großem Cockpit (max. 8 Personen), die etwas Wind benötigt, bei viel Wind aber mit Respekt gesegelt ( Großsegel aus der Hand fahren) werden sollte. Die vordere Klappe ist immer! mit Karabiner zu sichern, da das Boot beim Kentern ganz schnell voll läuft. Sehr gut zur Schulung von \"Rookies\" wegen viel Platz.",
             "club_boat": true,
-            "type": 2,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 6
+            "booking_remarks": "Für fortgeschrittene Segler. Falls du mit dem Boot noch nicht gesegelt bist, ist eine Einweisung erforderlich. "
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 7,
         "fields": {
-            "name": "Mariner I",
-            "booking_remarks": "Für fortgeschrittene Segler. Falls du mit dem Boot noch nicht gesegelt bist, ist eine Einweisung erforderlich.",
+            "owner": 1,
+            "type": 2,
             "photo": "boats_gallery/4ad48c20-8ebb-4abe-949f-5c97ce528710.jpg",
+            "name": "Mariner I",
+            "active": true,
             "briefing": "",
-            "remarks": "Familienfreundliche Max136lle mit großem Cockpit (max. 8 Personen).",
-            "owner": 1,
+            "remarks": "Familienfreundliche Jolle mit großem Cockpit (max. 8 Personen), die etwas Wind benötigt, bei viel Wind aber mit Respekt gesegelt ( Großsegel aus der Hand fahren) werden sollte. Die vordere Klappe ist immer! mit Karabiner zu sichern, da das Boot beim Kentern ganz schnell voll läuft. Sehr gut zur Schulung von \"Rookies\" wegen viel Platz.",
             "club_boat": true,
-            "type": 2,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 7
+            "booking_remarks": "Für fortgeschrittene Segler. Falls du mit dem Boot noch nicht gesegelt bist, ist eine Einweisung erforderlich."
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 8,
         "fields": {
-            "name": "RIB",
-            "booking_remarks": "Darf nur vom Ausbildungswart und vom Sportwart reserviert werden.",
-            "photo": "",
-            "briefing": "Darf nur vom Ausbildungswart und vom Sportwart reserviert werden.",
-            "remarks": "Schwarz - Rote Gummiflitsche mit 10 PS Motor mit Pinnensteuerung. Das Motorboot wird in der Segel-Motorboot-Ausbildung, sowie zu Rettung- und Bergungszwecken eingesetzt.",
             "owner": 1,
-            "club_boat": true,
             "type": 1,
-            "active": true
-        },
-        "model": "boote.boat",
-        "pk": 8
+            "photo": "",
+            "name": "RIB",
+            "active": true,
+            "briefing": "Darf nur vom Ausbildungswart und vom Sportwart reserviert werden.",
+            "remarks": "Schwarz - Rote Gummiflitsche mit 10 PS Motor mit Pinnensteuerung.\r\nDas Motorboot wird in der Segel-Motorboot-Ausbildung, sowie zu Rettung- und Bergungszwecken eingesetzt.",
+            "club_boat": true,
+            "booking_remarks": "Darf nur vom Ausbildungswart und vom Sportwart reserviert werden."
+        }
     },
     {
+        "model": "boote.boat",
+        "pk": 9,
         "fields": {
-            "name": "Mobo",
-            "booking_remarks": "",
+            "owner": 1,
+            "type": 1,
             "photo": "",
+            "name": "Mobo",
+            "active": true,
             "briefing": "",
             "remarks": "Großes Motorboot, nur zur Ausbildung und Rettung",
-            "owner": 1,
             "club_boat": false,
-            "type": 1,
-            "active": true
-        },
+            "booking_remarks": ""
+        }
+    },
+    {
         "model": "boote.boat",
-        "pk": 9
+        "pk": 10,
+        "fields": {
+            "owner": 1,
+            "type": 6,
+            "photo": "",
+            "name": "Bootskran s. Beschreibung",
+            "active": true,
+            "briefing": "Schulungstermine finden jährlichstatt. siehe:\r\nhttps://svpb.de/aktuelles/termine/",
+            "remarks": "Bitte nur so lange buchen, wie wirklich notwendig!",
+            "club_boat": true,
+            "booking_remarks": "Der Kran darf ausschließlich durch befugte Mitglieder bedient werden, die im Verein eine offzielle Einweisung durch den Vorstand bekommen haben"
+        }
     }
 ]

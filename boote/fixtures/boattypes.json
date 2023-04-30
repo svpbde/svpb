@@ -1,57 +1,68 @@
 [
     {
+        "model": "boote.boattype",
+        "pk": 1,
         "fields": {
+            "name": "Other",
             "url": "https://",
-            "beam": "-",
             "length": "-",
-            "draught": "-",
-            "name": "Other"
-        },
-        "model": "boote.boattype",
-        "pk": 1
+            "beam": "-",
+            "draught": "-"
+        }
     },
     {
+        "model": "boote.boattype",
+        "pk": 2,
         "fields": {
+            "name": "Mariner 19",
             "url": "http://mariner.pl/mariner-19-de/",
+            "length": "5,80 m",
             "beam": "2,08 m",
-            "length": "5,80 m",
-            "draught": "1,07 m",
-            "name": "Mariner 19"
-        },
-        "model": "boote.boattype",
-        "pk": 2
+            "draught": "1,07 m"
+        }
     },
     {
+        "model": "boote.boattype",
+        "pk": 3,
         "fields": {
+            "name": "Conger",
             "url": "https://de.wikipedia.org/wiki/Conger_%28Bootsklasse%29",
+            "length": "5,00 m",
             "beam": "1,80 m",
-            "length": "5,00 m",
-            "draught": "0,20 - 1,15 m",
-            "name": "Conger"
-        },
-        "model": "boote.boattype",
-        "pk": 3
+            "draught": "0,20 - 1,15 m"
+        }
     },
     {
+        "model": "boote.boattype",
+        "pk": 4,
         "fields": {
+            "name": "Pirat",
             "url": "https://de.wikipedia.org/wiki/Pirat_%28Bootsklasse%29",
-            "beam": "1,61 m",
             "length": "5,00 m",
-            "draught": "0,20 - 1,05 m",
-            "name": "Pirat"
-        },
-        "model": "boote.boattype",
-        "pk": 4
+            "beam": "1,61 m",
+            "draught": "0,20 - 1,05 m"
+        }
     },
     {
-        "fields": {
-            "url": "https://de.wikipedia.org/wiki/Kielzugvogel",
-            "beam": "1,88 m",
-            "length": "5,80 m",
-            "draught": "0,90 m",
-            "name": "Kielzugvogel"
-        },
         "model": "boote.boattype",
-        "pk": 5
+        "pk": 5,
+        "fields": {
+            "name": "Kielzugvogel",
+            "url": "https://de.wikipedia.org/wiki/Kielzugvogel",
+            "length": "5,80 m",
+            "beam": "1,88 m",
+            "draught": "0,90 m"
+        }
+    },
+    {
+        "model": "boote.boattype",
+        "pk": 6,
+        "fields": {
+            "name": "Bootskran",
+            "url": "https://",
+            "length": "-",
+            "beam": "-",
+            "draught": "-"
+        }
     }
 ]
