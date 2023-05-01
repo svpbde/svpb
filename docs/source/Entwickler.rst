@@ -35,6 +35,35 @@ wie in der `graph_models Dokumentation <https://django-extensions.readthedocs.io
     Klassendiagramm der models
 
 
+Benutzerrollen
+--------------
+
+Durch Erteilung von entsprechenden Benutzerberechtigungen ergeben sich drei verschiedene Rollen, siehe :ref:`table-Benutzerrollen`.
+Die Berechtigungen werden über die Mitgliedschaft in Gruppen geregelt, sowie `is_staff` und `is_superuser` aus dem Django-User-Modell (`auth.user`).
+Die feingranularen permissions, die Django automatisch für jedes model erzeugt (`auth.permission`), werden nicht benutzt.
+Mit Rohdaten-Zugriff ist der Zugriff auf die Django-Admin-Seiten gemeint, die ein direktes Editieren der Datenbankeinträge erlauben.
+Die Fixtures enthalten für jede Rolle einen Benutzer mit jeweiligem Login `<Name der Rolle>` und Passwort `Test`.
+
+Ein Teamleiter ist von den vergebenen Benutzerberechtigungen her ein normales Mitglied.
+Allein dadurch, dass er als Teamleiter bei einer Aufgabe eingetragen ist, erhält er zusätzliche Möglichkeiten.
+
+.. _table-Benutzerrollen:
+
+.. table:: Benutzerrollen mit zugehörigen Eigenschaften
+
+    +------------------+--------------+-----------------+----------+--------------+
+    | Rolle            | Gruppe Boote | Gruppe Vorstand | is_staff | is_superuser |
+    +==================+==============+=================+==========+==============+
+    | Mitglied         |       x      |        /        |    /     |      /       |
+    +------------------+--------------+-----------------+----------+--------------+
+    | Vorstand         |       x      |        x        |    /     |      /       |
+    +------------------+--------------+-----------------+----------+--------------+
+    | Superuser:       |              |                 |          |              |
+    | Vorstand mit     |       x      |        x        |    x     |      x       |
+    | Rohdaten-Zugriff |              |                 |          |              |
+    +------------------+--------------+-----------------+----------+--------------+
+
+
 Commands
 ========
 

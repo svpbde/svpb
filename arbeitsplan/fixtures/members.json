@@ -40,5 +40,26 @@
         },
         "model": "arbeitsplan.mitglied",
         "pk": 3
+    },
+    {
+        "fields": {
+            "status": "Er",
+            "mitgliedsnummer": "00003",
+            "zustimmungsDatum": "1899-12-31T23:07:00Z",
+            "erstbenachrichtigt": false,
+            "geburtsdatum": "1900-01-01",
+            "gender": "W",
+            "ort": "xx",
+            "arbeitslast": 12,
+            "zuteilungBenachrichtigungNoetig": false,
+            "plz": "0",
+            "user": 3,
+            "festnetz": "",
+            "strasse": "xxx",
+            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "mobil": ""
+        },
+        "model": "arbeitsplan.mitglied",
+        "pk": 4
     }
 ]

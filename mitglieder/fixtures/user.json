@@ -5,8 +5,8 @@
             "first_name": "Name",
             "last_name": "Nachname",
             "is_active": true,
-            "is_superuser": true,
-            "is_staff": true,
+            "is_superuser": false,
+            "is_staff": false,
             "last_login": null,
             "groups": [
                 1,
@@ -27,7 +27,7 @@
             "last_name": "Nachname",
             "is_active": true,
             "is_superuser": false,
-            "is_staff": true,
+            "is_staff": false,
             "last_login": null,
             "groups": [
                 2
@@ -39,5 +39,26 @@
         },
         "model": "auth.user",
         "pk": 2
+    },
+    {
+        "fields": {
+            "username": "Superuser",
+            "first_name": "Name",
+            "last_name": "Nachname",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "last_login": null,
+            "groups": [
+                1,
+                2
+            ],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$260000$eN0UXvcU4Q95MugbgpVWrp$HAJcqFwIPhXzEAiu64uYqnTt/5Ix+uSBnR0oycgARdM=",
+            "email": "superuser@example.com",
+            "date_joined": "2013-12-25T10:30:36Z"
+        },
+        "model": "auth.user",
+        "pk": 3
     }
 ]
