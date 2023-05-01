@@ -21,7 +21,15 @@ from django.views.generic import FormView
 
 @receiver(post_save, sender=User)
 def create_mitglied(sender, instance, created, **kwargs):
-    # print "creating : ", sender, created
+    """Create a mitglied if a user is created (called via a Django signal)."""
+    # Skip mitglied creation if called via 'manage.py loaddata', as fixtures
+    # typically already include mitglied data. Without this, loading fixtures
+    # with skipped primary key ids will throw the Exception
+    # 'psycopg2.errors.UniqueViolation: duplicate key value violates unique
+    # constraint "arbeitsplan_mitglied_user_id_key"'. See also
+    # https://docs.djangoproject.com/en/4.2/topics/db/fixtures/#how-fixtures-are-saved-to-the-database
+    if kwargs['raw']:
+        return
     if created:
         Mitglied.objects.get_or_create(user=instance)
 
