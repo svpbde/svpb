@@ -1,5 +1,7 @@
+"""Settings for development VM closely mirroring production."""
 from .base import *
 
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -33,10 +35,9 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-# XSendfilte interface
-# this will only work with nginx, not in development setup
-# but that's not too important to test there
-SENDFILE_BACKEND = 'sendfile.backends.nginx'
-
 # Use console mail backend for local testing and debugging
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# XSendfile interface
+# This requires nginx as webserver
+SENDFILE_BACKEND = 'sendfile.backends.nginx'

@@ -1,4 +1,4 @@
-# Base Django settings for svpb project.
+"""Base Django settings for svpb project."""
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

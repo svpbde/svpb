@@ -1,5 +1,7 @@
+"""Settings for local development with sqlite."""
 from .base import *
 
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -36,3 +38,7 @@ EMAIL_USE_SSL = True
 
 # Use console mail backend for local testing and debugging
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# XSendfile interface
+# Development backend should never be used in production!
+SENDFILE_BACKEND = 'sendfile.backends.development'
