@@ -369,7 +369,7 @@ class AccountLetters(isVorstandMixin, View):
 
     def get(self, request):
         return sendfile(request,
-                        os.path.join(SENDFILE_ROOT,
+                        os.path.join(settings.SENDFILE_ROOT,
                                 "letters.pdf"))
 
 
@@ -456,7 +456,7 @@ class MitgliederExcel(View):
 
             # repeated name; TODO: move this from here and mitgliedExcel.py into settings
             filename = "mitglieder.xlsx"
-            basepath = SENDFILE_ROOT
+            basepath = settings.SENDFILE_ROOT
 
             call_command('mitgliedExcel')
 
@@ -521,5 +521,3 @@ class ImpersonateListe(isVorstandMixin, FilteredListView):
                 .filter(is_superuser=False)
                 .exclude(id=self.request.user.id))
     pass
-
-
