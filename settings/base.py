@@ -145,8 +145,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = STATIC_ROOT / 'media'
-SENDFILE_ROOT = MEDIA_ROOT / 'doc'
+MEDIA_ROOT = BASE_DIR / 'media'
+SENDFILE_ROOT = STATIC_ROOT / 'media' / 'doc'
 
 # Additional locations of static files
 STATICFILES_DIRS = [
