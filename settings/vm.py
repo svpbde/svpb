@@ -19,8 +19,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'svpbdata',
-        'USER': 'UserPlaceholder',
-        'PASSWORD': 'PasswordPlaceholder',
+        'USER': 'svpbdb',
+        'PASSWORD': 'exyn9pwZvyJRDEjYQpuH',  # For development only
         'HOST': '127.0.0.1',
         'PORT': '',  # Set to empty string for default.
     }
