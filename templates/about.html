@@ -1,76 +1,31 @@
 {% extends "bootstrap/bootstrap_base.html" %}
 
 {% block branding %}
-Aufgabenverwaltung leicht gemacht 
+Über diese Webanwendung 
 {% endblock %}
 
 
 {% block content%}
+Diese Webanwendung ermöglicht den Mitgliedern des Segler-Verein Paderborn e.V. die Organisation des Arbeitsdienstes und das Reservieren von Vereinsbooten sowie dem Bootskran.
+Die Entwicklung wurde 2014 als Open-Source-Projekt gestartet und seitdem wird die Webanwendung weiterhin von Vereinsmitgliedern aktualisiert und weiterentwickelt.
 
+<h3>Impressum</h3>
+Diese Webanwendung ist Teil des Internetauftritts des Segler-Verein Paderborn e.V. (<a href="https://svpb.de">svpb.de</a>), die rechtlichen Angaben finden sich unter <a href="https://svpb.de/impressum/">svpb.de/impressum</a>.
 
-<h3> Neuerungen und Änderungen: </h3>
+<h3>Für die technisch Interessierten</h3>
+Den Quellcode findest du auf <a href="https://github.com/svpbde/svpb">Github</a>.
+Wenn du Lust hast, uns bei der Entwicklung zu unterstützen, melde dich gern bei uns oder stelle direkt einen Pull Request.
 
-<ul>
-<li> 5.4.2017: Vereinsbootsverwaltung offiziell im allgemeinen Testbetrieb. </li>
-<li> 5.3.2017: Fehlerhaft eingetragene Leistungen können wieder zurückgezogen werden,
-    wenn noch nicht von Vorstand bearbeitet. In der Tabelle der "Leistung -> Anzeigen" auf
-"Zurückziehen" klicken. </li>
-<li> 5.3.2017: Vorstandsfunktion: Bei Meldungen werden auch die noch offenen Stunden eines Mitglieds angezeigt. </li>
-<li> Februar 2017: Boot-Anwendung im Testbetrieb. </li>
-    <li>2.7.2016: Die Webseite wurde umorganisert, um das Einklinken weiterer Anwendungen zu erleichten. Great things to come! :-)
-    </li>
-    <li> 17.4.2016: Arbeitslast wird in Auswertung der geleisten Stunden angezeigt. Zuteilungslöschen vereinfacht.
-        Bemerkung aus Meldung wird in Zuteilungstabelle angezeigt. </li>
-  <li> 23.12.2015: Umfangreiche interne Restrukturiereungen; Vorberietungen für weitere Anwendungen</li>
-  <li> 16.12.2015: Umstellung auf 2016 </li>
-  <li> 10.11.2015: Umfangreichere Stundenauswertungen </li>
-  <li> 23.8.2015: Teamleader haben eine einfache Möglichkeit, sich eine Liste der Teams anzeigen zu lassen. </li>
-    <li> 5.7.2015: Filterungen der Meldungen für Vorstand verbessert, bugfix bei Stundenplänen. </li> 
-    <li> 30.5.2015: Man kann Meldung nicht mehr zurückziehen, wenn man schon auf die Aufgabe eingeteilt wurde. </li>
-    <li> 30.5.2015: Antworten auf Erinnerungsemails sollten jetzt direkt an den Verantwortlichen der Aufgabe gehen,
-        nicht mehr an mein@svpb.de. Experimentell; bei Problemen Bescheid sagen! </li>
-    <li> 25.5.2015: Beim Eintragen oder Ändern einer Meldung wird eine Mail an den verantwortlichen
-        Ansprechpartner für die entsprechende Aufgabe geschickt. </li>
-    <li> 17.5.2015: Fehler in Zuteilungs-Benachrichtungsemails behoben;
-        Name des Ansprechpartners sollte jetzt lesbar sein.
-        Ggf. wird in Zueilungs-Benachrichtungsemails und Erinnerungsemails an fehlende Telefonnummer erinnert.
-<li> 8.3.2015: Bei der Berechnug der zugeteilten Stunden für Aufgaben
-  mit Stundenplan lag ein Fehler vor. Dadurch wurden ZU VIELE Stunden
-  als zugteilt ausgewiesen. Dies betraff insbesondere emails mit der
-  Aufforderung, eine weitere Meldung abzugeben. Das sollte jetzt
-  behoben sein. </li>
-  <li> 11.2.2015: Bei Profiländerung wird Vorstand informiert, um
-  Datenbestand konsistent zu halten. </li>
-  <li> 11.2.2015: Liste der email-Templates abrufbar für Vorstand. </li>
-  <li> 9.2.2015: Zuteilungen in Vorstandsansicht gefiltert werden nach
-  "Aufgaben mit unzureichender Zuteilung". Auch direkt von Home aus
-  ansteuerbar. Dort auch direkte Links zu unterschiedlichen
-  Vor-Filterung, auch nach Aufgabengruppen separat.  </li>
-  <li> 7.2.2015: Das Zurückziehen von Meldungen sollte jetzt
-  funktionieren. Einfach bei einer schon erfoglten Meldung die
-  Präferenz auf "Nein" setzen. </li>
-  <li> 7.2.2015: Paginierung in verschiedenen Tabelle abgeschaltet! D.h., alle Zeilen einer Tabelle
-  werden auf einmal angezeigt. Das ist langsam, aber
-  verlässlicher. Paginierung führt in mehreren Tabellen zu reichlich
-  Problemen. Kommt evtl. später wieder. </li>
-</ul>
-
-<p>
-
-<h3> Impressum </h3>
-
-Kontakt: Holger Karl, hkarl@ieee.org
-
+<h3>Eingesetzte Open-Source-Projekte</h3>
 Diese Anwendung wäre nicht möglich ohne die folgenden Werkzeuge der Open-Source-Community:
 <ul>
-  <li> <a href="http://aquamacs.org/"> Emacs </a>  </li>
   <li> <a href="https://www.python.org/"> Python </a> </li>
-  <li> <a href="https://www.djangoproject.com/"> Django </a> </li> (mit zahlreichen Erweiterungen, insbesondere tables2, post_office, crispy_forms, impersonate)
-  <li> <a href="http://getbootstrap.com/"> Bootstrap </a> </li> (mit zahlreichen Erweiterungen)
-  <li> Verschiedene Icons Sammlung:
+  <li> <a href="https://www.djangoproject.com/"> Django </a> (mit zahlreichen Erweiterungen, insbesondere tables2, post_office, crispy_forms, impersonate) </li>
+  <li> <a href="https://getbootstrap.com/"> Bootstrap </a> (mit zahlreichen Erweiterungen) </li>
+  <li> Verschiedene Icon-Sammlungen:
     <ul>
-      <li> <a href="http://fontawesome.github.io/Font-Awesome//">Font Awesome</a> </li>
-      <li> <a href="thenounproject.com">Noun Project</a>
+      <li> <a href="https://fontawesome.com">Font Awesome</a> </li>
+      <li> <a href="https://thenounproject.com">Noun Project</a>
         <ul>
           <li>sailboat by jon trillana from the Noun Project</li>
           <li>labor by Creative Stall from the Noun Project</li>
