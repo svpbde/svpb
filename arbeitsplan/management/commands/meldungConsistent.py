@@ -22,10 +22,7 @@ class Command(BaseCommand):
     """Go through all Users and Aufgaben.
     Check whether at most one Meldung exist.
     """
-
-    args = ""
     help = "Check Meldung consistency, send out warning emails"
-    emailTemplate = "upcomingJob"
 
     def handle(self, *args, **options):
         # set the locale right, to get the dates represented correctly

@@ -4,7 +4,7 @@ Send out emails to everybody who has a job coming up
 on the following day.
 """
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.utils import translation
 from django.conf import settings
@@ -17,38 +17,34 @@ from collections import defaultdict
 
 
 class Command(BaseCommand):
-    """Grab all users which have a job starting tomorrow.
+    """Notify on upcoming jobs in leaddays days.
+
+    Grab all users which have a job starting in leaddays days.
     Send out emails to them.
     Store all those data in a list, to be sent to the corresponding
     responsible person as well.
     """
+    help = "Send emails for upcoming jobs with given leaddays"
 
-    args = "<leaddate>"
-    help = "Send emails for upcoming jobs with given leaddays (default: 1)"
-    leaddays = 1
-    emailTemplate = "upcomingJob"
+    def add_arguments(self, parser):
+        parser.add_argument('leaddays', type=int,
+                            help="days to look in the future for jobs")
 
     def handle(self, *args, **options):
         # set the locale right, to get the dates represented correctly
         translation.activate(settings.LANGUAGE_CODE)
-
-        if args:
-            try:
-                self.leaddays = int(args[0])
-            except Exception:
-                raise CommandError("Invalid argument: ", args[0])
 
         self.stdout.write('upcomingJob: Checking on ' +
                           str(datetime.date.today()))
 
         # find out the date of tomorrow to be used in zuteilung filter
         tomorrow = (datetime.date.today() +
-                    datetime.timedelta(days=self.leaddays))
+                    datetime.timedelta(days=options['leaddays']))
 
         zuteilungTomorrow = models.Zuteilung.objects.filter(
             aufgabe__datum=tomorrow)
 
-        self.stdout.write('upcomingJob: Found {0} many zuteilungen for {1}'
+        self.stdout.write('upcomingJob: Found {0} zuteilungen for {1}'
                           .format(
                               zuteilungTomorrow.count(),
                               str(tomorrow)))
@@ -59,7 +55,7 @@ class Command(BaseCommand):
             kontakt = z.aufgabe.kontakt()
             context = {'datum': z.aufgabe.datum,
                        'u': z.ausfuehrer,
-                       'aufgabe': z.aufgabe.__unicode__(),
+                       'aufgabe': z.aufgabe,
                        'a': z.aufgabe,
                        'uhrzeit': z.stundenString(),
                        'verantwortlich': kontakt,
@@ -70,7 +66,7 @@ class Command(BaseCommand):
             if z.ausfuehrer.email:
                 mail.send(
                     [z.ausfuehrer.email],
-                    template=self.emailTemplate,
+                    template="upcomingJob",
                     context=context,
                     )
 

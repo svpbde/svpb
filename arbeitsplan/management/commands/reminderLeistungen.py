@@ -23,8 +23,6 @@ class Command(BaseCommand):
     """Go through all Leistungen that have not been 
     processed by verantwortlicher. 
     """
-
-    args = ""
     help = "Send out Reminders that Leistungsmeldungen should be processed."
     emailTemplate = "leistungReminder"
 

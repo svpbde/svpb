@@ -17,8 +17,6 @@ class Command(BaseCommand):
     Set the arbeitslast of those users to the default.
     Notify the Geschäftsführer via mail!
     """
-
-    args = ""
     help = "Set all new Mitglieder's Arbeitslast to standard value. New is anybody how joined in the second half of a year"
 
     def handle(self, *args, **options):

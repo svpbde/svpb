@@ -14,8 +14,6 @@ class Command(BaseCommand):
     """Go through all Users and Aufgaben.
     Check whether at most one Meldung exist.
     """
-
-    args = ""
     help = "Produce statistics for yearly analysis"
 
     def handle(self, *args, **options):

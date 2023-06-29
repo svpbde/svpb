@@ -21,8 +21,6 @@ class Command(BaseCommand):
     """Go through all reservations 
     and send out 
     """
-    
-    args = ""
     help = "Send out Reservations."
     
 

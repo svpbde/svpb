@@ -47,7 +47,6 @@ class Command(BaseCommand):
     """Produce an Excel file of all the Mitglieder. 
     With differnt filters applied. 
     """
-    args = ""
     help = "Produce excel file of all Mitglieder"
 
 
