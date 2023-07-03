@@ -32,12 +32,15 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'impersonate',
-    'arbeitsplan',
-    'boote',
     'post_office',
     'sendfile',
     'password_reset',
     'django_select2',
+    # svpb apps
+    'arbeitsplan',
+    'boote',
+    'mitglieder',
+    'svpb',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
@@ -135,23 +138,23 @@ LOGIN_URL = '/login/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
-SENDFILE_URL = '/media/doc/'
+SENDFILE_URL = '/sendfile/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'www' / 'static'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = BASE_DIR / 'media'
-SENDFILE_ROOT = STATIC_ROOT / 'media' / 'doc'
+MEDIA_ROOT = BASE_DIR / 'www' / 'media'
+SENDFILE_ROOT = BASE_DIR / 'www' / 'sendfile'
 
 # Additional locations of static files
 STATICFILES_DIRS = [
-    BASE_DIR / 'templates'
-    ]
+    BASE_DIR / 'site_static'
+]
 
 # List of finder classes that know how to find static files in
 # various locations.

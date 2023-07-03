@@ -61,7 +61,7 @@ bla.py
 letters.aux
 letters.tex
 sanitized.json
-static
+/static/
 notes
 backup
 svpb.sq
@@ -80,3 +80,4 @@ appTemplate
 old_sq
 tmp
 settings/production.py
+/www/
