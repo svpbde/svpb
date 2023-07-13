@@ -65,10 +65,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / 'svpb/templates',
-            BASE_DIR / 'arbeitsplan/templates',
-            BASE_DIR / 'mitglieder/templates',
-            BASE_DIR / 'boote/templates',
             ],
         'APP_DIRS': True,
         'OPTIONS': {
