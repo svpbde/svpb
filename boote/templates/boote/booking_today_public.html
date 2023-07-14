@@ -1,3 +1,5 @@
+{% load static %}
+
 <head>
 
 <title>Vereinsboote</title>
@@ -185,11 +187,11 @@ body,table {
   window.onload=initialize
 </script>
 
-<link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
 
 
  <!-- Configuring Web Application -->
- <link rel="manifest" href="/static/boote/manifest.json">
+ <link rel="manifest" href="{% static 'boote/manifest.json' %}">
  <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
@@ -203,7 +205,7 @@ body,table {
 <!-- CONGER -->
 <DIV id="tab_1" class="tab">
 	<div class="boat_summary">
-		<img src='{% static "boote/conger.jpg" %}'/>
+		<img src="{% static 'boote/conger.jpg' %}"/>
 		<div>
 			<h2>Reservierungen</h2>
 			<h1>Conger</h1>
