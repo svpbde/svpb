@@ -81,3 +81,4 @@ old_sq
 tmp
 settings/production.py
 /www/
+/logs/
