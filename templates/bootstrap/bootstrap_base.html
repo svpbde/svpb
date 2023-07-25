@@ -23,7 +23,9 @@ SVPB -- Die kleine Webseite zur Vereinsunterstützung
 {% endblock %}
 </title>
 {% block extrastyle %}{% endblock %}
-<link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css"%}">
+<link rel="stylesheet" href="{% static 'fontawesomefree/css/fontawesome.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'fontawesomefree/css/solid.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'fontawesomefree/css/regular.min.css' %}" type="text/css">
 </head>
 <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css"%}" type="text/css" />
 <link href="{% static "bootstrap/css/starter-template.css"%}" rel="stylesheet">
@@ -71,7 +73,7 @@ SVPB -- Die kleine Webseite zur Vereinsunterstützung
 
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-user"></i>
+            <i class="fa-solid fa-user"></i>
             Mein Profil <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
@@ -98,9 +100,9 @@ SVPB -- Die kleine Webseite zur Vereinsunterstützung
                 {% endif %}
               </ul>
             </li>
-            <li><a href="/manual/"><i class="fa fa-question"></i> Handbuch</a>
+            <li><a href="/manual/"><i class="fa-solid fa-question"></i> Handbuch</a>
             </li>
-            <li><a href="/logout/"><i class="fa fa-sign-out"></i>Abmelden</a>
+            <li><a href="/logout/"><i class="fa-solid fa-sign-out"></i>Abmelden</a>
             </li>
           </ul>
           {% endif %}
@@ -169,8 +171,3 @@ $(document).ready(function(){
 
     
 </body> </html>
-
-
-
-
-

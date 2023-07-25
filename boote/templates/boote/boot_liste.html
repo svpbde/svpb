@@ -29,7 +29,7 @@ Diese Boote stehen allen Mitgliedern zur Verfügung.
 {% for boot in boots_verein %}
   <TR>
     <td style="text-align: left;">{% if boot.club_boat %}<img src="{% static 'boote/svpb.png' %}" style="width: 50px;" class="img-responsive">{% endif %}</td>
-    <td style="text-align: left;"> <a href='/boote/boot/{{ boot.pk }}'> <i class="fa fa-ship"></i> {{ boot.name }}  ({{ boot.type.name }})</a></TD>
+    <td style="text-align: left;"> <a href='/boote/boot/{{ boot.pk }}'> <i class="fa-solid fa-sailboat"></i> {{ boot.name }}  ({{ boot.type.name }})</a></TD>
     <td>{{ boot.type.length }} </td>
     <td>{{ boot.type.beam }} </td>
     <td>{{ boot.type.draught }} </td>
@@ -62,7 +62,7 @@ Es gibt auch viele andere Booten, die am Lippesee ihr Zuhause haben - hier einig
 
 {% for boot  in boots_andere %}
   <TR>
-    <td style="text-align: left;"> <a href='/boote/boot/{{ boot.pk }}'> <i class="fa fa-ship"></i> {{ boot.name }} </a> ({{ boot.type.name }})</TD>
+    <td style="text-align: left;"> <a href='/boote/boot/{{ boot.pk }}'> <i class="fa-solid fa-sailboat"></i> {{ boot.name }} </a> ({{ boot.type.name }})</TD>
     <td>{{ boot.type.length }} </td>
     <td>{{ boot.type.beam }} </td>
     <td>{{ boot.type.draught }} </td>

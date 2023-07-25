@@ -31,7 +31,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
             <div class="panel panel-default">
               <div class="panel-heading">
                 <div class="panel-title">
-                  <i class="fa fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
+                  <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
                 </div>
               </div>
               <div class="panel-body">
@@ -44,7 +44,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
           <div class="panel panel-info">
             <div class="panel-heading">
               <div class="panel-title">
-                <i class="fa fa-hand-o-up fa-lg fa-fw"></i>&nbsp;Meldung
+                <i class="fa-regular fa-hand-point-up fa-lg fa-fw"></i>&nbsp;Meldung
               </div>
             </div>
             <div class="panel-body">
@@ -65,7 +65,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
             <div class="panel panel-warning">
               <div class="panel-heading">
                 <div class="panel-title">
-                  <i class="fa fa-hand-o-right fa-lg fa-fw"></i>&nbsp;Zuteilung
+                  <i class="fa-regular fa-hand-point-right fa-lg fa-fw"></i>&nbsp;Zuteilung
                 </div>
               </div>
               <div class="panel-body">
@@ -78,7 +78,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
           <div class="panel panel-success">
             <div class="panel-heading">
               <div class="panel-title">
-                <i class="fa fa-check fa-lg fa-fw"></i>&nbsp;Leistung
+                <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
               </div>
             </div>
             <div class="panel-body">
@@ -102,7 +102,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
             <div class="panel panel-default">
               <div class="panel-heading">
                 <div class="panel-title">
-                  <i class="fa fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
+                  <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
                 </div>
               </div>
               <div class="panel-body">
@@ -143,7 +143,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <div class="panel-title">
-                    <i class="fa fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben und Aufgabengruppen
+                    <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben und Aufgabengruppen
                   </div>
                 </div>
                 <div class="panel-body">
@@ -162,7 +162,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
                 <div class="panel panel-info">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <i class="fa fa-hand-o-up fa-lg fa-fw"></i>&nbsp;Meldung
+                      <i class="fa-regular fa-hand-point-up fa-lg fa-fw"></i>&nbsp;Meldung
                     </div>
                   </div>
                   <div class="panel-body">
@@ -177,7 +177,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
               <div class="panel panel-warning">
                 <div class="panel-heading">
                   <div class="panel-title">
-                    <i class="fa fa-hand-o-right fa-lg fa-fw"></i>&nbsp;Zuteilung
+                    <i class="fa-regular fa-hand-point-right fa-lg fa-fw"></i>&nbsp;Zuteilung
                   </div>
                 </div>
                 <div class="panel-body">
@@ -230,7 +230,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
               <div class="panel panel-success">
                 <div class="panel-heading">
                   <div class="panel-title">
-                    <i class="fa fa-check fa-lg fa-fw"></i>&nbsp;Leistung
+                    <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
                   </div>
                 </div>
                 <div class="panel-body">
@@ -248,7 +248,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
               <div class="panel panel-danger">
                 <div class="panel-heading">
                   <div class="panel-title">
-                    <i class="fa fa-envelope-o fa-lg fa-fw"></i>&nbsp;Benachrichtigungen
+                    <i class="fa-solid fa-envelope fa-lg fa-fw"></i>&nbsp;Benachrichtigungen
                   </div>
                 </div>
                 <div class="panel-body">
@@ -281,12 +281,12 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
                   <ul class="list-group">
                     <li class="list-group-item"> <a href="/accounts/add/"> Mitglied hinzufügen </a> </li>
                     <li class="list-group-item"> <a href="/accounts/list/"> Mitgliederliste </a> </li>
-                    <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> <i class="fa fa-file-excel-o fa-lg fa-fw"></i>  Mitglieder als Excel, mit unterschiedlichen Filtern </a> </li>
+                    <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> <i class="fa-solid fa-file-excel fa-lg fa-fw"></i>  Mitglieder als Excel, mit unterschiedlichen Filtern </a> </li>
                     {% comment %}
                     <li class="list-group-item"> <a href="/accounts/inaktiveReset/">  Inaktive Mitglieder mit neuen Passwörtern versehen</a> </li>
                     {% endcomment %}
                     {% if user.is_staff %}
-                    <li class="list-group-item"> <a href="/admin/"> <i class="fa fa-database fa-lg fa-fw"></i>&nbsp; Rohdaten verwalten </a> Achtung, direkter Datenbankzugriff! Gefährlich!</li>
+                    <li class="list-group-item"> <a href="/admin/"> <i class="fa-solid fa-database fa-lg fa-fw"></i>&nbsp; Rohdaten verwalten </a> Achtung, direkter Datenbankzugriff! Gefährlich!</li>
                     {% endif %}
                   </ul>
                 </div>

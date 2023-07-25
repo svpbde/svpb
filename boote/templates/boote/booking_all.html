@@ -33,7 +33,7 @@ Hier sind deine aktuellen Reservierungen <a href="{% static 'boote/AlgemRegelnVe
 {% for b, weekday, date, time_from, time_to in bookings %}
   <tr>
   	<td>{{ b.user.first_name }} {{ b.user.last_name }}</td>
-  	<td style='text-align:left;'><a href="/boote/boot/{{ b.boat.pk }}/"> <i class="fa fa-ship"></i>  {{ b.boat.name }} ({{ b.boat.type.name }})</a></td> 
+  	<td style='text-align:left;'><a href="/boote/boot/{{ b.boat.pk }}/"> <i class="fa-solid fa-sailboat"></i>  {{ b.boat.name }} ({{ b.boat.type.name }})</a></td> 
   	<td style='text-align: right'>{{ weekday }}, {{ date }}</td> 
   	<td>von {{ time_from }} bis {{ time_to }}</td>
   	<td>{{ b.type }}</td>
@@ -44,7 +44,7 @@ Hier sind deine aktuellen Reservierungen <a href="{% static 'boote/AlgemRegelnVe
   	{% endif %}
   	
   	{% if b.notified == 1 %}
-  		<td><i class="fa fa-paper-plane" aria-hidden="true"></i></td>
+  		<td><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></td>
   	{% else %}
   		<td>-</td>
   	{% endif %}

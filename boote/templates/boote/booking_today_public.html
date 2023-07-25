@@ -187,7 +187,8 @@ body,table {
   window.onload=initialize
 </script>
 
-<link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesomefree/css/fontawesome.min..css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'fontawesomefree/css/solid.min.css' %}" type="text/css">
 
 
  <!-- Configuring Web Application -->
@@ -239,7 +240,7 @@ body,table {
     <TD class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
      {% for userid, usertag, type in overviewday %}
     	{% if userid %}
-      	<TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+      	<TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
       	{% else %}
       	<TD class='booked0'>&nbsp</TD>
       	{% endif %}
@@ -290,7 +291,7 @@ body,table {
     <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
      {% for userid, usertag, type in overviewday %}
         {% if userid %}
-        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        <TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
         {% else %}
         <TD class='booked0'>&nbsp</TD>
         {% endif %}
@@ -341,7 +342,7 @@ body,table {
     <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
      {% for userid, usertag, type in overviewday %}
         {% if userid %}
-        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        <TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
         {% else %}
         <TD class='booked0'>&nbsp</TD>
         {% endif %}
@@ -392,7 +393,7 @@ body,table {
     <TD  class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
      {% for userid, usertag, type in overviewday %}
         {% if userid %}
-        <TD class='{{ type }}'><i class="fa fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+        <TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
         {% else %}
         <TD class='booked0'>&nbsp</TD>
         {% endif %}

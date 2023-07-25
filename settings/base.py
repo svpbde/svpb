@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django_sendfile',
     'password_reset',
     'django_select2',
+    'fontawesomefree',
     # svpb apps
     'arbeitsplan',
     'boote',
