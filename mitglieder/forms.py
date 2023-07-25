@@ -6,7 +6,7 @@
 
 # generic imports from django:
 from django import forms
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
@@ -17,12 +17,14 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from phonenumber_field.formfields import PhoneNumberField
 
 from arbeitsplan import models
-from arbeitsplan.forms import NameFilterForm, MitgliedsnummerFilterForm
+from arbeitsplan.forms import (CrispyFilterMixin,
+                               MitgliedsnummerFilterForm,
+                               NameFilterForm)
 
 
 class ActivateForm(forms.Form):
     email = forms.EmailField(required=True,
-                             help_text="Bitte bestätigen Sie Ihre email-Adreese.")
+                             help_text="Bitte bestätigen Sie Ihre E-Mail-Adresse.")
     portal = forms.BooleanField(required=True,
                                 initial=False,
                                 label="Nutzung der Webseite",
@@ -30,7 +32,7 @@ class ActivateForm(forms.Form):
     emailNutzung = forms.BooleanField(required=True,
                                       initial=False,
                                       label="Email-Benachrichtigungen",
-                                      help_text="Erlauben Sie dem SVPB, Sie per email zu diesem Arbeitsplan zu benachrichtigen?")
+                                      help_text="Erlauben Sie dem SVPB, Sie per E-Mail zu diesem Arbeitsplan zu benachrichtigen?")
     pw1 = forms.CharField(max_length=30,
                           required=True,
                           label="Neues Passwort",
@@ -239,6 +241,33 @@ class PersonMitgliedsnummer(NameFilterForm,
     pass
 
 
+class MemberFilterForm(CrispyFilterMixin, forms.Form):
+    first_name = forms.CharField(label="Vorname",
+                                 max_length=20,
+                                 required=False)
+    last_name = forms.CharField(label="Nachname",
+                                max_length=20,
+                                required=False)
+    member_number = forms.CharField(required=False,
+                                    label="Mitgliedsnummer",
+                                    max_length=10)
+    status = forms.ChoiceField(required=False,
+                               initial=False,
+                               label="Mitgliedsstatus",
+                               choices=(('', 'Alle anzeigen'),
+                                        *models.Mitglied.STATUSDEFAULTS))
+    age = forms.IntegerField(required=False,
+                             label="Alter ab")
+
+    __layout = Layout(
+        'first_name',
+        'last_name',
+        'member_number',
+        'status',
+        'age'
+        )
+
+
 class PasswordChange(forms.Form):
 
     pw1 = forms.CharField(max_length=30,
@@ -273,7 +302,3 @@ class PasswordChange(forms.Form):
                             )
         else:
             return self.cleaned_data
-        
-     
-        
-  
