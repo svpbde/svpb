@@ -107,7 +107,7 @@ Verfügbarkeit des Vereinsboots "{{ boot.name }}" in den kommenden 7 Tagen.
 			{% if userid == 0 %}
 			<TD class='booked0' id='cell_{{ rowno }}_{{ forloop.counter }}'>&nbsp</TD>
       		{% else %}
-      		<TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>				
+      		<TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa-solid fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>				
       		{% endif %}
     	{% endfor %}
 	  </TR>

@@ -415,9 +415,9 @@ class AufgabenTable (django_tables2.Table):
         except:
             meldung_exists = False
 
-        return mark_safe('<a href="{}"> <i class="fa fa-hand-o-up fa-fw"></i></a> {}'.format(
+        return mark_safe('<a href="{}"> <i class="fa-regular fa-hand-point-up fa-fw"></i></a> {}'.format(
             reverse('arbeitsplan-quickmeldung', args=[record.id]),
-            '<i class="fa fa-check fa-fw"></i>' if meldung_exists else "",
+            '<i class="fa-solid fa-check fa-fw"></i>' if meldung_exists else "",
             ))
 
     class Meta:
