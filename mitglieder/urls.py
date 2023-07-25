@@ -7,7 +7,7 @@ from svpb.activeTest import active_and_login_required
 
 import mitglieder.views
 
-urlpatterns = [ # patterns('',
+urlpatterns = [
     url(r'^$',
         active_and_login_required(TemplateView.as_view(template_name="mitgliederHome.html")),
         name="mitgliederHome"),
@@ -45,6 +45,11 @@ urlpatterns = [ # patterns('',
         name="accountList"
         ),
 
+    url(r'^filteredList/',
+        active_and_login_required(mitglieder.views.FilteredMemberList.as_view()),
+        name="accountFilteredList"
+        ),
+
     url(r'^inaktiveReset/',
         active_and_login_required(mitglieder.views.AccountInactiveReset.as_view()),
         name="accountInactiveReset"
@@ -62,4 +67,3 @@ urlpatterns = [ # patterns('',
         ),
 
    ]
-   # )

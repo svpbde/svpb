@@ -4,6 +4,7 @@
 """Views for anything that relates to adminstration of members.
 Login and logout stays in SVPB
 """
+from datetime import date
 import os
 
 from django.contrib.auth.decorators import user_passes_test
@@ -17,6 +18,7 @@ from django.views.generic import View, FormView, CreateView, DeleteView
 from django.utils.html import format_html
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import F
 from django.shortcuts import redirect, get_object_or_404
 
 from django.contrib.auth.models import User, Group
@@ -29,13 +31,14 @@ from django_sendfile import sendfile
 import mitglieder.forms
 from arbeitsplan import forms
 from arbeitsplan.tables import ImpersonateTable
-from mitglieder.tables import MitgliederTable
+from mitglieder.tables import MitgliederTable, FilteredMemberTable
 from arbeitsplan.views import FilteredListView
 
-from mitglieder.forms import (ActivateForm,
-                              MitgliederAddForm,
-                              AccountEdit,
+from mitglieder.forms import (AccountEdit,
                               AccountOtherEdit,
+                              ActivateForm,
+                              MemberFilterForm,
+                              MitgliederAddForm,
                               PersonMitgliedsnummer,
                               )
 from arbeitsplan.models import Mitglied
@@ -382,7 +385,7 @@ class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
     Eine Übersicht über gemeldete, zugeteilte, erbrachte und akzeptieren
     Arbeitsstunden findet sich separat in der <a href="/arbeitsplan/salden/">Saldenübersicht</a>.
     """)
-    
+
 
 class AccountInactiveReset(FormView):
     """Für allen nicht-aktiven Accounts neue Passwörter erzeugen und PDF anlegen.
@@ -505,4 +508,40 @@ class ImpersonateListe(isVorstandMixin, FilteredListView):
                 .filter(is_staff=False)
                 .filter(is_superuser=False)
                 .exclude(id=self.request.user.id))
-    pass
+
+
+class FilteredMemberList(isVorstandMixin, FilteredListView):
+    """Show a table with all members and several filter options.
+    """
+    title = "Mitglieder filtern"
+    tableClass = FilteredMemberTable
+    model = User
+
+    template_name = "mitglieder_tff.html"
+
+    filterform_class = MemberFilterForm
+    filterconfig = [('first_name', 'first_name__icontains'),
+                    ('last_name', 'last_name__icontains'),
+                    ('member_number', 'mitglied__mitgliedsnummer__icontains'),
+                    ('status', 'mitglied__status'),
+                    ('age', 'age__gte')
+                    ]
+
+    intro_text = ("""Die Spalte Alter gibt an, wie alt das jeweilige Mitglied dieses Jahr wird.
+
+    Interessante Ansichten:
+    <ul>
+        <li><a href="?filter=Filter+anwenden">Alle Mitglieder</a></li>
+        <li><a href="?age=65&filter=Filter+anwenden ">Mitglieder ab 65 (Arbeitsdienst-befreit)</a></li>
+        <li><a href="?status=Ss&filter=Filter+anwenden">Schüler/Studenten/...</a></li>
+        <li><a href="?status=Ju&age=20&filter=Filter+anwenden">Jugendliche ab 20 (müssen Erwachsene werden)</a></li>
+        <li><a href="?status=Ki&age=20&filter=Filter+anwende">Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
+        <li><a href="?status=Kf&age=20&filter=Filter+anwende">Beitragsfreie Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
+    </ul>
+    """)
+
+    def get_data(self):
+        return (self.model.objects
+                .filter(is_active=True)
+                .annotate(age=date.today().year -
+                          F('mitglied__geburtsdatum__year')))
