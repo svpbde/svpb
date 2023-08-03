@@ -2,61 +2,52 @@
 {% load static %}
 
 {% block apphome %}
-<a href="/boote/">    
+<a class="nav-link" href="/boote/">    
     <i class="fa-solid fa-home fa-fw"></i>
     Home
 </a>
 {% endblock %}
-
 
 {% block appnav %}
 <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-boote.css" type="text/css" />
 
 <!-- BOOTE -->
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-solid fa-sailboat fa-fw"></i>
         Boote
-        <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">    	
-        <li><a href="/boote/boots_liste/">Alle Boote</a></li>                
-         {% for g in  user.groups.all %}
+        <li><a class="dropdown-item" href="/boote/boots_liste/">Alle Boote</a></li>                
+         {% for g in user.groups.all %}
             {% if g.name == "Vorstand" %}
-                <li class="divider"></li>
-                <li class="dropdown-header">Vorstandsfunktionen</li>
-                <li><a href="/boote/boot/edit/">Mein Boot</a></li>
-                <li><a href="/boote/boot_issues/all/">Alle Meldungen</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Vorstandsfunktionen</h6></li>
+        <li><a class="dropdown-item" href="/boote/boot/edit/">Mein Boot</a></li>
+        <li><a class="dropdown-item" href="/boote/boot_issues/all/">Alle Meldungen</a></li>
             {% endif %}
         {% endfor %}        
-    </ul>
-    
-    
-    
+    </ul>    
 </li>
-
 
 <!-- BOOT RESERVIEREN -->
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-regular fa-calendar-check fa-fw"></i>
         Reservieren
-        <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">        
-        <li><a href="/boote/booking/today/">Verfügbarkeit Heute</a></li>        
-        <li><a href="/boote/booking/overview/">Termin Reservieren</a></li>        
-        <li><a href="/boote/booking/my_bookings/">Meine Reservierungen</a></li>
+        <li><a class="dropdown-item" href="/boote/booking/today/">Verfügbarkeit Heute</a></li>        
+        <li><a class="dropdown-item" href="/boote/booking/overview/">Termin Reservieren</a></li>        
+        <li><a class="dropdown-item" href="/boote/booking/my_bookings/">Meine Reservierungen</a></li>
         {% for g in  user.groups.all %}
             {% if g.name == "Vorstand" %}
-                <li class="divider"></li>
-                <li class="dropdown-header">Vorstandsfunktionen</li>
-                <li> <a href="/boote/booking/priority/">Regata/Ausbildung</a> </li>
-                <li> <a href="/boote/booking/all/">Alle Reservierungen</a> </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Vorstandsfunktionen</h6></li>
+        <li><a class="dropdown-item" href="/boote/booking/priority/">Regata/Ausbildung</a></li>
+        <li><a class="dropdown-item" href="/boote/booking/all/">Alle Reservierungen</a></li>
             {% endif %}
         {% endfor %}
     </ul>
 </li>
-
-
 {% endblock %}
