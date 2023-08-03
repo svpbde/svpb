@@ -62,7 +62,7 @@ class RadioButtonTable (django_tables2.Table):
                 )
                 for (counter, choice) in enumerate(choices)])        
 
-        return mark_safe("""<div class="btn-group-vertical" data-toggle="buttons">""" +
+        return mark_safe("""<div class="btn-group-vertical" data-bs-toggle="buttons">""" +
                           tmp +
                           """</div>""")
 
@@ -731,7 +731,7 @@ class MeldungTable(RadioButtonTable):
         tmp = mark_safe(
             '<div class="tooltip-demo">'
             '<a href="{0}"'
-            'data-toggle="tooltip"'
+            'data-bs-toggle="tooltip"'
             'title="{2}"'
             '>{1}</a></div>'.format(
                 '#',
