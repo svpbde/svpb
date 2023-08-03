@@ -24,7 +24,7 @@ from django.contrib.auth.models import User, Group
 from post_office import mail
 from post_office.models import EmailTemplate
 from pwgen import pwgen
-from sendfile import sendfile
+from django_sendfile import sendfile
 
 import mitglieder.forms
 from arbeitsplan import forms

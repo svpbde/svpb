@@ -40,4 +40,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # XSendfile interface
 # This requires nginx as webserver
-SENDFILE_BACKEND = 'sendfile.backends.nginx'
+SENDFILE_BACKEND = 'django_sendfile.backends.nginx'

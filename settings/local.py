@@ -41,4 +41,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # XSendfile interface
 # Development backend should never be used in production!
-SENDFILE_BACKEND = 'sendfile.backends.development'
+SENDFILE_BACKEND = 'django_sendfile.backends.development'

@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'impersonate',
     'post_office',
-    'sendfile',
+    'django_sendfile',
     'password_reset',
     'django_select2',
     # svpb apps

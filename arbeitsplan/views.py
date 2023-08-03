@@ -29,7 +29,7 @@ from . import forms
 from .tables import *  # TODO: change import not to polute name space
 from django.conf import settings
 
-from sendfile import sendfile
+from django_sendfile import sendfile
 
 
 from svpb.views import isTeamlead, isVorstand, isVorstandMixin, isVorstandOrTeamleaderMixin
