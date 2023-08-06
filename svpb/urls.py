@@ -39,11 +39,6 @@ urlpatterns = [
 
     url(r'^boote/', include('boote.urls')),
 
-    url(r'^bootstrap$',
-        TemplateView.as_view(template_name="bootstrap.html"),
-        name="bootstrap",
-        ),
-
     url(r'^about$',
         TemplateView.as_view(template_name="about.html"),
         name="about",
@@ -90,14 +85,8 @@ urlpatterns = [
     ]
 
 if settings.DEBUG:
-    # static files (images, css, javascript, etc.)
-    # urlpatterns += patterns('',
-    #     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-    #     'document_root': settings.MEDIA_ROOT}))
-
-    # urlpatterns.append(
-    #     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-    #     'document_root': settings.MEDIA_ROOT}))
-
+    # See https://docs.djangoproject.com/en/4.2/howto/static-files/#serving-uploaded-files-in-development
+    # Check for debug is already included in static.
+    # But we should include a check if we are in the VM, were we want to use nginx despite debug being true
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
