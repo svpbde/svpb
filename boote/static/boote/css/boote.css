@@ -61,7 +61,6 @@
 }
 #boatslist td.selected {
   background: #d7e4ef;
-  z-index: ;
 }
 
 #boatslist td.booked0 {
