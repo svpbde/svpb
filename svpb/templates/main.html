@@ -3,8 +3,7 @@
 
 
 {% block branding %}
-Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}}
-{% endif %}!
+{% if user.is_authenticated %}Willkommen, {{user.first_name}} {{user.last_name}}!{% endif %}
 {% endblock %}
 
 
@@ -13,122 +12,98 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
 {% if user.is_authenticated %}
 
 
-    <div class="row">
-        <div class="col-md-6">
-        <a href="/arbeitsplan/">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-titel">
-                        Arbeitsplan
+    <div class="row row-cols-1 row-cols-lg-2 g-4">
+        <div class="col">        
+            <div class="card h-100">
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-person-digging fa-fw fa-6x"></i>
                     </div>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                        <p>Für Aufgaben melden, zugeteilte Aufgaben ansehen, Leistungen eingeben, ... </p>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="fa-solid fa-person-digging fa-fw fa-6x"></i>
+                    <div class="col-sm-8">    
+                        <div class="card-body">
+                            <h5 class="card-title">Arbeitsplan</h5>
+                            <p class="card-text">Für Aufgaben melden, zugeteilte Aufgaben ansehen, Leistungen eingeben, ...</p>
+                            <a href="/arbeitsplan/" class="btn btn-primary">Zum Arbeitsplan</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </a>
         </div>
 
         {% for g in  user.groups.all %}
         {% if g.name == "Boote" %}
         
-        <div class="col-md-6">
-        <a href="/boote/">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-titel">
-                        Boote
+        <div class="col">        
+            <div class="card h-100">
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-sailboat fa-fw fa-6x"></i>
                     </div>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p>
-                                Vereinsboote reservieren und nutzen,
-                                Schaden melden, ...
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="fa-solid fa-sailboat fa-fw fa-6x"></i>
+                    <div class="col-sm-8">    
+                        <div class="card-body">
+                            <h5 class="card-title">Boote und Kran</h5>
+                            <p class="card-text">Vereinsboote und Kran reservieren und nutzen, Schaden melden, ...</p>
+                            <a href="/boote/" class="btn btn-primary">Zu Boote und Kran</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </a>
         </div>
         
         {% endif %}
         {% endfor %}
-        
+
 
         {% for g in  user.groups.all %}
         {% if g.name == "Vorstand" %}
-
-            <div class="col-md-6">
-            <a href="/accounts/">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-titel">
-                            Mitglieder
+            <div class="col">        
+                <div class="card h-100">
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-users fa-fw fa-6x"></i>
                         </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p>Mitglieder verwalten,
-                                    neu anlegen, ... </p>
-                            </div>
-                            <div class="col-md-6">
-                                <i class="fa-solid fa-users fa-fw fa-6x"></i>
+                        <div class="col-sm-8">    
+                            <div class="card-body">
+                                <h5 class="card-title">Mitgliederverwaltung</h5>
+                                <p class="card-text">Mitglieder verwalten, neu anlegen, ....</p>
+                                <a href="/accounts/" class="btn btn-primary">Zur Mitgliederverwaltung</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </a>
             </div>
         {% endif %}
         {% endfor %}
-
     </div>
 {% else %}
 
 <div class="container">
-    <div class="row">
+    <div class="row text-center">
         <div class ="col-md-12">
             <img class="img-responsive" src="{% static "svpb/head_startseite_01.jpg"%}">
         </div>
     </div>
 </div>
-<div class="jumbotron">
-    <p> In einem Segelverein fällt viel Arbeit an,
-        die auf die Mitglieder verteilt werden muss.
-        Diese Seite dient der Organisation dieser Arbeit.
+<div class="row text-center">
+    <p>Diese Web-Anwendung dient der Organisation des Vereinslebens (Arbeitsdienst, Boots- und Kranreservierung, Mitgliederverwaltung).
     </p>
 
     {% if OFFLINE %}
     <p>
         <b><big>
-            Die Web-Anwendung ist wegen Wartung kurzfristig ausser Betrieb. Anmelden ist derzeit nicht mögich. Bitte versuchen Sie es später erneut! Wir entschuldigen uns für die Unannehmlichkeiten.
+            Die Web-Anwendung ist wegen Wartungsarbeiten kurzfristig außer Betrieb. Anmelden ist derzeit nicht mögich. Bitte versuche es später erneut!
         </big></b>
     </p>
     {% elif JAHRESENDE %}
     <p>
         <b><big>
-            Das Jahr ist zu Ende, mein.svpb geht in den Winterschlaf. Wir bereiten das neue Jahr vor. Bitte haben Sie etwas Geduld. Bald können Meldungen für das neue Jahr abgegeben werden.
+            Wir bereiten das neue Jahr vor, daher ist die Anmeldung derzeit nur für Vorstandsmitglieder möglich. Bitte versuche es in einigen Tagen erneut.
         </big></b>
     </p>
     {% else %}
     <p>
-        Bist Du ein Mitglied, so
-        <a href="/login/?next=/home/"> melde Dich bitte an
-        </a>.
+        Bist du ein Mitglied, so melde dich bitte an.
+        Bist du kein Mitglied, schau gerne auf unserem öffentlichen Auftritt <a href="https://svpb.de">svpb.de</a> vorbei.
     </p>
     <p>
         <a href="/login/?next=/home/"
@@ -141,12 +116,8 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}
 {% endif %}
 
 <hr>
-<p>
-<a href="/dsgvo">Datenschutzerklärung</a>
+<p class="text-end">
+    <a href="/about">Über diese Webseite</a> 
+    <a href="/dsgvo">Datenschutzerklärung</a>
 </p>
-<hr>
-<p>
-    <a href="/about">Über diese Webseite</a>
-</p>
-
 {% endblock %}
