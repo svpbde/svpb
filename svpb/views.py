@@ -84,7 +84,7 @@ class SvpbLogin(FormView):
             context['intro_text'] = "Zur Zeit ist eine Anmeldung nur für Vorstände und Teamleiter möglich!"
         else:
             context['intro_text'] = ""
-        context['post_text'] = format_html('Passwort vergessen? <a href="/reset/recover/"> Hier zurücksetzen.<a/>')
+        context['post_text'] = format_html('Passwort vergessen? <a href="/reset/recover/"> Hier zurücksetzen.</a>')
         context['todo_text'] = ""
 
         return context
