@@ -101,7 +101,6 @@ class SvpbLogin(FormView):
         necessarily active"""
 
         user = form.cleaned_data['user']
-        # print user
         if user is not None:
             succ = login(self.request, user)
 
@@ -131,13 +130,12 @@ class SvpbLogin(FormView):
                 return redirect('/accounts/activate/')
         else:
             # This should never happen, end up in form_invalid instead
-            print("do the invalid thing")
+            print("do the invalid thing")  # TODO: Log accordingly/throw exception?
 
 
 ##############
 
 
 def logout_view(request):
-    # print "logout view"
     logout(request)
     return render(request, "registration/logged_out.html", {})

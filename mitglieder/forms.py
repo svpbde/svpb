@@ -44,9 +44,6 @@ class ActivateForm(forms.Form):
                           )
 
     def __init__(self, *args, **kwargs):
-
-        # print "creating an Activate Form"
-
         self.helper = FormHelper()
         super(ActivateForm, self).__init__(*args, **kwargs)
         self.helper.form_id = self.__class__.__name__
@@ -178,8 +175,6 @@ class AccountEdit(forms.Form):
         )
 
     def __init__(self, *args, **kwargs):
-        # print "creating an Account Edit Form"
-
         self.helper = FormHelper()
         super(AccountEdit, self).__init__(*args, **kwargs)
         self.helper.form_id = self.__class__.__name__

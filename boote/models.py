@@ -55,11 +55,9 @@ class Boat(models.Model):
         return result
 
     def getDetailedBookingsToday(self):
-        print(self.name)
         res = [['', '', ''] for x in range(28)] 
         d1 = datetime.now().replace(hour=7, minute=0)
         d2 = d1.replace(hour=21)
-        print(d1, ' do ' , d2)
         for booking in Booking.objects.filter(boat=self, date__lte=d2, date__gte=d1, status=1):            
             uid = booking.user.username
             usertag = booking.user.first_name + " " + booking.user.last_name              

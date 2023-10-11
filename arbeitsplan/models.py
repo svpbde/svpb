@@ -229,7 +229,6 @@ class Mitglied (models.Model):
             qs = qs.filter(aufgabe__datum__isnull=True)
 
         stundenlist = [z.stunden() for z in qs]
-        # print self.__str__(), time, stundenlist
         return sum(stundenlist)
 
     def behaupteteStunden(self):
@@ -357,7 +356,6 @@ class Aufgabe(models.Model):
         """How many Meldungen of status better than No!
         exist for this Aufgabe?
         """
-        # print Meldung.GARNICHT
         return self.meldung_set.exclude(prefMitglied=
                                         Meldung.GARNICHT).count()
 
@@ -371,7 +369,6 @@ class Aufgabe(models.Model):
         stundenplan = self.stundenplan_set.filter(anzahl__gt=0)
         if stundenplan.count() > 0:
             for s in stundenplan:
-                print(s, type(s))
                 zuteilungen = self.zuteilung_set.filter(stundenzuteilung__uhrzeit=s.uhrzeit)
                 zugewiesen = sum([z.zusatzhelfer +1 for z in zuteilungen])
                 if zugewiesen < s.anzahl:
@@ -486,7 +483,6 @@ class Zuteilung (models.Model):
     zusatzhelfer = models.IntegerField(default=0)
 
     def __str__(self):
-        # print self.stundenzuteilung_set.all() 
         return (self.aufgabe.__str__() + ": " + self.ausfuehrer.__str__() 
                 + (" @ " + ','.join([s.__str__() for s in self.stundenzuteilung_set.all()] ))
                 # + ('@' + ','.join(self.StundenZuteilung_set.all().values('uhrzeit')))
@@ -527,7 +523,6 @@ class Zuteilung (models.Model):
         outlist = []    
         inlist = sorted([s.uhrzeit for s in self.stundenzuteilung_set.all()])
 
-        ## print self.aufgabe, self.ausfuehrer, inlist
         try: 
             if inlist:
                 now = inlist.pop(0)
@@ -542,10 +537,9 @@ class Zuteilung (models.Model):
 
                 outlist.append(currentTuple)
         except Exception:
-            # print e
+            # TODO: Log exception
             pass
 
-        ## print "outlist: ", outlist 
         return outlist
 
 

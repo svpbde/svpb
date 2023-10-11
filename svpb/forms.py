@@ -31,7 +31,6 @@ class LoginForm(forms.Form):
             username = self.cleaned_data['username']
             password = self.cleaned_data['password']
 
-            # print username, password
             user = authenticate(username=username,
                                 password=password)
 
@@ -43,7 +42,7 @@ class LoginForm(forms.Form):
             error = True
 
         if error:
-            print("raising validation in Login", username)
+            print("raising validation in Login", username)  # TODO: Log exception
             raise ValidationError('Der Nutzer konnte nicht angemeldet werden.')
 
         return self.cleaned_data

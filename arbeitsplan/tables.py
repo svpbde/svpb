@@ -79,12 +79,9 @@ class KontaktColumn(django_tables2.columns.Column):
             kwargs['order_by'] = (kwargs['accessor']+'.last_name',
                                   kwargs['accessor']+'.first_name',
                                   )
-            ## print kwargs['order_by'], type(kwargs['order_by'])
-            ## print kwargs['accessor'], type(kwargs['accessor'])
         super(KontaktColumn, self).__init__(*args, **kwargs)
 
     def render(self, value):
-        # print value
         return mark_safe('{1} {2}{0}'.format(
             (' <a href="mailto:{0}">'
              '<span class="glyphicon glyphicon-envelope">'
@@ -111,7 +108,6 @@ class DeleteIconColumn(django_tables2.columns.Column):
 
 
     def render(self, value):
-        # print value, type(value)
         return mark_safe('<a href="{}/{}">'
                          '<span class="glyphicon glyphicon-trash">'
                          '</a>'.format(self.urlBase,
@@ -136,9 +132,6 @@ class ValuedCheckBoxColumn(django_tables2.columns.Column):
         super().__init__(*args, **kwargs)
 
     def render(self, value):
-    
-        print ("XXX 1: in render ValuedCheckBoxColumn", self.verbose_name, value)
-
         if value == None: 
             return "--"
 
@@ -157,7 +150,6 @@ class ValuedCheckBoxColumn(django_tables2.columns.Column):
                          '/>' + text
                          )
 
-        print ("XXX 1", tmp)
         return tmp 
 
 class IntegerEditColumn(django_tables2.columns.Column):
@@ -176,11 +168,8 @@ class IntegerEditColumn(django_tables2.columns.Column):
                            )
         except Exception as e:
             # sometimes, we get a None as value; not sure why and when :-/ ? 
-            # print "Exc2: ", e
-            # print value
+            # TODO: Log exception
             res = ""
-
-            # print "IEC: ", res
 
         return res
     
@@ -188,7 +177,6 @@ class IntegerEditColumn(django_tables2.columns.Column):
 class TextareaInputColumn (django_tables2.columns.Column):
 
     def render(self, value):
-        # print "render: ", value, self.__dict__
         return mark_safe ('<input class="textinput textInput" id="id_bemerkungVorstand" maxlength="20" name="bemerkungVorstand" placeholder="Bemerkung Vorstand" value="'
                           +    escape (value) +
                           '" type="text" />'
@@ -202,7 +190,6 @@ class RequiredAssignedColumn (django_tables2.columns.Column):
     """
 
     def render(self, value):
-        # print value
         try:
             r = mark_safe(str(value['required']) +
                           " / " + str(value['zugeteilt']))
@@ -257,7 +244,6 @@ def TableFactory (name, attrs, l, meta={}):
     klass = type(name, (django_tables2.Table,), attrs)
     
     t = klass(l)
-    print ("XXX TableFactory: ", t)
 
     return t
 
@@ -359,19 +345,15 @@ def StundenplanEditFactory(l, aufgabe):
     
     for i in range(models.Stundenplan.startZeit,
                    models.Stundenplan.stopZeit+1):
-        # print '----- ', i
         try: 
             benoetigt = aufgabe.stundenplan_set.filter(uhrzeit__exact=i)[0].anzahl
             # benoetigt = aufgabe.benoetigte_Anzahl(i)
         except Exception as e:
-            print("eX: ", e)
+            print("eX: ", e)  # TODO: Log exception
             benoetigt = 0
-        # print benoetigt
 
         zugewiesen = sum([z.zusatzhelfer + 1
                           for z in aufgabe.zuteilung_set.filter(stundenzuteilung__uhrzeit=i)])
-
-        # print zugewiesen
 
         newattrs['u'+str(i)] = ValuedCheckBoxColumn(accessor='u'+str(i),
                                                     # verbose_name=str(i)+'-'+str(i+1),
@@ -769,8 +751,6 @@ class MeldungTable(RadioButtonTable):
             )
 
     def render_bemerkung(self, value, record, bound_row):
-        # print record
-        # print bound_row
         tmp = format_html(
             """<textarea class="textinput textInput"
             id="id_bemerkung_{0}" name="bemerkung_{0}"
@@ -923,7 +903,6 @@ def ZuteilungsTableFactory (tuple):
                                    a.aufgabe).encode('ASCII', 'ignore').decode()
               )
         # tag = a.aufgabe
-        print ("XXX 2: ", tag, type(tag))
         attrs[tag] = ValuedCheckBoxColumn(
             verbose_name=mark_safe(('<a href="{}">{}</a>, {}h'
                                     '<span style="font-weight:normal">'
@@ -957,14 +936,9 @@ def ZuteilungsTableFactory (tuple):
     # TODO: in verbose_name hier noch Anzahl benötigt, anzahl zugeteilt eintragen
 
 
-    print ("XXX 2: ", attrs)
-
     t = NameTableFactory('ZuteilungsTable', attrs, l,
                          kontakt=('mitglied', 'Mitglied'))
 
-    print("XXX 2")
-    print(t.base_columns.keys())
-    print("XXX 2: l ", type(l), l)
     return t 
 
 ##############################

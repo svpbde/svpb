@@ -24,7 +24,6 @@ class CrispyFormMixin(object):
         - `**kwargs`:
         """
 
-        # print "crispy form mixin init"
         super(CrispyFormMixin, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = self.__class__.__name__
@@ -63,7 +62,6 @@ class CreateLeistungForm(CrispyFormMixin, forms.ModelForm):
             )
 
         self.helper.add_input(Submit ('apply', 'Eintragen'))
-        # print self.helper.layout
 
     class Meta:
         model = models.Leistung
@@ -96,11 +94,6 @@ class Select2UserField(ModelSelect2MultipleWidget):
     queryset = User.objects
     search_fields = ['username__icontains', ]
 
-    ## def get_model_field_values(self, value):
-    ##     print "get_model_field_vlaues"
-    ##     print self
-    ##     print value
-    ##     return {'username': value}
 
 class AufgabeForm(forms.ModelForm):
 
@@ -168,8 +161,6 @@ class AufgabeForm(forms.ModelForm):
 
         cleaned_data['stundenplan'] = stundenplan
 
-        # print stundenplan
-
         if (len(stundenplan) > 0) and (cleaned_data['datum'] is None):
             raise ValidationError("Angaben im Stundenplan erfordern ein Datum.",
                                   code ="illogic") 
@@ -234,7 +225,6 @@ class CrispyFilterMixin(CrispyFormMixin):
             except AttributeError:
                 pass
 
-        # print "get_mixin:", res
         return res
 
     def __init__(self, *args, **kwargs):

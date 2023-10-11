@@ -159,15 +159,14 @@ class FilteredListView(ListView):
                                        initialValues)
                     else:
                         print("warning: filterxpression not recognized")
+                        # TODO: Log exception
         else:
             self.filterform = self.filterform_class(self.request.GET)
             filterconfig = self.filterconfig
 
             if self.filterform.is_valid():
                 # apply filters
-                # print "filter: ", self.filterform.cleaned_data
                 for fieldname, filterexp in filterconfig:
-                    # print fieldname, filterexp
                     if ((self.filterform.cleaned_data[fieldname] is not None) and
                         (self.filterform.cleaned_data[fieldname] != "")):
                         if isinstance(filterexp, str):
@@ -179,9 +178,10 @@ class FilteredListView(ListView):
                                            self.filterform.cleaned_data[fieldname])
                         else:
                             print("warning: filterxpression not recognized")
-                            # print filterexp
+                            # TODO: Log exception
             else:
                 print("filterform not valid")
+                # TODO: Log exception
 
         return qs
 
@@ -251,9 +251,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
                                                                   args=(self.object.id,)),
                                                       id=self.object.id))
 
-        # messages.warning(self.request, "aber komisch ist die schon")
-
-        # print "succesS_msg: ", msg
         return msg
 
     def get_initial(self):
@@ -267,7 +264,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
             initial['schnellzuweisung'] = [z.ausfuehrer for
                                            z in self.object.zuteilung_set.all()]
 
-        # pp(initial)
         return initial
 
     def get_context_data(self, **kwargs):
@@ -300,7 +296,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
     def form_valid(self, form):
 
         if '_delete' in self.request.POST:
-            # print "redirecting to delete", self.object.id
             return redirect('arbeitsplan-aufgabenDelete',
                             pk=self.object.id)
 
@@ -310,7 +305,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
         # manipulate the stundenplan
         stundenplan = collections.defaultdict(int,
                                               form.cleaned_data['stundenplan'])
-        # print "stundenplan: ", stundenplan
         for u in range(models.Stundenplan.startZeit,
                        models.Stundenplan.stopZeit+1):
             anzahl = stundenplan[u]
@@ -324,7 +318,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
         if 'schnellzuweisung' in form.cleaned_data:
             try:
                 mm = form.cleaned_data['schnellzuweisung']
-                # pp(mm)
                 for m in mm:
                     z, zcreated = models.Zuteilung.objects.get_or_create(
                         aufgabe=self.object,
@@ -344,7 +337,6 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
                         # m.mitglied.zuteilungBenachrichtigungNoetig = True
                         # m.mitglied.save()
             except Exception as e:
-                # print e, form.cleaned_data['schnellzuweisung'], self.object
                 messages.error(self.request,
                                "Die Aufgabe konnte nicht unmittelbar an ein Mitglied zugeteilt werden")
 
@@ -515,19 +507,15 @@ class AufgabenCreate (isVorstandMixin, SimpleCreateView):
         shouldn't be more elegantly done in the get_context_data; that's
         where it really belongs.
         """
-        # print "Aufgabe Create, form invalid"
 
         # add the uhrzeiten from querydict back into the context !?
         context = self.get_context_data(form=form)
         stundenplandict = dict(context['stundenplan'])
-        # print 'std before: ', stundenplandict
         for k, v in self.request.POST.items():
-            # print k, v
             try:
                 u, uu = k.split('_')
                 stundenplandict[int(uu)] = int(v)
             except Exception as e:
-                # print "problem: ", e
                 pass
 
         context['stundenplan'] = [(k, v)
@@ -639,9 +627,6 @@ class MeldungEdit (FilteredListView):
                                          format(m.aufgabe.aufgabe))
 
                 if key == 'prefMitglied':
-                    # print value, m.prefMitglied, models.Meldung.MODELDEFAULTS['prefMitglied']
-                    # print type(value), type(m.prefMitglied), type(models.Meldung.MODELDEFAULTS['prefMitglied'])
-
                     if m.prefMitglied != value:
                         safeit = True
 
@@ -657,7 +642,6 @@ class MeldungEdit (FilteredListView):
                                              format(m.aufgabe.aufgabe))
                         elif (int(value) ==
                               models.Meldung.MODELDEFAULTS['prefMitglied']):
-                            # print "zurueckgezogen"
                             # TODO: CHECK
                             # TODO: das muss man am besten direkt verbieten, wenn es schon eine Zuteilung gibt!
                             # first: check whether such a Zuteilung already exsts
@@ -887,9 +871,6 @@ class CreateMeldungenView (MeldungEdit):
 
 
     def post(self, request, *args, **kwargs):
-        # print "post in CreateMeldungenView"
-        # print request.POST
-
         self.processUpdate(request)
 
         # return redirect ("arbeitsplan-meldung")
@@ -942,7 +923,6 @@ class MeldungVorstandView(isVorstandMixin, MeldungEdit):
     ## """
 
     def post(self, request, *args, **kwargs):
-        # print request.POST
         self.processUpdate(request)
         # return redirect ('arbeitsplan-meldungVorstand')
         return redirect(self.request.get_full_path())
@@ -957,8 +937,6 @@ class QuickMeldung(View):
     """
 
     def get(self, request, aufgabeid, *args, **kwargs):
-        # print aufgabeid
-
         try:
             aufgabe = models.Aufgabe.objects.get(pk=int(aufgabeid))
             meldung, created = models.Meldung.objects.get_or_create(aufgabe=aufgabe,
@@ -1024,7 +1002,6 @@ class ListZuteilungenView(FilteredListView):
 
         qs = self.apply_filter(qs)
         table = self.get_filtered_table(qs)
-        # print table
         return table
 
 
@@ -1042,16 +1019,9 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
     def MitgliedBusy_Filter(self, qs, busy):
         """applies a spare capacity available filter to a user Qs"""
 
-        # print self, self.aufgabeQs
-
         if ("AM" in busy):
             if self.aufgabengruppe:
                 """Only keep those users who have a meldung for an aufagebn in this gruppe"""
-                ## for q in qs:
-                ##     print (q.meldung_set
-                ##            .exclude(prefMitglied=models.Meldung.GARNICHT)
-                ##            .filter(aufgabe__gruppe__gruppe=self.aufgabengruppe)
-                ##            .count())
                 qs = [q for q in qs
                       if q.meldung_set
                            .exclude(prefMitglied=models.Meldung.GARNICHT)
@@ -1064,9 +1034,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
 
             try:
                 if self.aufgabeQs.count() == 1:
-                    # print "just a single one"
                     aufgabe = self.aufgabeQs[0]
-                    # print aufgabe
 
                     qs = [q for q in qs
                           if q.meldung_set
@@ -1091,16 +1059,12 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
 
     def AktiveAufgaben_Filter(self, qs, aktive):
         """filter out jobs froms the past?"""
-
-        # print qs
-
         if aktive:
             qs = qs.exclude(datum__lte=datetime.date.today())
 
         return qs
 
     def ungenuegend_zuteilungen_filter(self, qs, restrict):
-        # print qs, restrict
         if restrict == 'UN':
             # qs=qs.filter(anzahl__gt=zuteilung_set.count())
             qs = (qs.annotate(num_Zuteilung=Count('zuteilung')).
@@ -1174,17 +1138,11 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
         self.filterconfig = self.filterconfigUser
         userQs = super(ManuelleZuteilungView, self).apply_filter(userQs)
 
-        # print "apply filter done"
-        # print userQs
-        # print aufgabeQs
         return (userQs, aufgabeQs)
 
 
     def annotate_data (self, qs):
-
         userQs, aufgabenQs = qs
-
-        # print "Aufgaben: ", [a.__unicode__() for a in aufgabenQs]
 
         ztlist = []
         statuslist = {}
@@ -1197,7 +1155,6 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                     'first_name': u.first_name,
                     'mitglied': u,
                     }
-            # print 'user:', u.id
             tmp.update(aufgaben)
             mQs =  models.Meldung.objects.filter(melder=u)
             ## if self.aufgabengruppe <> None:
@@ -1224,9 +1181,6 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
 
                             )
                 statuslist[str(u.id)+"_"+str(m.aufgabe.id)]='0'
-
-                print ("XXX 5: ", tag, type(tag), tmp[tag], m.aufgabe.aufgabe, type(m.aufgabe.aufgabe))
-
 
             zQs =  models.Zuteilung.objects.filter(ausfuehrer=u)
             ## if self.aufgabengruppe <> None:
@@ -1278,22 +1232,15 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                     request.POST.get('status').split(';')
                   ])
 
-        # print "prevState:"
-        # print previousStatus
-
         newState = dict([ (item[0][4:], item[1])
                      for item in request.POST.items()
                      if item[0][:4] == "box_"
                     ])
 
-        # print "newState"
-        # print newState
-
         # find all items in  newState  that have a zero in prevState
         # add that zuteilung
         for k, v in newState.items():
             if previousStatus[k] == '0':
-                # print "add ", k
                 user, aufgabe = k.split('_')
                 aufgabeObj = models.Aufgabe.objects.get(id=int(aufgabe))
                 ausfuehrerObj = models.User.objects.get(id=int(user))
@@ -1321,7 +1268,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                                      ausfuehrerObj.first_name,
                                      ausfuehrerObj.last_name))
 
-                # print "setting (cause of add)  zuteilung benachrichtigung noetig for ", ausfuehrerObj
+                # setting (cause of add)  zuteilung benachrichtigung noetig for ausfuehrerObj
                 ausfuehrerObj.mitglied.zuteilungBenachrichtigungNoetig = True
                 ausfuehrerObj.mitglied.save()
 
@@ -1329,7 +1276,6 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
         # remove that zuteilung
         for k, v in previousStatus.items():
             if v=='1' and k not in newState:
-                # print "delete ", k
                 user, aufgabe = k.split('_')
                 aufgabeObj = models.Aufgabe.objects.get(id=int(aufgabe))
                 ausfuehrerObj = models.User.objects.get(id=int(user))
@@ -1346,7 +1292,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                                          ausfuehrerObj.first_name,
                                          ausfuehrerObj.last_name))
 
-                # print "setting (cause of delete) zuteilung benachrichtigung noetig for ", ausfuehrerObj
+                # setting (cause of delete) zuteilung benachrichtigung noetig for ausfuehrerObj
                 ausfuehrerObj.mitglied.zuteilungBenachrichtigungNoetig = True
                 ausfuehrerObj.mitglied.save()
 
@@ -1367,7 +1313,6 @@ class ZuteilungLoeschenView(isVorstandMixin, DeleteView):
             r = super(ZuteilungLoeschenView, self).get(request, *args, **kwargs)
             return r
         except Exception as e:
-            # print e
             messages.error(self.request,
                            'Die Zuteilung konnte nicht gelöscht werden')
 
@@ -1389,7 +1334,6 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
     model = models.Aufgabe
 
     def ungenuegend_zuteilungen_filter(self, qs, restrict):
-        # print qs, restrict
         if restrict == 'UN':
             # qs=qs.filter(anzahl__gt=zuteilung_set.count())
             qs = (qs.annotate(num_Zuteilung=Count('zuteilung')).
@@ -1464,7 +1408,6 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
             if aufgabe.has_Stundenplan():
 
                 for s in aufgabe.stundenplan_set.filter(anzahl__gt=0):
-                    # print s
                     newEntry['u'+str(s.uhrzeit)] = {
                         'required': s.anzahl,
                         'zugeteilt': 0
@@ -1472,7 +1415,6 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
 
                 # TODO: Die Schleifen auf aggregate processing umstellen
                 for zs in aufgabe.zuteilung_set.all():
-                    # print zs
                     for stdzut in zs.stundenzuteilung_set.all():
                         newEntry['u'+str(stdzut.uhrzeit)]['zugeteilt'] += 1
 
@@ -1487,8 +1429,6 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
                 newEntry['stundenplanlink'] = None
 
             data.append(newEntry)
-
-        # pp( data)
 
         # TODO: allow filtering of those Aufgaben
         # qs = self.apply_filter(qs)
@@ -1557,9 +1497,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
 
         zugeteilteUser = [z.ausfuehrer for z in aufgabe.zuteilung_set.all()]
 
-        # print "Stundenplan fuer Auzfgabe: ", stundenplan
-        # print "zugeteilte User: ",  zugeteilteUser
-
         # construct the checkboxes string:
         # userid_uhrzeit, if that user works on that time
 
@@ -1569,7 +1506,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         checkedboxes = [str(sz.zuteilung.ausfuehrer.id) + "_" + str(sz.uhrzeit)
                         for szQs in stundenzuteilungenQuerysets
                         for sz in szQs]
-        # print checkedboxes
 
         # construct the list of dicts for users:
         for u in zugeteilteUser:
@@ -1587,7 +1523,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
             stundenzuteilung = (zuteilungThisUser[:1].get().
                                 stundenzuteilung_set.values_list('uhrzeit',
                                                                  flat=True))
-            # print zuteilungThisUser
             for s in stundenplan:
                 newEntry['u'+str(s.uhrzeit)] = ((1 if s.uhrzeit in stundenzuteilung
                                                  else 0),
@@ -1597,9 +1532,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
                                                  )
             data.append(newEntry)
 
-        # print data
-
-        # print [(sz.zuteilung.ausfuehrer, sz.uhrzeit) for sz in stundenzuteilungen]
 
         ## # TODO: rewrite that to only iterate over users with zuteilung for this aufgabe
         ## # should be tremendously more efficient
@@ -1614,8 +1546,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         ##         stundenzuteilungen =  zuteilung.stundenzuteilung_set.values_list('uhrzeit',
         ##                                                                          flat=True )
 
-        ##         # print "Zuteilung fuer User: ", u, stundenzuteilungen
-
         ##         for s in stundenplaene:
         ##             tag = 'uhrzeit_' + str(u.id) + "_" + str(s.uhrzeit)
         ##             present = s.uhrzeit in stundenzuteilungen
@@ -1628,8 +1558,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         ##     except models.Zuteilung.DoesNotExist:  # keine Zuteilung gefunden
         ##         pass
 
-        ##     print "checkedboxes after user: ", u, " : ", checkedboxes
-
         ## # prepare user id list to be passed into the hidden field,
         ## # to ease processing later
         self.tableformHidden = [{'name': 'checkedboxes',
@@ -1640,9 +1568,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         return table
 
     def post(self, request, aufgabeid, *args, **kwargs):
-
-        # print self.request.POST
-
         if self.request.POST.get('checkedboxes'):
             tmp = [x.split('_')
                    for x in
@@ -1651,9 +1576,7 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         else:
             tmp = []
 
-        # pp(tmp)
         checkedboxes = [(int(x[0]), int(x[1])) for x in tmp ]
-        # print "checkboxes: ", checkedboxes
 
         # any values to add?
         for v in self.request.POST:
@@ -1661,7 +1584,6 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
             if v.startswith('anzahl'):
                 # what is the anzahl value?
                 anzahl = int(self.request.POST.get(v))
-                # print("anzahl: ", anzahl)
 
                 _tmp, uid = v.split('_')
                 zuteilung = models.Zuteilung.objects.get (ausfuehrer__id = uid,
@@ -1681,10 +1603,8 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
                 except ValueError:
                     pass
 
-                # print aufgabeid, uid, uhrzeit
                 zuteilung = models.Zuteilung.objects.get (ausfuehrer__id = uid,
                                                           aufgabe__id = aufgabeid)
-                # print "Z: ", zuteilung
                 stundenzuteilung, created  = models.StundenZuteilung.objects.get_or_create (
                     zuteilung = zuteilung,
                     uhrzeit = int(uhrzeit),
@@ -1695,14 +1615,10 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
         # anything still in checkedboxes had been checked before, but was not in QueryDict
         # i.e., it has been uncheked by user and should be removed
         for uid, uhrzeit in checkedboxes:
-            # print "remove: ", uid, uhrzeit
-
             zuteilung =  models.Zuteilung.objects.get (ausfuehrer__id = uid,
                                                           aufgabe__id = aufgabeid)
 
             stundenzuteilung = zuteilung.stundenzuteilung_set.get(uhrzeit=uhrzeit)
-
-            # print stundenzuteilung
 
             stundenzuteilung.delete()
 
@@ -1735,12 +1651,9 @@ class CreateLeistungView (CreateView):
         return kwargs
 
     def form_valid(self, form):
-        # print "in Create Leistung View form_valid"
         leistung = form.save(commit=False)
         leistung.melder = self.request.user
         leistung.save()
-
-        # print "saved leistung"
 
         return HttpResponseRedirect(CreateLeistungView.success_url)
 
@@ -1755,7 +1668,6 @@ class DeleteLeistungView(DeleteView):
 
     def get_object(self):
         obj = super(DeleteLeistungView, self).get_object()
-        print(obj)
 
         if (not (self.request.user == obj.melder) or
             (obj.status == models.Leistung.ACK) or
@@ -1878,11 +1790,8 @@ class LeistungBearbeitenView (isVorstandOrTeamleaderMixin, FilteredListView):
         for k, v in request.POST.items():
             try:
                 # TODO: shorten to startswith construction
-                # print 'post value: ', k, v
                 if "status" == k[:6]:
-                    # print "status detected"
                     opt, num = k.split('_')
-                    # print opt, num
                     if not num in list(data.keys()):
                         data[num] = {'status': "",
                                      'bemerkungVorstand': "",
@@ -1902,15 +1811,8 @@ class LeistungBearbeitenView (isVorstandOrTeamleaderMixin, FilteredListView):
             except:
                 pass
 
-        # print data
-
         # and now save the updated values in the data
         for k, v in data.items():
-            # they should all exist!
-            ## print "----------"
-            ## print k, v
-            ## print type(v['id_bemerkungVorstand'])
-
             l = models.Leistung.objects.get(id=int(k))
             if checkNeeded:
                 if l.aufgabe not in leadingTheseTasks:
@@ -1937,7 +1839,6 @@ class LeistungBearbeitenView (isVorstandOrTeamleaderMixin, FilteredListView):
                                      l.melder.last_name,
                                      l.aufgabe.aufgabe)
                                      )
-            # print l
 
         # TODO: bei Rueckfrage koennte man eine email senden? oder immer?
 
@@ -2074,9 +1975,6 @@ class Salden(isVorstandMixin, FilteredListView):
 
             if self.check_filter(tmp):
                 res.append(tmp)
-
-            # pp (tmp)
-            # print reverse(ListLeistungView,args=("all",))
 
         return res
 
@@ -2238,12 +2136,6 @@ class LeistungEmailView (isVorstandMixin, FilteredEmailCreateView):
     filterform_class = forms.LeistungEmailFilter
 
     def benachrichtigt_filter (self, qs, includeSchonBenachrichtigt):
-        ## print "benachrichtigt filter: ", self, qs, includeSchonBenachrichtigt
-        ## for q in qs:
-        ##     print q.__unicode__()
-        ##     print 'veraendert: ', q.veraendert
-        ##     print 'benachrich: ', q.benachrichtigt
-        ##     print 'schon benachrichtigt: ', q.veraendert <= q.benachrichtigt
         # filter out those were the "benachrichtigt" is later than the last change
         if includeSchonBenachrichtigt:
             pass
@@ -2270,7 +2162,6 @@ class LeistungEmailView (isVorstandMixin, FilteredEmailCreateView):
 
     def saveUpdate(self, instance, thisuser):
         instance.benachrichtigt = datetime.datetime.utcnow().replace(tzinfo=utc)
-        # print instance.benachrichtigt
         instance.save(veraendert=False)
 
     def annotate_data(self, qs):
@@ -2332,7 +2223,6 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
              'numMeldungen': instance.gemeldeteAnzahlAufgaben(),
             }
 
-        # print d
         return d
 
 
@@ -2378,7 +2268,6 @@ class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
         instance.zuteilungsbenachrichtigung = datetime.datetime.utcnow().replace(tzinfo=utc)
         instance.zuteilungBenachrichtigungNoetig = False
 
-        # print instance.benachrichtigt
         instance.save()
 
     def annotate_data(self, qs):
@@ -2401,7 +2290,6 @@ class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
              'zuteilungen': models.Zuteilung.objects.filter(ausfuehrer=instance.user)
             }
 
-        # print d
         return d
 
 
@@ -2414,15 +2302,11 @@ class EmailSendenView(isVorstandMixin, View):
         import post_office.models as pom
 
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
-        # print now
 
         call_command('send_queued_mail')
 
         # count how many newly genereated log entries have relevant status values:
         newEmailLogs = pom.Log.objects.filter(date__gt = now)
-
-        ## for el in newEmailLogs:
-        ##     print el
 
         if newEmailLogs.count() == 0:
             messages.success(request,
@@ -2431,8 +2315,6 @@ class EmailSendenView(isVorstandMixin, View):
         else:
             failed = newEmailLogs.filter(status=pom.STATUS.failed).count()
             sent = newEmailLogs.filter(status=pom.STATUS.sent).count()
-
-            # print sent, failed
 
             if sent > 0:
                 messages.success(request,
@@ -2461,8 +2343,6 @@ class MediaChecks(View):
         """
 
         basepath = settings.SENDFILE_ROOT
-
-        # print "in Meia checks: ", basepath
 
         if request.user.is_staff:
             filename = "SVPB-entwickler.pdf"

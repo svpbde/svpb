@@ -110,8 +110,6 @@ def preparePassword(accountList=None):
 
     r = []
 
-    # print "preparing passwords for: ", accountList
-
     for u in accountList:
         pw = pwgen(6, no_symbols=True, no_ambiguous=True)
         u.set_password(pw)
@@ -128,10 +126,8 @@ def preparePassword(accountList=None):
     # assume the template is in templates
 
     templateText = EmailTemplate.objects.get(name='newUserLaTeX')
-    # print templateText.content
 
     rendered = Template(templateText.content).render(dicts=r)
-    # print rendered
 
     # and now process this via latex:
     f = codecs.open('letters.tex', 'w', 'utf-8')
@@ -143,9 +139,6 @@ def preparePassword(accountList=None):
     retval = subprocess.call (["xelatex",
                                 '-interaction=batchmode',
                                 "letters.tex"])
-    ## retval = subprocess.call (["xelatex",
-    ##                                '-interaction=batchmode',
-    ##                                "letters.tex"])
 
     # move this file into a directory where only Vorstand has access!
     # remove an older letter first; ignore errors here
@@ -216,7 +209,6 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
 
         try:
             r = preparePassword([u])
-            print("PAssword erzeugt: ", r)
 
             # copy the produced PDF to the SENDFILE_ROOT directory
 
@@ -229,7 +221,7 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
                                  ))
 
         except Exception as e:
-            print("Fehler bei password: ", e)
+            print("Fehler bei password: ", e)  # TODO: Log exception
             messages.error(self.request,
                            "Das Password für den Nutzer konnte nicht gesetzt werden "
                            "oder das Anschreiben nicht erzeugt werden. Bitten Sie das "
@@ -292,12 +284,6 @@ class AccountEdit(SuccessMessageMixin, FormView):
 
             user.save()
             user.mitglied.save()
-
-            # print ({'user': user.__dict__,
-            #         'mitglied': user.mitglied.__dict__})
-            # print type(user)
-            # print user.last_name
-            # print type(user.mitglied)
 
             # inform the relevant Vorstand in charge of memeberhsip
             mail.send(['mail@svpb.de'],
@@ -413,7 +399,6 @@ class AccountInactiveReset(FormView):
 
             try:
                 r = preparePassword(userQs)
-                print("PAssword erzeugt: ", r)
 
                 # copy the produced PDF to the SENDFILE_ROOT directory
 
@@ -426,7 +411,7 @@ class AccountInactiveReset(FormView):
                                      ))
 
             except Exception as e:
-                print("Fehler bei password: ", e)
+                print("Fehler bei password: ", e)  # TODO: Log exception
                 messages.error(self.request,
                                "Ein Password konnte nicht gesetzt werden "
                                "oder das Anschreiben nicht erzeugt werden. "
