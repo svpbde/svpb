@@ -1,7 +1,7 @@
 [
     {
         "fields": {
-            "teamleader": null,
+            "teamleader": 4,
             "gruppe": 1,
             "aufgabe": "Feuchtfröhliche Bugfixsuche",
             "verantwortlich": 1,
