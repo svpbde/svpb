@@ -28,34 +28,28 @@
 {% endcomment %}
 
 <form id="aufgabe-form" method="POST" action=".">
-<div class="row">
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="panel-title">
-          Aufgaben
-        </div>
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        Aufgabe
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         {% crispy form %}
       </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="panel-title">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
           Stundenplan - Personen zu Uhrzeiten 
-        </div>
       </div>
-      <div class="panel-body">
-        <table class="table-striped">
-          {%  for x in stundenplan %}
+      <div class="card-body">
+        <table class="table table-sm table-striped align-middle">
+          {% for x in stundenplan %}
           <tr id="{{x.0}}-row">
-            <td>  {{x.0}}: </td>
-            <td> <div class="controls">
-              <input class="numberinput" id="id_uhrzeit_{{x.0}}" name="uhrzeit_{{x.0}}" type="number" value="{{x.1}}" />
-            </div>  </td> 
+            <td>  {{x.0}}:00 Uhr </td>
+            <td> <input class="form-control form-control-sm" id="id_uhrzeit_{{x.0}}" name="uhrzeit_{{x.0}}" type="number" value="{{x.1}}"> </td> 
           </tr>
           {% endfor %}
         </table>
@@ -63,7 +57,8 @@
     </div>
   </div>
 </div>
-<input type="submit" class="btn btn-primary" value="{{buttontext}}" name="_edit"">
+
+<input type="submit" class="btn btn-primary" value="{{buttontext}}" name="_edit">
 {% if loeschknopf %}
 <input type="submit" class="btn btn-danger" value="Aufgabe löschen" name="_delete">
 {% endif%}
