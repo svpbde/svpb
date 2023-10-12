@@ -2,8 +2,8 @@
     {
         "fields": {
             "username": "Vorstand",
-            "first_name": "Name",
-            "last_name": "Nachname",
+            "first_name": "Volker",
+            "last_name": "Vorstand",
             "is_active": true,
             "is_superuser": false,
             "is_staff": false,
@@ -23,8 +23,8 @@
     {
         "fields": {
             "username": "Mitglied",
-            "first_name": "Name",
-            "last_name": "Nachname",
+            "first_name": "Michael",
+            "last_name": "Mitglied",
             "is_active": true,
             "is_superuser": false,
             "is_staff": false,
@@ -43,8 +43,8 @@
     {
         "fields": {
             "username": "Superuser",
-            "first_name": "Name",
-            "last_name": "Nachname",
+            "first_name": "Susanne",
+            "last_name": "Superuser",
             "is_active": true,
             "is_superuser": true,
             "is_staff": true,
@@ -60,5 +60,25 @@
         },
         "model": "auth.user",
         "pk": 3
+    },
+    {
+        "fields": {
+            "username": "Teamleiter",
+            "first_name": "Tea",
+            "last_name": "Teamleiter",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "last_login": null,
+            "groups": [
+                2
+            ],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$260000$eN0UXvcU4Q95MugbgpVWrp$HAJcqFwIPhXzEAiu64uYqnTt/5Ix+uSBnR0oycgARdM=",
+            "email": "teamleiter@example.com",
+            "date_joined": "2013-12-25T10:30:36Z"
+        },
+        "model": "auth.user",
+        "pk": 4
     }
 ]
