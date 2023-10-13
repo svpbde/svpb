@@ -84,7 +84,7 @@ class KontaktColumn(django_tables2.columns.Column):
     def render(self, value):
         return mark_safe('{1} {2}{0}'.format(
             (' <a href="mailto:{0}">'
-             '<span class="glyphicon glyphicon-envelope">'
+             '<i class="fa-solid fa-envelope"></i>'
              '</span></a>'.format(value.email)
              if value.email
              else ""),
@@ -109,9 +109,9 @@ class DeleteIconColumn(django_tables2.columns.Column):
 
     def render(self, value):
         return mark_safe('<a href="{}/{}">'
-                         '<span class="glyphicon glyphicon-trash">'
+                         '<i class="fa-solid fa-trash-can text-danger"></i>'
                          '</a>'.format(self.urlBase,
-                                        (value)),
+                                       (value)),
                          )
 
 
