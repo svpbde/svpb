@@ -117,8 +117,11 @@ class AufgabeForm(forms.ModelForm):
             'bemerkung',
             )
         widgets = {
-            'verantwortlich': Select2Widget,
-            'teamleader': Select2Widget,
+            # Force data-width to 100% to keep select2 from calculating a
+            # fixed width (which would break responsiveness), see
+            # https://select2.org/appearance#container-width
+            'verantwortlich': Select2Widget({'data-width': '100%'}),
+            'teamleader': Select2Widget({'data-width': '100%'}),
             }
 
     def __init__(self, request, *args, **kwargs):

@@ -163,8 +163,7 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # for select2:
-SELECT2_BOOTSTRAP = False
-AUTO_RENDER_SELECT2_STATICS = False
+SELECT2_THEME = "bootstrap-5"
 
 IMPERSONATE = {
     'REDIRECT_URL': '/',
