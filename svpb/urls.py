@@ -79,7 +79,7 @@ urlpatterns = [
     # password reset; compare http://django-password-reset.readthedocs.org/en/latest/quickstart.html
     url(r'^reset/', include('password_reset.urls')),
 
-    # django select2, see: https://github.com/applegrew/django-select2
+    # django select2, see: https://github.com/codingjoe/django-select2
     url(r'^select2/', include('django_select2.urls')),
 
     ]
