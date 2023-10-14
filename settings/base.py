@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django_tables2',
+    'crispy_bootstrap5',
     'crispy_forms',
     'impersonate',
     'post_office',
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
     'svpb',
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap3"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',

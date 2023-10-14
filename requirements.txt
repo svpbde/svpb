@@ -16,10 +16,14 @@ certifi==2023.7.22
     # via requests
 charset-normalizer==3.3.2
     # via requests
+crispy-bootstrap5==0.7
+    # via -r requirements.in
 django==3.2.23
     # via
     #   -r requirements.in
+    #   crispy-bootstrap5
     #   django-appconf
+    #   django-crispy-forms
     #   django-extensions
     #   django-password-reset
     #   django-phonenumber-field
@@ -29,8 +33,10 @@ django==3.2.23
     #   django-tables2
 django-appconf==1.0.5
     # via django-select2
-django-crispy-forms==1.13.0
-    # via -r requirements.in
+django-crispy-forms==2.0
+    # via
+    #   -r requirements.in
+    #   crispy-bootstrap5
 django-extensions==3.2.3
     # via -r requirements.in
 django-impersonate==1.9.1
