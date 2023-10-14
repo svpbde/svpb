@@ -113,16 +113,16 @@ class SvpbLogin(FormView):
 
             if settings.JAHRESENDE:
                 messages.warning(self.request,
-                                 format_html("Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direk Mitglieder einteilen!"))
+                                 format_html("Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direkt Mitglieder einteilen!"))
 
             if user.is_active:
                 tmp = user.mitglied.profileIncomplete()
                 if tmp:
                     messages.warning(self.request,
                                      format_html(
-                                         "Ihre Profilangaben sind unvollständig.<br>"
-                                         "Es fehlen {}.<br>"
-                                         'Bitte ergänzen Sie <a href="/accounts/edit/">Ihr Profil.</a>',
+                                         "Deine Profilangaben sind unvollständig.<br>"
+                                         "Es fehlt/fehlen: {}.<br>"
+                                         'Bitte ergänze <a href="/accounts/edit/">dein Profil.</a>',
                                          tmp
                                      ))
                 return super(SvpbLogin, self).form_valid(form)
