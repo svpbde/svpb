@@ -239,8 +239,9 @@ class CrispyFilterMixin(CrispyFormMixin):
         self.helper.form_method = "get"
         self.helper.form_action = ""
 
-        self.helper.form_class = "form-inline"
-        self.helper.field_template = "bootstrap3/layout/inline_field.html"
+        self.helper.form_class = "row gy-2 gx-3 align-items-center"
+        self.helper.wrapper_class = "col-auto"
+        self.helper.field_template = "bootstrap5/layout/inline_field.html"
 
         # get all the __layout attributes from the derived classes,
         # in mro order. Then, patch taht together into the self.helper.layout,
