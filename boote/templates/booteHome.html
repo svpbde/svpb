@@ -28,24 +28,29 @@ Oder hattest du vielleicht Schwierigkeiten um nachzuvollziehen, ob die von dir g
 <p>
 Diese App soll es uns ermöglichen die Vereinsboote effizienter zu nutzen und noch mehr Spass am Segeln haben! 
 </p>
+<p>
 <img src="{% static 'boote/banner.png' %}" style="width: 786px;" class="img-responsive"><br>
-  
-  <p>
-  Hier kannst Du folgendes tun (ohne deinen gemütlichen Sessel zu verlassen)
-   <ul>
-   <li>Alle Boote <a href="boots_liste/">anschauen</a></li>
-   <li>Heutige Verfügbarkeit der Vereinsbooten <a href="booking/today/">prüfen</a></li>
-   <li>Vereinsboote <a href="booking/overview/">reservieren</a></li>
-   <li>Probleme bei Booten <a href="boots_liste/">melden und anschauen</a></li>
-   </ul>
-   Alles erreichbar über die Menüleiste oben.
-  </p>
-  
-  
-  
-  <p style="font-weight: bold;">
-  Handbreit Wasser unterm Kiel! 
-  </p>
+</p>
+<p>
+<div class="row row-cols-1 row-cols-lg-2 g-4">
+  <div class="col">        
+    <div class="card">
+      <div class="card-header text-bg-secondary text-center">
+        <i class="fa-solid fa-sailboat fa-lg fa-fw"></i> Boote und Kran
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"> <a href="boots_liste/"> Alle Boote und Kran anschauen</a> </li>
+        <li class="list-group-item"> <a href="booking/today/"> Heutige Verfügbarkeit prüfen</a> </li>
+        <li class="list-group-item"> <a href="booking/overview/"> Vereinsboote oder Kran reservieren</a> </li>
+        <li class="list-group-item"> <a href="boots_liste/"> Probleme melden und anschauen</a> </li>       
+      </ul>
+    </div>
+  </div>
+</div>
+</p>
+<p style="font-weight: bold;">
+Handbreit Wasser unterm Kiel! 
+</p>
 
 {% else %}
 
