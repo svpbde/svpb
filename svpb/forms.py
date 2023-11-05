@@ -4,11 +4,12 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML
 from django import forms
 from django.core.exceptions import ValidationError
+from crispy_bootstrap5.bootstrap5 import FloatingField
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(label="Nutzername",
-                               help_text="In der Regel: Ihre Mitgliedsnummer, mit führenden 0 auf 5 Stellen  aufgefüllt")
+                               help_text="In der Regel: Ihre Mitgliedsnummer, mit führenden 0 auf 5 Stellen aufgefüllt")
     password = forms.CharField(widget=forms.PasswordInput,
                                label="Passwort",
                                required=True,
@@ -20,7 +21,7 @@ class LoginForm(forms.Form):
         self.helper.form_id = self.__class__.__name__
         self.helper.form_method = "post"
 
-        self.helper.layout = Layout('username', 'password', HTML("<p>"),)
+        self.helper.layout = Layout(FloatingField('username'), FloatingField('password'), HTML("<p>"),)
         self.helper.add_input(Submit('apply', 'Anmelden'))
 
     def clean(self):
