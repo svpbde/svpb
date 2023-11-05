@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, HTML
-
+from crispy_bootstrap5.bootstrap5 import FloatingField
 
 # specfic imports:
 from phonenumber_field.formfields import PhoneNumberField
@@ -49,10 +49,15 @@ class ActivateForm(forms.Form):
         self.helper.form_id = self.__class__.__name__
         self.helper.form_method = "post"
 
-        self.helper.layout = Layout('email', 'portal', 'emailNutzung',
-                                    HTML("<p>"),
-                                    'pw1', 'pw2', HTML("<p>"),
-                                    )
+        self.helper.layout = Layout(
+            FloatingField('email'),
+            'portal',
+            'emailNutzung',
+            HTML("<p>"),
+            FloatingField('pw1'),
+            FloatingField('pw2'),
+            HTML("<p>"),
+            )
         self.helper.add_input(Submit('apply', 'Aktivieren'))
 
 
@@ -81,23 +86,27 @@ class MitgliederAddForm(forms.ModelForm):
         super(MitgliederAddForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
-        self.helper.layout = Layout('firstname', 'lastname',
-                                    HTML("<p>"),
-                                    'email',
-                                    HTML("<p>"),
-                                    'mitgliedsnummer',
-
-                                    HTML("<p>"),
-                                    'geburtsdatum',
-                                    'gender',
-                                    'strasse', 'plz', 'ort',
-                                    HTML("<p>"),
-                                    'festnetz',
-                                    'mobil',
-                                    HTML("<p>"),
-                                    'status', 'arbeitslast',
-                                    HTML("<p>"),
-                                    )
+        self.helper.layout = Layout(
+            FloatingField('firstname'),
+            FloatingField('lastname'),
+            HTML("<p>"),
+            FloatingField('email'),
+            HTML("<p>"),
+            FloatingField('mitgliedsnummer'),
+            HTML("<p>"),
+            FloatingField('geburtsdatum', css_class="datepicker"),
+            FloatingField('gender'),
+            FloatingField('strasse'),
+            FloatingField('plz'),
+            FloatingField('ort'),
+            HTML("<p>"),
+            FloatingField('festnetz'),
+            FloatingField('mobil'),
+            HTML("<p>"),
+            FloatingField('status'),
+            FloatingField('arbeitslast'),
+            HTML("<p>"),
+            )
 
         self.helper.add_input(Submit('apply', 'Mitglied anlegen'))
 
@@ -162,16 +171,18 @@ class AccountEdit(forms.Form):
                              help_text="Ihre Mobilfunknummer.")
 
     def computeLayout(self):
-        return  Layout('email',
-                       HTML("<p>"),
-                       'strasse',
-                       HTML("<p>"),
-                       'plz', 'ort',
-                       HTML("<p>"),
-                       Field('geburtsdatum', css_class="datepicker"),
-                       HTML("<p>"),
-                       'festnetz',
-                       'mobil',
+        return  Layout(
+            FloatingField('email'),
+            HTML("<p>"),
+            FloatingField('strasse'),
+            HTML("<p>"),
+            FloatingField('plz'), 
+            FloatingField('ort'),
+            HTML("<p>"),
+            FloatingField('geburtsdatum', css_class="datepicker"),
+            HTML("<p>"),
+            FloatingField('festnetz'),
+            FloatingField('mobil'),
         )
 
     def __init__(self, *args, **kwargs):
@@ -210,16 +221,16 @@ class AccountOtherEdit(AccountEdit):
 
     def computeLayout(self):
         l = super(AccountOtherEdit, self).computeLayout()
-
-        return Layout ('vorname',
-                       'nachname',
-                       HTML("<p>"),
-                       l,
-                       
-                       'status',
-                       'aktiv',
-                       'arbeitslast',
-                       'boots_app')
+        return Layout (
+            FloatingField('vorname'),
+            FloatingField('nachname'),
+            HTML("<p>"),
+            l,
+            FloatingField('status'),
+            'aktiv',
+            FloatingField('arbeitslast'),
+            'boots_app'
+            )
 
 
 class PersonMitgliedsnummer(NameFilterForm,
@@ -249,8 +260,8 @@ class PasswordChange(forms.Form):
         self.helper.form_method = "post"
 
         self.helper.layout = Layout(
-            'pw1',
-            'pw2',
+            FloatingField('pw1'),
+            FloatingField('pw2'),
             HTML("<p>"),
             )
         self.helper.add_input(Submit('apply', 'Neues Passwort setzen'))
