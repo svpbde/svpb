@@ -239,7 +239,7 @@ class CrispyFilterMixin(CrispyFormMixin):
         self.helper.form_method = "get"
         self.helper.form_action = ""
 
-        self.helper.form_class = "row gy-2 gx-3 align-items-center"
+        self.helper.form_class = "row g-2 align-items-center"
         self.helper.wrapper_class = "col-auto"
         self.helper.field_template = "bootstrap5/layout/inline_field.html"
 
@@ -254,7 +254,6 @@ class CrispyFilterMixin(CrispyFormMixin):
                                         l)
 
         self.helper.layout = Layout(self.helper.layout,
-                                    HTML("<p>"),
                                     FormActions(
                                         Submit('filter', 'Filter anwenden'),
                                         ),
