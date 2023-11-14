@@ -3,7 +3,7 @@
         "fields": {
             "teamleader": null,
             "gruppe": 1,
-            "aufgabe": "Feuchtfröhliche Bugfixsuche.",
+            "aufgabe": "Feuchtfröhliche Bugfixsuche",
             "verantwortlich": 1,
             "stunden": 12,
             "datum": null,
