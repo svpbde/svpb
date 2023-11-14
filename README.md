@@ -31,6 +31,8 @@ There are settings for three different environments:
    Copy `settings/production.py.template` to `settings/production.py` and fill in the credentials.
    In `manage.py` and `svpb/wsgi.py`, replace `settings.local`/`settings.vm` with `settings.production`.
 
+Python dependencies are managed with [pip-tools](https://pip-tools.readthedocs.io/en/latest/).
+
 Contributing
 ------------
 Feel free to open issues or pull requests.
