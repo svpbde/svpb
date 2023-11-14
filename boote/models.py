@@ -60,7 +60,7 @@ class Boat(models.Model):
         d2 = d1.replace(hour=21)
         for booking in Booking.objects.filter(boat=self, date__lte=d2, date__gte=d1, status=1):            
             uid = booking.user.username
-            usertag = booking.user.first_name + " " + booking.user.last_name              
+            usertag = booking.user.first_name + " " + booking.user.last_name
             startIdx = round((booking.time_from.hour-8)*2+(booking.time_from.minute/30))
             endIdx = round((booking.time_to.hour-8)*2+(booking.time_to.minute/30))
             for i in range(max(0, startIdx), min(28, endIdx)):
@@ -68,16 +68,17 @@ class Boat(models.Model):
         return res
     
     def getDetailedBookings7Days(self):
-        res = [[[0,''] for x in range(28)] for x in range(7)]
+        res = [[[0, '', ''] for x in range(28)] for x in range(7)]
         d1 = datetime.now()
         d2 = d1 + timedelta(days=6)
         for booking in Booking.objects.filter(boat=self, date__lte=d2, date__gte=d1, status=1):
             offset = (booking.date - d1.date()).days
-            uid = booking.user.username 
+            uid = booking.user.username
+            usertag = booking.user.first_name + " " + booking.user.last_name
             startIdx = round((booking.time_from.hour-8)*2+(booking.time_from.minute/30))
             endIdx = round((booking.time_to.hour-8)*2+(booking.time_to.minute/30))
             for i in range(max(0, startIdx), min(28, (endIdx))):
-                res[offset][i] = [uid, booking.type]
+                res[offset][i] = [uid, usertag, booking.type]
         return res
     
     def getNumberOfIssues(self):

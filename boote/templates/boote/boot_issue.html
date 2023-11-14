@@ -13,7 +13,7 @@ Schadensmeldungen {{ boot.name }} ({{ boot.type.name }})
 </p>
 
 {% if issues %}
-<p>Es liegen folgende offene Schadensmeldungen für "{{ boot.name }}" vor (Bootspate wurde informiert):</p>
+<p>Es liegen folgende offenen Schadensmeldungen für "{{ boot.name }}" vor (Bootspate wurde informiert):</p>
 <table id="boatslist">
  <thead>
         <tr>
@@ -46,11 +46,11 @@ Schadensmeldungen {{ boot.name }} ({{ boot.type.name }})
 {% endfor %}
 </table>
 {% else %}
-    <p>Es liegen <span style="color: rgb(0, 161, 30)">keine</span> offene Schadensmeldungen fuer "{{ boot.name }}" vor.</p>
+    <p>Es liegen <span style="color: rgb(0, 161, 30)">keine</span> offenen Schadensmeldungen für "{{ boot.name }}" vor.</p>
 {% endif %}
 
 <h2>Neue Schadensmeldungen</h2>
-<p>Bitte trage hier Beschädigungen, Probleme oder notwenige Reparaturen ein, egal, ob diese durch Dich verursacht worden sind oder nicht.
+<p>Bitte trage hier Beschädigungen, Probleme oder notwenige Reparaturen ein, egal, ob diese durch dich verursacht worden sind oder nicht.
     Bei kritischen Problemen mit dem Boot, informiere bitte parallel den Bootspaten.</p>
  
 {% crispy form_issue %}

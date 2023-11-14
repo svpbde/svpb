@@ -18,7 +18,7 @@ Meine Boote
 	{% crispy form_boot_edit %}
 	
 
-<a href="/boote/boot/edit/" class="btn btn-secondary">Cancel</a> 
+<a href="/boote/boot/edit/" class="btn btn-danger">Abbrechen</a> 
 </div>
 </div>
 {% endif %}
@@ -45,8 +45,8 @@ Du kanst hier deine Boote verwalten oder neue Boote anlegen.
     {% if  boat.active %} <td style="text-align: left;">  <i class="fa fa-check-square-o"></i></td>  		{% endif %}
     {% if  not boat.active %} <td style="text-align: left; color: red;">  <i class="fa fa-square-o"></i></td>  		{% endif %}
   	<td style="text-align: left;"><a href="/boote/boot/{{ boat.pk }}/" target="_blank"> <i class="fa fa-ship"></i> {{ boat.name }}</a> ({{ boat.type.name }})</TD>
-  	<td style="text-align: left;">{{ user.first_name }} {{ user.last_name }}</td>  		
-  	<td><a href="/boote/boot/edit/{{ boat.pk }}/" class="btn btn-primary">Edit</a></td>
+  	<td style="text-align: left;">{{ boat.owner.first_name }} {{ boat.owner.last_name }}</td>  		
+  	<td><a href="/boote/boot/edit/{{ boat.pk }}/" class="btn btn-primary">Editieren</a></td>
   </tr>
 {% endfor %}
 </table>
