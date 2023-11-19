@@ -3,8 +3,7 @@
 
 
 {% block branding %}
-Willkommen{% if user.is_authenticated %}, {{user.first_name}}  {{user.last_name}}
-{% endif %}!
+Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}{% endif %}!
 {% endblock %}
 
 {% block content %}
