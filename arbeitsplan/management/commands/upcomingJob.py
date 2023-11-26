@@ -85,7 +85,7 @@ class Command(BaseCommand):
                              },
                     headers={'Reply-to': (z.aufgabe.verantwortlich.email
                                           if z.aufgabe.verantwortlich.email
-                                          else "mein@svpb.de"), }
+                                          else settings.DEFAULT_FROM_EMAIL), }
                     )
 
         # and finally send out all queued mails:

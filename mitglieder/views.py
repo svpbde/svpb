@@ -285,8 +285,8 @@ class AccountEdit(SuccessMessageMixin, FormView):
             user.save()
             user.mitglied.save()
 
-            # inform the relevant Vorstand in charge of memeberhsip
-            mail.send(['mail@svpb.de'],
+            # inform the relevant Vorstand in charge of memberhsip
+            mail.send(settings.EMAIL_NOTIFICATION_BOARD,
                       template="updatedProfile",
                       context={'user': user,
                                'mitglied': user.mitglied,

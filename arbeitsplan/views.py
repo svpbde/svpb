@@ -846,16 +846,7 @@ class CreateMeldungenView (MeldungEdit):
                 )
             except models.Meldung.MultipleObjectsReturned:
                 messages.error(self.request,
-                               format_html(
-                                   "Ein Datenbankfehler trat auf! "
-                                   'Bitte schicken Sie '
-                                   '<a href="mailto:hkarl@ieee.org?subject=SVPB: QAWX&body=A: {}, U: {}">'
-                                   'diese email</a> ab. Es wäre schön wenn Sie schildern '
-                                   'könnten, welche Handlungen Sie kurz zuvor durchführten.'
-                                   ,
-                                   a.id,
-                                   self.request.user.id,
-                                   ))
+                               "Leider ist ein Datenbankfehler aufgetreten!")
                 return self.get_filtered_table([])
 
             d['id'] = m.id

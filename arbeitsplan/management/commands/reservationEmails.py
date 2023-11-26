@@ -61,14 +61,15 @@ class Command(BaseCommand):
             try:
                 c = Context({ 'issue': issue})
                 payload = t.render(c)
+                recipients = settings.EMAIL_NOTIFICATION_BOATS + [issue.reported_by.email]
                 sbj = '[SVPB] Schadensmeldung - ' + issue.boat.type.name + " \"" + issue.boat.name + "\"" 
                 self.stdout.write('From: ' +  settings.DEFAULT_FROM_EMAIL)
-                self.stdout.write('To:  bommel@svpb.de, conger@svpb.de')                
+                self.stdout.write(f'To: {recipients}')
                 self.stdout.write('Subject: ' + sbj)
                 self.stdout.write('Content:\n\r' + payload)
                 
                 mail.send(
-                            ["bommel@svpb.de", "conger@svpb.de", issue.reported_by.email], 
+                            recipients,
                             settings.DEFAULT_FROM_EMAIL,
                             subject=sbj,                  
                             html_message=payload,

@@ -32,8 +32,8 @@ class Command(BaseCommand):
 
         # Mail:
         subject = "Arbeitsstunden neuer Mitglieder auf Jahressoll angepasst"
-        to = ['hkarl@ieee.org', 'dieter.peitz@svpb.de']
-        fromEmail = "mein@svpb.de"
+        to = settings.EMAIL_NOTIFICATION_BOARD
+        fromEmail = settings.DEFAULT_FROM_EMAIL
 
         body = """
 Für folgende Mitglieder wurden die Arbeitsstunden auf das Jahressoll gesetzt:
@@ -41,8 +41,6 @@ Für folgende Mitglieder wurden die Arbeitsstunden auf das Jahressoll gesetzt:
 {}
 
 Ist das nicht korrekt, bitte die entsprechenden Mitglieder direkt in der Webseite editieren.
-
-Rückfragen bitte an mein@svpb.de
         """.format('\n'.join(['- ' + str(m) for m in newmitglieder]))
 
         send_mail(subject,

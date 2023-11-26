@@ -51,7 +51,7 @@ class Command(BaseCommand):
 
         send_mail(subject,
                   body,
-                  "mein@svpb.de",
+                  settings.DEFAULT_FROM_EMAIL,
                   ['d.dimka89@gmail.com'],
                   fail_silently=False)
         translation.deactivate()
