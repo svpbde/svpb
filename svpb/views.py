@@ -5,18 +5,20 @@ Views for the entire adminstration of SVPB
 - login
 
 """
-
-
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.shortcuts import (redirect, render)
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
 from django.views.generic import FormView
+from django.conf import settings
+
+from arbeitsplan.models import Mitglied
+from svpb.forms import LoginForm
 
 
 @receiver(post_save, sender=User)
@@ -28,16 +30,14 @@ def create_mitglied(sender, instance, created, **kwargs):
     # 'psycopg2.errors.UniqueViolation: duplicate key value violates unique
     # constraint "arbeitsplan_mitglied_user_id_key"'. See also
     # https://docs.djangoproject.com/en/4.2/topics/db/fixtures/#how-fixtures-are-saved-to-the-database
-    if kwargs['raw']:
+    if kwargs["raw"]:
         return
     if created:
         Mitglied.objects.get_or_create(user=instance)
 
 
-###############
-
 def isVorstand(user):
-    return user.groups.filter(name='Vorstand')
+    return user.groups.filter(name="Vorstand")
 
 
 def isTeamlead(user):
@@ -55,17 +55,11 @@ class isVorstandMixin(object):
 
 
 class isVorstandOrTeamleaderMixin(object):
-    @method_decorator(user_passes_test(isVorstandOrTeamleader, login_url="/keinVorstand/"))
+    @method_decorator(
+        user_passes_test(isVorstandOrTeamleader, login_url="/keinVorstand/")
+    )
     def dispatch(self, *args, **kwargs):
         return super(isVorstandOrTeamleaderMixin, self).dispatch(*args, **kwargs)
-
-
-###############
-
-from svpb.forms import (LoginForm,
-                        )
-from django.conf import settings
-from arbeitsplan.models import Mitglied
 
 
 class SvpbLogin(FormView):
@@ -79,19 +73,22 @@ class SvpbLogin(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(SvpbLogin, self).get_context_data(**kwargs)
-        context['title'] = "Anmeldung"
         if settings.JAHRESENDE:
-            context['intro_text'] = "Zur Zeit ist eine Anmeldung nur für Vorstände und Teamleiter möglich!"
+            context[
+                "intro_text"
+            ] = "Zur Zeit ist eine Anmeldung nur für Vorstände und Teamleiter möglich!"
         else:
-            context['intro_text'] = ""
-        context['post_text'] = format_html('Passwort vergessen? <a href="/reset/recover/"> Hier zurücksetzen.</a>')
-        context['todo_text'] = ""
+            context["intro_text"] = ""
+        context["post_text"] = format_html(
+            'Passwort vergessen? <a href="/reset/recover/"> Hier zurücksetzen.</a>'
+        )
+        context["todo_text"] = ""
 
         return context
 
     def get_success_url(self):
         try:
-            return self.request.GET['next']
+            return self.request.GET["next"]
         except:
             return super(SvpbLogin, self).get_success_url()
 
@@ -100,40 +97,47 @@ class SvpbLogin(FormView):
         This is only called if the user can be logged in, but is not
         necessarily active"""
 
-        user = form.cleaned_data['user']
+        user = form.cleaned_data["user"]
         if user is not None:
-            succ = login(self.request, user)
+            login(self.request, user)
 
             if settings.JAHRESENDE and not isVorstandOrTeamleader(user):
-                messages.warning(self.request,
-                                 format_html("Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich."))
+                messages.warning(
+                    self.request,
+                    format_html(
+                        "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich."
+                    ),
+                )
                 # make normal users go away
                 logout(self.request)
-                return redirect('/')
+                return redirect("/")
 
             if settings.JAHRESENDE:
-                messages.warning(self.request,
-                                 format_html("Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direkt Mitglieder einteilen!"))
+                messages.warning(
+                    self.request,
+                    format_html(
+                        "Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direkt Mitglieder einteilen!"
+                    ),
+                )
 
             if user.is_active:
                 tmp = user.mitglied.profileIncomplete()
                 if tmp:
-                    messages.warning(self.request,
-                                     format_html(
-                                         "Deine Profilangaben sind unvollständig.<br>"
-                                         "Es fehlt/fehlen: {}.<br>"
-                                         'Bitte ergänze <a href="/accounts/edit/">dein Profil.</a>',
-                                         tmp
-                                     ))
+                    messages.warning(
+                        self.request,
+                        format_html(
+                            "Deine Profilangaben sind unvollständig.<br>"
+                            "Es fehlt/fehlen: {}.<br>"
+                            'Bitte ergänze <a href="/accounts/edit/">dein Profil.</a>',
+                            tmp,
+                        ),
+                    )
                 return super(SvpbLogin, self).form_valid(form)
             else:
-                return redirect('/accounts/activate/')
+                return redirect("/accounts/activate/")
         else:
             # This should never happen, end up in form_invalid instead
             print("do the invalid thing")  # TODO: Log accordingly/throw exception?
-
-
-##############
 
 
 def logout_view(request):
