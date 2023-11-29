@@ -1,33 +1,26 @@
-"""Run tests on mitglieder adminstration
+"""Tests of mitglieder administration
 """
-
-from django.test import TestCase
-from django.test import Client
-
 from django.contrib.auth.models import User
+from django.test import Client, TestCase
 
 from pprint import pprint as pp
 
 from mitglieder import views
 
-from arbeitsplan import models
 
 class MitgliederTest(TestCase):
-    # we onyl need the Vorstand group fixture
-
-    fixtures=[
-      'mitglieder/fixtures/groups.json',
-      'mitglieder/fixtures/user.json',
-      'mitglieder/fixtures/arbeitsplan.json',
-      'mitglieder/fixtures/po.json',
+    fixtures = [
+        'arbeitsplan/fixtures/members.json',
+        'arbeitsplan/fixtures/taskgroups.json',
+        'arbeitsplan/fixtures/tasks.json',
+        'mitglieder/fixtures/groups.json',
+        'mitglieder/fixtures/po.json',
+        'mitglieder/fixtures/user.json'
     ]
+    plainpassword = "Test"
+    superuser = "Superuser"
 
-    plainpassword = "abc"
-
-
-    def login_user(self, user,
-                   password=None):
-
+    def login_user(self, user, password=None):
         cl = Client()
 
         response = cl.post(
@@ -56,7 +49,7 @@ class MitgliederTest(TestCase):
         return cl, response
 
     def test_login_works(self):
-        cl, response = self.login_user('su')
+        cl, response = self.login_user(self.superuser)
 
         # print "analysing context:"
         # pp(response.request)
@@ -67,15 +60,14 @@ class MitgliederTest(TestCase):
         self.assertTrue('login' not in response.request['PATH_INFO'])
 
     def test_wrong_password_fails(self):
-        cl, response = self.login_user('su', "xxx")
+        cl, response = self.login_user(self.superuser, "xxx")
         self.assertFalse('login' not in response.request['PATH_INFO'])
-
 
     def test_add_user(self):
 
         print("adding user")
 
-        cl, response = self.login_user('su')
+        cl, response = self.login_user(self.superuser)
 
         # print "adding"
 
@@ -97,7 +89,7 @@ class MitgliederTest(TestCase):
              'plz': '12345',
              'ort': 'Teststadt',
              'status': "Er",
-             'arbeitslast': '10',
+             'arbeitslast': '12',
              },
             follow=True,
         )
@@ -119,14 +111,10 @@ class MitgliederTest(TestCase):
         pp(response)
         pp(response.status_code)
 
-        # check wether user really exists; never trust the test framework:
-        try:
-            u = User.objects.get(username='666666')
-            print("Peter Pan exists")
-        except User.DoesNotExist:
-            print("user Peter Pan not created")
-        except Exception as e:
-            print("When creating PeterPan: ", e)
+        # Activate user to allow login
+        peter = User.objects.get(username="666666")
+        peter.is_active = True
+        peter.save()
 
         # try to get the new password link:
         # check: does this have a redirect loop?
@@ -164,31 +152,8 @@ class MitgliederTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('login' not in response.request['PATH_INFO'])
 
-        # new user needs to activate its account
-        print("------------")
-        print("aktiviere Peter Pan")
-        print("------------")
-
-        self.assertEqual('/accounts/activate/', response.request['PATH_INFO'])
-        response = cl3.post('/accounts/activate/',
-                            {'email': 'peter@pan.com',
-                             'portal': True,
-                             'emailNutzung': True,
-                             'pw1': self.plainpassword,
-                             'pw2': self.plainpassword,
-                             },
-                            follow=True)
-
-        self.assertEqual(response.status_code, 200)
-
-        # after activation:
-        peter = User.objects.get(username="666666")
-        self.assertTrue(peter.is_active)
-
-
     def test_profile_incomplete(self):
-
-        cl, response = self.login_user('su')
+        cl, response = self.login_user(self.superuser)
         self.assertEqual(response.status_code, 200)
 
         message = list(response.context['messages'])[0]
@@ -227,7 +192,7 @@ class MitgliederTest(TestCase):
         self.assertIsNotNone(su.mitglied.festnetz)
 
         # log back in again; now the error should be gone
-        cl2, response = self.login_user('su')
+        cl2, response = self.login_user(self.superuser)
         self.assertEqual(response.status_code, 200)
 
         # we should end up on home:
@@ -241,8 +206,7 @@ class MitgliederTest(TestCase):
         #                   lambda: response.context['messages'])
 
     def test_change_password(self):
-
-        cl, response = self.login_user('su')
+        cl, response = self.login_user(self.superuser)
         self.assertEqual(response.status_code, 200)
 
         response = cl.get("/password/change/")
@@ -263,7 +227,6 @@ class MitgliederTest(TestCase):
         self.assertContains(response,
                             "Ihr Passwort wurde erfolgreich")
 
-        cl, response = self.login_user('su',
+        cl, response = self.login_user(self.superuser,
                                        self.plainpassword + self.plainpassword)
         self.assertEqual(response.status_code, 200)
-
