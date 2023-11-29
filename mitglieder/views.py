@@ -239,14 +239,14 @@ class AccountEdit(SuccessMessageMixin, FormView):
     success_url = "/"
     post_text = format_html("""
     <p>
-    Sie haben Ihr Passwort vergessen? Sie können es <a href="{{% url "password_reset_recover" %}}">
-    hier zurücksetzen</a>.
+    Passwort vergessen? Zum Zurücksetzen <a href="{{% url "password_reset_recover" %}}">
+    hier klicken</a>.
     <p>
     """)
 
     def get_context_data(self, **kwargs):
         context = super(AccountEdit, self).get_context_data(**kwargs)
-        context['title'] = "Aktualisieren Sie Ihr SVPB-Konto"
+        context['title'] = "Meine Profildaten editieren"
         context['post_text'] = self.post_text
         return context
 
@@ -304,7 +304,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
                                  user.mitglied.mitgliedsnummer))
         else:
             messages.success(self.request,
-                             "Sie haben keine Änderungen vorgenommen."
+                             "Keine Änderungen vorgenommen."
                              )
 
         return super(AccountEdit, self).form_valid(form)
@@ -315,7 +315,7 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
 
     def get_context_data(self, **kwargs):
         context = super(AccountOtherEdit, self).get_context_data(**kwargs)
-        context['title'] = "Bearbeiten Sie das  SVPB-Konto eines Mitgliedes"
+        context['title'] = "Bearbeite das SVPB-Konto eines Mitgliedes"
         return context
 
     def fillinUser(self, user):      

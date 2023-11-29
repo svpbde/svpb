@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mitglied',
             name='strasse',
-            field=models.CharField(default='', max_length=50, verbose_name='Strasse und Hausnummer'),
+            field=models.CharField(default='', max_length=50, verbose_name='Straße und Hausnummer'),
             preserve_default=True,
         ),
     ]

@@ -18,7 +18,6 @@ Main classes:
 * :class:`Leistung` : Mitglied claims to have performaed a certain amount of
   work on a particular job
 """
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -56,9 +55,9 @@ class Mitglied (models.Model):
         ('Vorname', 'user__first_name'),
         ('Nachname', 'user__last_name'),
         ('M/W', 'gender'), 
-        ('email', 'user__email'), 
+        ('Email', 'user__email'), 
         ('ID', 'mitgliedsnummer'),
-        ('Strasse', 'strasse'), 
+        ('Straße', 'strasse'), 
         ('PLZ', 'plz'), 
         ('Ort', 'ort'), 
         ('Status', 'status'), 
@@ -78,9 +77,7 @@ class Mitglied (models.Model):
                 on_delete=models.CASCADE)
     """Couple Mitglied to User via 1:1 field."""
 
-    mitgliedsnummer = models.CharField(max_length=10,
-                                       help_text="Mitgliedsnummer",
-                                       default=0)
+    mitgliedsnummer = models.CharField(max_length=10, default=0)
     """ID as assigned by Verein. Unique?! Use this as default login."""
 
     zuteilungsbenachrichtigung = models.DateTimeField(
@@ -109,13 +106,12 @@ class Mitglied (models.Model):
     """At what date did the member agree to the use of this system?"""
 
     geburtsdatum = models.DateField(
-        help_text="Geburtsdatum des Mitglieds",
         default=datetime.datetime(1900, 1, 1),
-        verbose_name="Geburtstag",
+        verbose_name="Geburtsdatum",
         )
 
     strasse = models.CharField(max_length=50,
-                               verbose_name="Strasse und Hausnummer",
+                               verbose_name="Straße und Hausnummer",
                                default="")
 
     plz = models.DecimalField(max_digits=5,
@@ -177,7 +173,6 @@ class Mitglied (models.Model):
 
     arbeitslast = models.IntegerField(
         verbose_name="Arbeitslast (h/Jahr)",
-        help_text="Wieviele Stunden pro Jahr muss dieses Mitglied arbeiten?",
         default=12,
         )
 
@@ -250,7 +245,7 @@ class Mitglied (models.Model):
     def profileIncomplete(self):
         r = []
         if not self.user.email:
-            r.append('email')
+            r.append('Email')
         if not self.festnetz and not self.mobil:
             r.append('Telefonummer (Festnetznummer oder Mobil)')
         return ', '.join(r)
