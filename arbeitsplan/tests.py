@@ -1,29 +1,26 @@
+"""Tests of arbeitsplan app
 """
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
-from django.test import TestCase
 from django.contrib.auth.models import User
-from django.test import Client
 from django.core.mail import outbox
+from django.test import Client, TestCase
 
 from arbeitsplan.models import *
 
 from pprint import pprint as pp
 
 class SimpleTest(TestCase):
-    fixtures=['arbeitsplan/fixtures/testdata/arbeitsplan.json',
-              'arbeitsplan/fixtures/testdata/groups.json',
-              'arbeitsplan/fixtures/testdata/user.json',
-              'arbeitsplan/fixtures/testdata/po.json',
-              ]
+    fixtures = [
+        'arbeitsplan/fixtures/members.json',
+        'arbeitsplan/fixtures/taskgroups.json',
+        'arbeitsplan/fixtures/tasks.json',
+        'mitglieder/fixtures/groups.json',
+        'mitglieder/fixtures/po.json',
+        'mitglieder/fixtures/user.json'
+    ]
 
     # in fixture, all users should have this password:
-    plainpassword = "abc"
-    superuser = "su"
+    plainpassword = "Test"
+    superuser = "Superuser"
 
     def meldungOnlyOne(self):
         """
@@ -167,7 +164,7 @@ class SimpleTest(TestCase):
         u.zuteilungBenachrichtigungNoetig = True
         u.save()
 
-        cl, response = self.login_user("su")
+        cl, response = self.login_user(self.superuser)
         self.assertEqual(response.status_code, 200)
 
         response = cl.get("/arbeitsplan/benachrichtigen/zuteilung/",
@@ -188,9 +185,9 @@ class SimpleTest(TestCase):
         # let's generate the email
         response = cl.post("/arbeitsplan/benachrichtigen/zuteilung/",
                            {'eintragen': 'Benachrichtigungen eintragen',
-                            'sendit_2': 'on',
+                            'sendit_4': 'on',
                             'ergaenzung': 'ergaenzungtest',
-                            'anmerkung_2': 'anmerkungtest'},
+                            'anmerkung_4': 'anmerkungtest'},
                            follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(outbox), 0)
@@ -204,4 +201,3 @@ class SimpleTest(TestCase):
         #
         # self.assertEqual(len(outbox), 1)
         # print outbox[0]
-
