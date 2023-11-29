@@ -3,7 +3,7 @@ import re
 
 from django.contrib.auth.models import User
 from django.core import mail
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 
 from mitglieder import views
 
@@ -20,6 +20,10 @@ class MitgliederTest(TestCase):
     # In fixtures, all users should have this password
     plainpassword = "Test"
     superuser = "Superuser"
+    board = "Vorstand"
+    teamleader = "Teamleiter"
+    member = "Mitglied"
+    users = [superuser, board, teamleader, member]
 
     def login_user(self, user, password=None):
         cl = Client()
@@ -33,12 +37,30 @@ class MitgliederTest(TestCase):
         return cl, response
 
     def test_login_works(self):
-        cl, response = self.login_user(self.superuser)
-        self.assertNotIn("login", response.request["PATH_INFO"])
+        for user in self.users:
+            cl, response = self.login_user(user)
+            self.assertNotIn("login", response.request["PATH_INFO"])
+
+    @override_settings(JAHRESENDE=True)
+    def test_login_works_year_end(self):
+        # Test blocked user
+        cl, response = self.login_user(self.member, self.plainpassword)
+        self.assertContains(
+            response,
+            "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich.",
+        )
+        # Test allowed users
+        for user in [self.superuser, self.board, self.teamleader]:
+            cl, response = self.login_user(user, self.plainpassword)
+            self.assertNotContains(
+                response,
+                "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich.",
+            )
 
     def test_wrong_password_fails(self):
-        cl, response = self.login_user(self.superuser, "xxx")
-        self.assertIn("login", response.request["PATH_INFO"])
+        for user in self.users:
+            cl, response = self.login_user(user, "xxx")
+            self.assertIn("login", response.request["PATH_INFO"])
 
     def test_add_user(self):
         cl, response = self.login_user(self.superuser)
