@@ -21,7 +21,6 @@ class MitgliederTable(django_tables2.Table):
 
     class Meta:
         model = User
-        attrs = {"class": "paleblue"}        
         fields = ('first_name',
                   'last_name',
                   'mitgliedsnummer',
@@ -50,8 +49,6 @@ class FilteredMemberTable(django_tables2.Table):
 
     class Meta:
         model = User
-        attrs = {"class": "table table-hover table-striped"}
-        template_name = "django_tables2/bootstrap5.html"
         fields = ('first_name',
                   'last_name',
                   'member_number',

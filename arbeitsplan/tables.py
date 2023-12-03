@@ -7,6 +7,7 @@ Collect all the tables and column types relevant for django_tables2 here.
 import unicodedata
 
 import django_tables2
+from django.conf import settings
 from django.contrib.auth.models import User
 # from django.core.urlresolvers import reverse
 from django.urls import reverse
@@ -229,11 +230,10 @@ def TableFactory (name, attrs, l, meta={}):
     return klass
     """
 
-    metadict = dict(attrs={"class": "paleblue",
-                            "orderable": "True",
-                           # "width":"90%"
-                    })
+    metadict = dict(attrs={"orderable": "True"})
 
+    # Ensure default django-tables2 attrs are present
+    metadict["attrs"].update(settings.DJANGO_TABLES2_TABLE_ATTRS)
 
     metadict.update(meta)
     attrs['Meta'] = type('Meta',
@@ -422,11 +422,6 @@ class AufgabenTable (django_tables2.Table):
 
     class Meta:
         model = models.Aufgabe
-        attrs = {"class": "paleblue"}
-        # fields=("aufgabe", "datum",
-        # django_tables2.A("verantwortlich.last_name"),
-        # "gruppe", "anzahl", "bemerkung")
-
         fields = ("gruppe", "aufgabe", "datum",
                   "stunden",
                   "anzahl",
@@ -434,7 +429,6 @@ class AufgabenTable (django_tables2.Table):
                   "verantwortlicher",
                   "quickmeldung",
                   )
-
         exclude = ("meldungen", "zuteilungen", )
 
 
@@ -464,18 +458,12 @@ class AufgabenTableTeamlead (django_tables2.Table):
 
     class Meta:
         model = models.Aufgabe
-        attrs = {"class": "paleblue"}
-        # fields=("aufgabe", "datum",
-        # django_tables2.A("verantwortlich.last_name"),
-        # "gruppe", "anzahl", "bemerkung")
-
         fields = ("gruppe", "aufgabe", "datum",
                   "stunden",
                   "anzahl",
                   "bemerkung",
                   "verantwortlicher",
                   )
-
         exclude = ("meldungen", "zuteilungen", )
 
         
@@ -519,12 +507,6 @@ class AufgabenTableVorstand(django_tables2.Table):
 
     class Meta:
         model = models.Aufgabe
-        attrs = {"class": "paleblue"}
-
-        # fields=("aufgabe", "datum",
-        # django_tables2.A("verantwortlich.last_name"),
-        # "gruppe", "anzahl", "bemerkung")
-
         fields = ("id",
                   "gruppe", "aufgabe", "datum",
                   "stunden",
@@ -550,9 +532,7 @@ class AufgabengruppeTable(django_tables2.Table):
 
     class Meta:
         model = models.Aufgabengruppe
-        attrs = {"class": "paleblue"}
         fields = ('gruppe', 'verantwortlich', 'bemerkung', 'id', )
-        # exclude = ('id',)
 
 
 ########################
@@ -584,9 +564,7 @@ class StundenplanTable (django_tables2.Table):
     u17 = django_tables2.Column (accessor='u17', verbose_name='0-1')
 
     class Meta:
-        # model = models.Aufgabe
-        attrs = {"class": "paleblue"}
-        # fields = ('aufgabe', 'gruppe', 'id', )
+        pass
 
 ##############################
 
@@ -612,11 +590,7 @@ class ZuteilungTable(django_tables2.Table):
 
     class Meta:
         model = models.Zuteilung
-        attrs = {"class": "paleblue"}
-
-        fields = ("aufgabe", 'verantwortlicher', 'datum',
-                  # 'stundenString',
-                  )
+        fields = ("aufgabe", 'verantwortlicher', 'datum')
 
 
 class ZuteilungTableVorstand(django_tables2.Table):
@@ -639,8 +613,6 @@ class ZuteilungTableVorstand(django_tables2.Table):
 
     class Meta:
         model = models.Zuteilung
-        attrs = {"class": "paleblue"}
-
         fields = ("aufgabe", 'verantwortlicher',
                   'datum', 'ausfuehrer',
                   'deleteColumn')
@@ -661,8 +633,6 @@ class MeldungListeTable(django_tables2.Table):
 
     class Meta:
         model = models.Meldung
-        attrs = {"class": "paleblue"}
-
         fields = ("aufgabenGruppe",
                   "aufgabeName",
                   "aufgabenDatum",
@@ -762,17 +732,12 @@ class MeldungTable(RadioButtonTable):
         return tmp
 
     class Meta:
-
-        # model = models.Aufgabe
-        attrs = {"class": "paleblue"}
-
         fields = ('gruppe', 'aufgabe', 'datum',
                   'stunden',
                   'anzahl',
                   "meldungen",
                   'bemerkung',
                   'prefMitglied')
-
         exclude = ("fehlende_zuteilungen", 'zuteilungen')
 
 
@@ -970,16 +935,18 @@ class LeistungTable(django_tables2.Table):
                 reverse('arbeitsplan-leistungDelete', args=[record.id])
             ))
 
-
     class Meta:
         model = models.Leistung
-        attrs = {"class": "paleblue"}
-        fields = (  # 'melder_last', 'melder_first',
-                    'aufgabe',
-                    'id',
-                    'wann', 'zeit',
-                    'status',
-                    'bemerkung', 'bemerkungVorstand')
+        fields = (
+            'aufgabe',
+            'id',
+            'wann',
+            'zeit',
+            'status',
+            'bemerkung',
+            'bemerkungVorstand'
+        )
+
 
 class LeistungBearbeitenTable (RadioButtonTable):
 
@@ -1004,9 +971,8 @@ class LeistungBearbeitenTable (RadioButtonTable):
 
     class Meta:
         model = models.Leistung
-        attrs = {"class": "paleblue"}
-        exclude = ("erstellt", "veraendert", 'id', 'benachrichtigt')        
-        sequence = ('melder', 'aufgabe', 'wann', 'zeit', 
+        exclude = ("erstellt", "veraendert", 'id', 'benachrichtigt')
+        sequence = ('melder', 'aufgabe', 'wann', 'zeit',
                     'bemerkung', 'status', 'bemerkungVorstand')
 
 
@@ -1056,7 +1022,6 @@ class LeistungEmailTable(BaseEmailTable):
 
     class Meta:
         model = models.Leistung
-        attrs = {"class": "paleblue"}
         exclude = ("erstellt", "veraendert", 'id', 'benachrichtigt')
         sequence = ('melder', 'aufgabe', 'wann', 'zeit',
                     'bemerkung', 'status', 'bemerkungVorstand',
@@ -1080,7 +1045,6 @@ class ZuteilungEmailTable(BaseEmailTable):
 
     class Meta:
         model = models.Mitglied
-        attrs = {"class": "paleblue"}
         exclude = ('id',
                    'mitgliedsnummer',
                    'zustimmungsDatum',
@@ -1129,7 +1093,6 @@ class MeldungsAufforderungsEmailTable(BaseEmailTable):
     
     class Meta:
         model = models.Mitglied
-        attrs = {"class": "paleblue"}
         exclude = ('id',
                    'mitgliedsnummer',
                    'zustimmungsDatum',
@@ -1167,11 +1130,8 @@ class ImpersonateTable(django_tables2.Table):
 
     class Meta:
         model = User
-
-        attrs = {"class": "paleblue"}
         fields = ('first_name',
                   'last_name',
                   'mitgliedsnummer',
                   'id',
                   )
-
