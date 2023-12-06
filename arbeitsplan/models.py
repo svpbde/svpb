@@ -55,7 +55,7 @@ class Mitglied (models.Model):
         ('Vorname', 'user__first_name'),
         ('Nachname', 'user__last_name'),
         ('M/W', 'gender'), 
-        ('Email', 'user__email'), 
+        ('E-Mail', 'user__email'), 
         ('ID', 'mitgliedsnummer'),
         ('Straße', 'strasse'), 
         ('PLZ', 'plz'), 
@@ -245,7 +245,7 @@ class Mitglied (models.Model):
     def profileIncomplete(self):
         r = []
         if not self.user.email:
-            r.append('Email')
+            r.append('E-Mail')
         if not self.festnetz and not self.mobil:
             r.append('Telefonummer (Festnetznummer oder Mobil)')
         return ', '.join(r)

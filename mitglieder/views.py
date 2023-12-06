@@ -62,10 +62,10 @@ class ActivateView(FormView):
         <p>
         Vor der Nutzung dieser Webseite bitten wir Sie um folgendes:
         <ul>
-        <li>Bitte überprüfen Sie Ihre email-Adresse und korrigieren Sie diese
+        <li>Bitte überprüfen Sie Ihre E-Mail-Adresse und korrigieren Sie diese
         gegebenenfalls </li>
         <li>Bitte stimmen Sie der Nutzung der Webseite zu </li>
-        <li>Bitte stimmen Sie zu, dass der SVPB Ihnen emails
+        <li>Bitte stimmen Sie zu, dass der SVPB Ihnen E-Mails
          im Zusammenhang mit dem
         Arbeitsplan schicken darf. </li>
         <li>Bitte vergeben Sie ein neues Passwort! (Die beiden Eingaben

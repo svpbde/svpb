@@ -35,7 +35,7 @@ class ActivateForm(forms.Form):
     emailNutzung = forms.BooleanField(
         required=True,
         initial=False,
-        label="Email-Benachrichtigungen",
+        label="E-Mail-Benachrichtigungen",
         help_text="Erlauben Sie dem SVPB, Sie per E-Mail zu diesem Arbeitsplan zu benachrichtigen?",
     )
     pw1 = forms.CharField(
@@ -89,7 +89,7 @@ class MitgliederAddForm(forms.ModelForm):
         max_length=20,
         label="Nachname",
     )
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="E-Mail")
 
     def __init__(self, *args, **kwargs):
         super(MitgliederAddForm, self).__init__(*args, **kwargs)
@@ -140,7 +140,7 @@ class MitgliederAddForm(forms.ModelForm):
             mnrnum = int(self.cleaned_data["mitgliedsnummer"])
         except:
             raise ValidationError(
-                "Die Mitgliedsnummer muss eine Zahl sein (führende Nullen sind ok.",
+                "Die Mitgliedsnummer muss eine Zahl sein (führende Nullen sind ok).",
                 code="invalid",
             )
 

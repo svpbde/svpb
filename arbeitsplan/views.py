@@ -2301,7 +2301,7 @@ class EmailSendenView(isVorstandMixin, View):
 
         if newEmailLogs.count() == 0:
             messages.success(request,
-                             "Es waren keine emails zu versenden."
+                             "Es waren keine E-Mails zu versenden."
                              )
         else:
             failed = newEmailLogs.filter(status=pom.STATUS.failed).count()
