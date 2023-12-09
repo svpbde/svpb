@@ -1,16 +1,13 @@
 {% extends "base.html" %}
-{% load i18n %}
-
-{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></div>{% endblock %}
 
 {% block branding %}
-SVPB 
+Bis zum nächsten Mal! 
 {% endblock %}
 {% block content %}
 
-<p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>
+<p>Du bist nun abgemeldet.</p>
 
 
-<p><a href="/login/?next=/home/">{% trans 'Log in again' %}</a></p>
+<p><a href="/login/?next=/home/" class="btn btn-primary" role="button">Erneut anmelden</a></p>
 
 {% endblock %}
