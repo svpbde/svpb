@@ -7,13 +7,13 @@ from django.contrib.auth.models import User
 class MitgliederTable(django_tables2.Table):
     mitgliedsnummer = django_tables2.Column(accessor="mitglied.mitgliedsnummer")
     edit = django_tables2.TemplateColumn(
-        "<a href=\"{% url 'accountOtherEdit' record.pk %}\"> Editieren </a>",
+        "<a href=\"{% url 'accountOtherEdit' record.pk %}\"><i class=\"fa-solid fa-pen-to-square\"></i></a>",
         verbose_name="Editieren",
         orderable=False,
         empty_values=(),
         )
     delete = django_tables2.TemplateColumn(
-        "<a href=\"{% url 'accountDelete' record.pk %}\"> Löschen </a>",
+        "<a href=\"{% url 'accountDelete' record.pk %}\"><i class=\"fa-solid fa-trash-can text-danger\"></i></a>",
         verbose_name="Löschen",
         orderable=False,
         empty_values=(),
