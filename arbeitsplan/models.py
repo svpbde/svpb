@@ -434,10 +434,10 @@ class Meldung (models.Model):
     praeferenzstring = "; ".join(["{}: {}".format(n, s) for (n, s) in PRAEFERENZ] )
         
     PRAEFERENZButtons = {
-        GARNICHT: 'btn-default',
-        GERNE: 'btn-default',
-        NORMAL: 'btn-default',
-        WENNSMUSS: 'btn-default',
+        GARNICHT: 'btn-outline-secondary',
+        GERNE: 'btn-outline-secondary',
+        NORMAL: 'btn-outline-secondary',
+        WENNSMUSS: 'btn-outline-secondary',
         }
 
     MODELDEFAULTS = {'prefMitglied': GARNICHT,
@@ -615,10 +615,10 @@ class Leistung (models.Model):
         )
 
     STATUSButtons = {
-        OFFEN: 'btn-default',
-        ACK: 'btn-default',
-        RUECKFRAGE: 'btn-default',
-        NEG: 'btn-default',
+        OFFEN: 'btn-outline-secondary',
+        ACK: 'btn-outline-secondary',
+        RUECKFRAGE: 'btn-outline-secondary',
+        NEG: 'btn-outline-secondary',
         }
     status = models.CharField(max_length=2,
                               choices = STATUS,

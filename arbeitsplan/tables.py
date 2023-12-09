@@ -23,49 +23,55 @@ from . import models
 ####################################
 
 
-class RadioButtonTable (django_tables2.Table):
-
+class RadioButtonTable(django_tables2.Table):
     def render_radio(self, fieldname, choices, buttontexts, **kwargs):
-
-        if 'bound_row' in kwargs:
-            record = kwargs['bound_row']._record
-        if 'record' in kwargs:
-            record = kwargs['record']
+        if "bound_row" in kwargs:
+            record = kwargs["bound_row"]._record
+        if "record" in kwargs:
+            record = kwargs["record"]
 
         try:
-            tmp = '\n'.join([
-                format_html("""
-                <label class="btn {4} {5}">
-                <input type="radio" name="{0}_{1}" value="{2}"> {3}
-                </label>
-                """,
-                fieldname,
-                record['id'], 
-                choice[0],
-                choice[1],
-                buttontexts[choice[0]],
-                " active" if record[fieldname] == choice[0] else "",
-                )
-                for (counter, choice) in enumerate(choices)])        
+            tmp = "\n".join(
+                [
+                    format_html(
+                        """
+                        <input type="radio" class="btn-check" name="{0}_{1}" id="btnradio_{0}_{1}_{6}" value="{2}" autocomplete="off" {5}>
+                        <label class="btn {4}" for="btnradio_{0}_{1}_{6}">{3}</label>
+                        """,
+                        fieldname,
+                        record["id"],
+                        choice[0],
+                        choice[1],
+                        buttontexts[choice[0]],
+                        "checked" if record[fieldname] == choice[0] else "",
+                        counter,
+                    )
+                    for (counter, choice) in enumerate(choices)
+                ]
+            )
         except TypeError:
-            tmp = '\n'.join([
-                format_html("""
-                <label class="btn {4} {5}">
-                <input type="radio" name="{0}_{1}" value="{2}"> {3}
-                </label>
+            tmp = "\n".join(
+                [
+                    format_html(
+                        """
+                <input type="radio" class="btn-check" name="{0}_{1}" id="btnradio_{0}_{1}_{6}" value="{2}" autocomplete="off" {5}>
+                <label class="btn {4}" for="btnradio_{0}_{1}_{6}">{3}</label>
                 """,
-                fieldname,
-                record.id, 
-                choice[0],
-                choice[1],
-                buttontexts[choice[0]],
-                " active" if getattr(record, fieldname) == choice[0] else "",
-                )
-                for (counter, choice) in enumerate(choices)])        
+                        fieldname,
+                        record.id,
+                        choice[0],
+                        choice[1],
+                        buttontexts[choice[0]],
+                        "checked" if getattr(record, fieldname) == choice[0] else "",
+                        counter,
+                    )
+                    for (counter, choice) in enumerate(choices)
+                ]
+            )
 
-        return mark_safe("""<div class="btn-group-vertical" data-bs-toggle="buttons">""" +
-                          tmp +
-                          """</div>""")
+        return mark_safe(
+            """<div class="btn-group-vertical" role="group" >""" + tmp + """</div>"""
+        )
 
 
 class KontaktColumn(django_tables2.columns.Column):
@@ -765,20 +771,9 @@ class MeldungTableVorstand (RadioButtonTable):
                                       empty_values=(),
                                       )
 
-    ## melder_last = django_tables2.Column (accessor="melder.last_name",
-    ##                                      verbose_name="Melder Nachname")
-    ## melder_first = django_tables2.Column (accessor="melder.first_name",
-    ##                                      verbose_name="Melder Vorname")
-
     melder = KontaktColumn(accessor="melder",
                            verbose_name="Melder",
-                           # order_by=("melder.last_name", "melder.first_name"),
                            )
-
-    ## bemerkungVorstand = django_tables2.Column (accessor="bemerkungVorstand",
-    ##                                     verbose_name="Bemerkung Vorstand",
-    ##                                     empty_values=(), 
-    ##                                     )
 
     bemerkungVorstand = django_tables2.Column(
         empty_values=(),
@@ -791,7 +786,6 @@ class MeldungTableVorstand (RadioButtonTable):
         )
 
     def render_prefVorstand(self, value, record):
-
         return self.render_radio(
             choices=models.Meldung.PRAEFERENZ,
             buttontexts=models.Meldung.PRAEFERENZButtons,
