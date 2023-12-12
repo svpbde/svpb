@@ -36,7 +36,6 @@ User.__str__ = lambda s: "%s %s (Nr.: %s)" % (s.first_name,
 
 
 class Mitglied (models.Model):
-
     """Provide additional information on a User by a 1:1 relationship:
     ID, dates of messages
 
@@ -50,6 +49,21 @@ class Mitglied (models.Model):
     last message - there simply might not have anything happened to
     this member since its last message.
     """
+    class Status(models.TextChoices):
+        ADULT = "Er", "Erwachsene"
+        YOUTH = "Ju", "Jugendlicher"
+        PUPIL = "Ss", "Schüler, Studenten, BW, Zivi"
+        CHILD = "Ki", "Kind in Familie"
+        CHILD_NO_FEE = "Kf", "Kind in Familie, beitragsfrei"
+        PASSIVE = "PM", "Passives Mitglied"
+        NON_MEMBER = "Nm", "Nichtmitglied"
+        NO_FEE = "Bf", "Beitragsfreies Mitglied"
+        PARTNER_ACTIVE = "Pa", "Partner aktives Mitglied"
+        PARTNER_PASSIVE = "Pp", "Partner passives Mitglied"
+
+    class Gender(models.TextChoices):
+        M = "M", "M"
+        W = "W", "W"
 
     excelFields = [
         ('Vorname', 'user__first_name'),
@@ -121,8 +135,8 @@ class Mitglied (models.Model):
 
     gender = models.CharField(max_length=1,
                               verbose_name="Geschlecht",
-                              default="M",
-                              choices=(('M', 'M'), ('W', 'W')))
+                              default=Gender.M,
+                              choices=Gender.choices)
 
     ort = models.CharField(max_length=50,
                            verbose_name="Ort",
@@ -135,36 +149,11 @@ class Mitglied (models.Model):
     mobil = PhoneNumberField(blank=True,
                              verbose_name="Mobilnummer",
                              default="")
-    
-    STATUS_Erwachsene = "Er"
-    STATUS_Jugendliche = "Ju"
-    STATUS_Schueler = "Ss"
-    STATUS_Kind = "Ki"
-    STATUS_KindBeitragsfrei = "Kf"
-    STATUS_PassivMitglied = "PM"
-    STATUS_Nichtmitglied = "Nm"
-    STATUS_Beitragsfrei = "Bf"
-    STATUS_PartnerAktiv = "Pa"
-    STATUS_PartnerPassiv = "Pp"
-
-    STATUSDEFAULTS = (
-        (STATUS_Erwachsene, "Erwachsene"),
-        (STATUS_Jugendliche, "Jugendliche"),
-        (STATUS_Schueler, "Schüler, Studenten, BW, Zivi"),
-        (STATUS_Kind, "Kind in Familie"),
-        (STATUS_KindBeitragsfrei, "Kind in Familie, beitragsfrei"),
-        (STATUS_PassivMitglied, "Passives Mitglied"),
-        (STATUS_Nichtmitglied, "Nichtmitglied"),
-        (STATUS_Beitragsfrei, "Beitragsfreies Mitglied"),
-        (STATUS_PartnerAktiv, "Partner aktives Mitglied"),
-        (STATUS_PartnerPassiv, "Partner passives Mitglied"),
-    )
 
     status = models.CharField(max_length=20,
                               verbose_name="Mitgliedsstatus",
-                              default=STATUS_Erwachsene,
-                              choices=STATUSDEFAULTS)
-
+                              default=Status.ADULT,
+                              choices=Status.choices)
 
     erstbenachrichtigt = models.BooleanField(
         verbose_name="Erstbenachrichtigung",
