@@ -220,15 +220,15 @@ class Mitglied (models.Model):
         return sum([l.zeit for l in leistungen])
 
     def akzeptierteStunden(self):
-        leistungen = self.user.leistung_set.filter(status=Leistung.ACK)
+        leistungen = self.user.leistung_set.filter(status=Leistung.Status.ACCEPTED)
         return sum([l.zeit for l in leistungen])
     
     def offeneStunden(self):
-        leistungen = self.user.leistung_set.filter(status=Leistung.OFFEN)
+        leistungen = self.user.leistung_set.filter(status=Leistung.Status.OPEN)
         return sum([l.zeit for l in leistungen])
     
     def abgelehnteStunden(self):
-        leistungen = self.user.leistung_set.filter(status=Leistung.NEG)
+        leistungen = self.user.leistung_set.filter(status=Leistung.Status.REJECTED)
         return sum([l.zeit for l in leistungen])
 
     def profileIncomplete(self):
@@ -565,62 +565,41 @@ class StundenZuteilung(models.Model):
         return str(self.uhrzeit)
 
 
-class Leistung (models.Model):
-    melder = models.ForeignKey(User,
-                    on_delete=models.CASCADE)
-    aufgabe = models.ForeignKey (Aufgabe,
-                    on_delete=models.PROTECT)
-    erstellt = models.DateTimeField (auto_now_add=True)
-    # veraendert = models.DateTimeField (auto_now=True)
-    veraendert = models.DateTimeField ()
-    benachrichtigt = models.DateTimeField (default=datetime.datetime(1900, 1, 1))
-    wann = models.DateField (help_text="An welchem Tag haben Sie die Leistung erbracht?",
-                             ) 
-    zeit = models.DecimalField (max_digits=3,
-                                decimal_places = 1,
-                                help_text="Wieviel Zeit (in Stunden) haben Sie gearbeitet? Eingabe von Zentelstunden möglich. Je nach Browsereinstellung mit . oder , die Nachkommastelle abtrennen: 1.4 oder 1,4 für 1 Stunde 24 Minuten. ",
-                                )
-    ## auslagen = models.DecimalField (max_digits=6,
-    ##                                 decimal_places = 2,
-    ##                                 help_text = "Hatten Sie finanzielle Auslagen? Bitte Belege vorlegen!",
-    ##                                 default = 0, 
-    ##                                 ) 
-    ## km = models.DecimalField (max_digits= 4,
-    ##                           decimal_places = 0,
-    ##                           help_text = "Hatten Sie Wegstrecken, für die Sie km-Vergütung erhalten?",
-    ##                           default = 0, 
-    ##                           )
+class Leistung(models.Model):
+    class Status(models.TextChoices):
+        OPEN = "OF", "Offen"
+        ACCEPTED = "AK", "Akzeptiert"
+        INQUIRY = "RU", "Rückfrage"
+        REJECTED = "NE", "Abgelehnt"
 
-    OFFEN =  'OF'
-    ACK = 'AK'
-    RUECKFRAGE = 'RU'
-    NEG = 'NE'
+    STATUS_BUTTONS = {
+        Status.OPEN: "btn-outline-secondary",
+        Status.ACCEPTED: "btn-outline-secondary",
+        Status.INQUIRY: "btn-outline-secondary",
+        Status.REJECTED: "btn-outline-secondary",
+    }
 
-    STATUS = (
-        (OFFEN, 'Offen'), 
-        (ACK, 'Akzeptiert'), 
-        (RUECKFRAGE, 'Rückfrage'), 
-        (NEG, 'Abgelehnt'), 
-        )
-
-    STATUSButtons = {
-        OFFEN: 'btn-outline-secondary',
-        ACK: 'btn-outline-secondary',
-        RUECKFRAGE: 'btn-outline-secondary',
-        NEG: 'btn-outline-secondary',
-        }
-    status = models.CharField(max_length=2,
-                              choices = STATUS,
-                              default = OFFEN) 
+    melder = models.ForeignKey(User, on_delete=models.CASCADE)
+    aufgabe = models.ForeignKey(Aufgabe, on_delete=models.PROTECT)
+    erstellt = models.DateTimeField(auto_now_add=True)
+    veraendert = models.DateTimeField()
+    benachrichtigt = models.DateTimeField(default=datetime.datetime(1900, 1, 1))
+    wann = models.DateField(
+        help_text="An welchem Tag haben Sie die Leistung erbracht?",
+    )
+    zeit = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        help_text="Wieviel Zeit (in Stunden) haben Sie gearbeitet? Eingabe von Zentelstunden möglich. Je nach Browsereinstellung mit . oder , die Nachkommastelle abtrennen: 1.4 oder 1,4 für 1 Stunde 24 Minuten. ",
+    )
+    status = models.CharField(max_length=2, choices=Status.choices, default=Status.OPEN)
 
     bemerkung = models.TextField(blank=True)
-    bemerkungVorstand = models.TextField(blank=True,
-                                         verbose_name="Bemerkung Vorstand")
+    bemerkungVorstand = models.TextField(blank=True, verbose_name="Bemerkung Vorstand")
 
     class Meta:
         verbose_name_plural = "Leistungen"
         verbose_name = "Leistung"
-
 
     def save(self, veraendert=True, *args, **kwargs):
         """
@@ -638,33 +617,15 @@ class Leistung (models.Model):
         - `**kwargs`: Passed through to super class
         """
         if veraendert:
-            self.veraendert = (datetime.datetime.
-                                   utcnow().replace(tzinfo=utc))
+            self.veraendert = datetime.datetime.utcnow().replace(tzinfo=utc)
 
         return super(Leistung, self).save(*args, **kwargs)
 
-    def __str__ (self):
-        return (self.melder.__str__() + " ; " +
-                self.aufgabe.__str__() + " ; " +
-                (self.veraendert.strftime("%d/%m/%y")
-                 if self.veraendert else "--") 
-                )
-
-
-
-## this is just debug code for the meldung issue - trying to figure out why there are double instances
-# from django.db.models.signals import pre_save, pre_init, post_save
-# from django.dispatch import receiver
-
-## @receiver(pre_init, sender=Meldung)
-## def meldungDebugPreInit (sender, args, **kwargs):
-##     print "Meldung Pre Init : ", args, kwargs
-
-## @receiver(pre_save, sender=Meldung)
-## def meldungDebugPreSave (sender, **kwargs):
-##     print "Meldung PreSave: ", kwargs
-    
-## @receiver(post_save, sender=Meldung)
-## def meldungDebugPostSave (sender, **kwargs):
-##     print "Meldung PostSave: ", kwargs
-    
+    def __str__(self):
+        return (
+            self.melder.__str__()
+            + " ; "
+            + self.aufgabe.__str__()
+            + " ; "
+            + (self.veraendert.strftime("%d/%m/%y") if self.veraendert else "--")
+        )

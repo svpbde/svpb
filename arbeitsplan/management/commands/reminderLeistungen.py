@@ -34,9 +34,9 @@ class Command(BaseCommand):
                             filter(
                                 erstellt__lte=datetime.date.today()-datetime.timedelta(days=7)).
                             exclude(
-                                status=models.Leistung.ACK).
+                                status=models.Leistung.Status.ACCEPTED).
                             exclude(
-                                status=models.Leistung.NEG)
+                                status=models.Leistung.Status.REJECTED)
                             )
 
         print(offeneLeistungen)

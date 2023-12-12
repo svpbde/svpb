@@ -814,8 +814,8 @@ class MeldungTableVorstand (RadioButtonTable):
 def SaldenTableFactory (l):
 
     attrs = {}
-    for s in models.Leistung.STATUS:
-        attrs[s[0]] = LinkedColumn(verbose_name='Leistungs- angabe ' + s[1] + ' (h)')
+    for s in models.Leistung.Status:
+        attrs[s.value] = LinkedColumn(verbose_name='Leistungs- angabe ' + s.label + ' (h)')
 
     attrs['zugeteilt'] = LinkedColumn(verbose_name="Zugeteilt insgesamt (h)")
     attrs['past'] = django_tables2.Column(
@@ -921,8 +921,8 @@ class LeistungTable(django_tables2.Table):
                                          verbose_name="Zurückziehen?")
 
     def render_id(self, record):
-        if ((record.status == models.Leistung.ACK) or
-            (record.status == models.Leistung.NEG)):
+        if ((record.status == models.Leistung.Status.ACCEPTED) or
+            (record.status == models.Leistung.Status.REJECTED)):
             return "---"
         else:
             return mark_safe('<a href="{}">Zurückziehen</a>'.format(
@@ -954,8 +954,8 @@ class LeistungBearbeitenTable (RadioButtonTable):
 
     def render_status (self, value, bound_row):
         return self.render_radio(bound_row=bound_row,
-                                 choices=models.Leistung.STATUS,
-                                 buttontexts=models.Leistung.STATUSButtons,
+                                 choices=models.Leistung.Status.choices,
+                                 buttontexts=models.Leistung.STATUS_BUTTONS,
                                  fieldname="status")
 
     bemerkungVorstand = django_tables2.Column(empty_values=(),

@@ -354,32 +354,38 @@ class DateFilterForm (CrispyFilterMixin, forms.Form):
         )
 
 
-class StatusFilterForm (CrispyFilterMixin, forms.Form):
-    status = forms.MultipleChoiceField(choices=models.Leistung.STATUS,
-                                           widget=forms.CheckboxSelectMultiple,
-                                           label="Bearbeitungsstatus",
-                                           required=False,
-                                           initial=[models.Leistung.STATUS[0][0],
-                                                    models.Leistung.STATUS[2][0],
-                                                    ],
-                                             )
+class StatusFilterForm(CrispyFilterMixin, forms.Form):
+    status = forms.MultipleChoiceField(
+        choices=models.Leistung.Status.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label="Bearbeitungsstatus",
+        required=False,
+        initial=[
+            models.Leistung.Status.OPEN,
+            models.Leistung.Status.INQUIRY,
+        ],
+    )
     __layout = Layout(
-        InlineCheckboxes('status'),
-        )
+        InlineCheckboxes("status"),
+    )
 
-class StatusFilterForm2 (CrispyFilterMixin, forms.Form):
-    status = forms.MultipleChoiceField(choices=models.Leistung.STATUS,
-                                           widget=forms.CheckboxSelectMultiple,
-                                           label="Bearbeitungsstatus",
-                                           required=False,
-                                           initial=[models.Leistung.STATUS[1][0],
-                                                    models.Leistung.STATUS[2][0],
-                                                    models.Leistung.STATUS[3][0],
-                                                    ],
-                                             )
+
+class StatusFilterForm2(CrispyFilterMixin, forms.Form):
+    status = forms.MultipleChoiceField(
+        choices=models.Leistung.Status.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label="Bearbeitungsstatus",
+        required=False,
+        initial=[
+            models.Leistung.Status.ACCEPTED,
+            models.Leistung.Status.INQUIRY,
+            models.Leistung.Status.REJECTED,
+        ],
+    )
     __layout = Layout(
-        InlineCheckboxes('status'),
-        )
+        InlineCheckboxes("status"),
+    )
+
 
 class LeistungBenachrichtigtForm(CrispyFilterMixin, forms.Form):
     benachrichtigt = forms.BooleanField(required=False,
