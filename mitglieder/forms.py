@@ -226,7 +226,7 @@ class AccountOtherEdit(AccountEdit):
     status = forms.ChoiceField(
         required=False,
         label="Mitgliedsstatus",
-        choices=models.Mitglied.STATUSDEFAULTS,
+        choices=models.Mitglied.Status.choices,
     )
     aktiv = forms.BooleanField(
         required=False,
@@ -271,7 +271,7 @@ class MemberFilterForm(CrispyFilterMixin, forms.Form):
         required=False,
         initial=False,
         label="Mitgliedsstatus",
-        choices=(("", "Alle anzeigen"), *models.Mitglied.STATUSDEFAULTS),
+        choices=(("", "Alle anzeigen"), *models.Mitglied.Status.choices),
     )
     age = forms.IntegerField(required=False, label="Alter ab")
     __layout = Layout("first_name", "last_name", "member_number", "status", "age")
