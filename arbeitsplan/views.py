@@ -1661,8 +1661,8 @@ class DeleteLeistungView(DeleteView):
         obj = super(DeleteLeistungView, self).get_object()
 
         if (not (self.request.user == obj.melder) or
-            (obj.status == models.Leistung.ACK) or
-            (obj.status == models.Leistung.NEG)):
+            (obj.status == models.Leistung.Status.ACCEPTED) or
+            (obj.status == models.Leistung.Status.REJECTED)):
             from django.core.exceptions import PermissionDenied
             raise PermissionDenied
 
@@ -1693,12 +1693,12 @@ class ListLeistungView (FilteredListView):
         qsLeistungen = self.model.objects.filter(melder=self.request.user)
 
         res = [(-1, 'Arbeitssoll', -1, self.request.user.mitglied.arbeitslast,)]
-        for s in models.Leistung.STATUS:
-            qs = models.Leistung.objects.filter(status=s[0],
+        for s in models.Leistung.Status:
+            qs = models.Leistung.objects.filter(status=s.value,
                                                 melder=self.request.user,
                                                 )
             sum = qs.aggregate(Sum('zeit'))
-            res.append((s[0], s[1], qs, sum['zeit__sum']))
+            res.append((s.value, s.label, qs, sum['zeit__sum']))
 
         self.context['leistungSummary'] = res
 
@@ -1931,20 +1931,20 @@ class Salden(isVorstandMixin, FilteredListView):
             tmp['user'] = u
             tmp['box'] = ("box-" + str(u.id), True)
             qs = models.Leistung.objects.filter(melder=u)
-            for s in models.Leistung.STATUS:
-                zeit = qs.filter(status=s[0]
+            for s in models.Leistung.Status:
+                zeit = qs.filter(status=s.value
                                  ).aggregate(Sum('zeit'))['zeit__sum']
 
                 if zeit:
                     linktarget = rurl + "?" + urlencode({
                         'last_name': u.last_name,
                         'first_name': u.first_name,
-                        'status': s[0],
+                        'status': s.value,
                         'filter': 'Filter anwenden'})
                 else:
                     linktarget = None
 
-                tmp[s[0]] = (zeit, linktarget)
+                tmp[s.value] = (zeit, linktarget)
 
 
             # TODO: add linked column here as well
@@ -1959,7 +1959,7 @@ class Salden(isVorstandMixin, FilteredListView):
                                  args=('all',)) + "?" + urlencode({
                                      'last_name': u.last_name,
                                      'first_name': u.first_name,
-                                     'status': s[0],
+                                     'status': s.value,
                                      'filter': 'Filter anwenden'})
 
             tmp['zugeteilt'] = (zugeteilt, linktarget)
