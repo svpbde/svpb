@@ -720,8 +720,8 @@ class MeldungTable(RadioButtonTable):
 
     def render_prefMitglied(self, value, record):
         return self.render_radio(
-            choices=models.Meldung.PRAEFERENZ,
-            buttontexts=models.Meldung.PRAEFERENZButtons,
+            choices=models.Meldung.Preferences.choices,
+            buttontexts=models.Meldung.PREFERENCES_BUTTONS,
             fieldname="prefMitglied",
             record=record,
             )
@@ -787,8 +787,8 @@ class MeldungTableVorstand (RadioButtonTable):
 
     def render_prefVorstand(self, value, record):
         return self.render_radio(
-            choices=models.Meldung.PRAEFERENZ,
-            buttontexts=models.Meldung.PRAEFERENZButtons,
+            choices=models.Meldung.Preferences.choices,
+            buttontexts=models.Meldung.PREFERENCES_BUTTONS,
             fieldname="prefVorstand",
             record=record)
 
