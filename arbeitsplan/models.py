@@ -170,7 +170,7 @@ class Mitglied (models.Model):
 
     def gemeldeteAnzahlAufgaben(self):
 
-        return self.user.meldung_set.exclude(prefMitglied=Meldung.GARNICHT).count()
+        return self.user.meldung_set.exclude(prefMitglied=Meldung.Preferences.NEVER).count()
 
     def gemeldeteStunden(self):
         """Compute hours for which the Mitglied has entered
@@ -178,7 +178,7 @@ class Mitglied (models.Model):
         """
 
         echteMeldungen = (self.user.meldung_set
-                          .exclude(prefMitglied=Meldung.GARNICHT))
+                          .exclude(prefMitglied=Meldung.Preferences.NEVER))
 
         return sum([m.aufgabe.stunden for m in echteMeldungen])
 
@@ -341,7 +341,7 @@ class Aufgabe(models.Model):
         exist for this Aufgabe?
         """
         return self.meldung_set.exclude(prefMitglied=
-                                        Meldung.GARNICHT).count()
+                                        Meldung.Preferences.NEVER).count()
 
     def has_Stundenplan(self):
         """Is there a STundenplan for this Aufgabe?"""
@@ -398,59 +398,58 @@ class Stundenplan (models.Model):
         verbose_name = "Stundenplan"
 
 
-class Meldung (models.Model):
+class Meldung(models.Model):
+    class Preferences(models.IntegerChoices):
+        NEVER = -1, "Nein"
+        RELUCTANTLY = 0, "Wenn es sein muss"
+        OK = 1, "Ok"
+        GLADLY = 2, "Gerne!"
+
+    PREFERENCES_STRING = "; ".join(
+        [f"{value}: {label}" for (value, label) in Preferences.choices]
+    )
+    PREFERENCES_BUTTONS = {
+        Preferences.NEVER: "btn-outline-secondary",
+        Preferences.RELUCTANTLY: "btn-outline-secondary",
+        Preferences.OK: "btn-outline-secondary",
+        Preferences.GLADLY: "btn-outline-secondary",
+    }
+    MODELDEFAULTS = {
+        "prefMitglied": Preferences.NEVER,
+        "prefVorstand": Preferences.OK,
+        "bemerkung": "",
+        "bemerkungVorstand": "",
+    }
+
     erstellt = models.DateField(auto_now_add=True)
     veraendert = models.DateField(auto_now=True)
-    melder = models.ForeignKey(User,
-                        on_delete=models.CASCADE)
-    aufgabe = models.ForeignKey(Aufgabe,
-                        on_delete=models.PROTECT)
+    melder = models.ForeignKey(User, on_delete=models.CASCADE)
+    aufgabe = models.ForeignKey(Aufgabe, on_delete=models.PROTECT)
     # Man kann Meldung löschen, wenn es den Melder nicht mehr gibt.
-    # aber man kann eine Aufgabe nicht löschen, wenn es schon Meldungen dafür gibt 
+    # aber man kann eine Aufgabe nicht löschen, wenn es schon Meldungen dafür gibt
 
-    GARNICHT = -1
-    WENNSMUSS = 0
-    NORMAL = 1
-    GERNE = 2
+    prefMitglied = models.IntegerField(
+        choices=Preferences.choices,
+        default=Preferences.OK,
+        verbose_name="Präferenz",
+        help_text="Haben Sie Vorlieben für diese Aufgabe?",
+    )
+    prefVorstand = models.IntegerField(
+        choices=Preferences.choices,
+        default=Preferences.OK,
+        help_text="Trauen Sie diesem Mitglied die Aufgabe zu?",
+    )
+    bemerkung = models.TextField(blank=True)
+    bemerkungVorstand = models.TextField(blank=True)
 
-    PRAEFERENZ = (
-        (GARNICHT, "Nein"),
-        (WENNSMUSS, "Wenn es sein muss"),
-        (NORMAL, "Ok"),
-        (GERNE, "Gerne!"),
+    def __str__(self):
+        return (
+            self.melder.__str__()
+            + " ; "
+            + self.aufgabe.__str__()
+            + " ; "
+            + (self.veraendert.strftime("%d/%m/%y") if self.veraendert else "--")
         )
-
-    praeferenzstring = "; ".join(["{}: {}".format(n, s) for (n, s) in PRAEFERENZ] )
-        
-    PRAEFERENZButtons = {
-        GARNICHT: 'btn-outline-secondary',
-        GERNE: 'btn-outline-secondary',
-        NORMAL: 'btn-outline-secondary',
-        WENNSMUSS: 'btn-outline-secondary',
-        }
-
-    MODELDEFAULTS = {'prefMitglied': GARNICHT,
-                     'prefVorstand': NORMAL,
-                     'bemerkung': '',
-                     'bemerkungVorstand': '', 
-                    }
-    prefMitglied = models.IntegerField (choices = PRAEFERENZ,
-                                        default = NORMAL,
-                                        verbose_name = "Präferenz", 
-                                        help_text="Haben Sie Vorlieben für diese Aufgabe?",)
-    prefVorstand = models.IntegerField (choices = PRAEFERENZ,
-                                        default = NORMAL,
-                                        help_text = "Trauen Sie diesem Mitglied die Aufgabe zu?",)
-
-    bemerkung = models.TextField (blank=True)
-    bemerkungVorstand = models.TextField (blank=True)
-
-    def __str__ (self):
-        return (self.melder.__str__() + " ; " +
-                self.aufgabe.__str__() + " ; " +
-                (self.veraendert.strftime("%d/%m/%y")
-                 if self.veraendert else "--") 
-                )
 
     class Meta:
         verbose_name_plural = "Meldungen"

@@ -302,13 +302,13 @@ class PersonAufgabengruppeFilterForm (NameFilterForm,
 
 class PraeferenzFilterForm (CrispyFilterMixin, forms.Form):
 
-    praeferenz = forms.MultipleChoiceField(choices=models.Meldung.PRAEFERENZ,
+    praeferenz = forms.MultipleChoiceField(choices=models.Meldung.Preferences.choices,
                                            widget=forms.CheckboxSelectMultiple,
                                            label="Vorliebe Mitglied",
                                            required=False,
-                                           initial=[models.Meldung.PRAEFERENZ[1][0],
-                                                    models.Meldung.PRAEFERENZ[2][0],
-                                                    models.Meldung.PRAEFERENZ[3][0],
+                                           initial=[models.Meldung.Preferences.RELUCTANTLY,
+                                                    models.Meldung.Preferences.OK,
+                                                    models.Meldung.Preferences.GLADLY,
                                                     ],
                                              )
     __layout = Layout(
@@ -319,14 +319,14 @@ class PraeferenzFilterForm (CrispyFilterMixin, forms.Form):
 
 class PraeferenzVorstandFilterForm (CrispyFilterMixin, forms.Form):
 
-    praeferenzVorstand = forms.MultipleChoiceField(choices=models.Meldung.PRAEFERENZ,
+    praeferenzVorstand = forms.MultipleChoiceField(choices=models.Meldung.Preferences.choices,
                                            widget=forms.CheckboxSelectMultiple,
                                            label="Vorliebe Vorstand",
                                            required=False,
-                                           initial=[models.Meldung.PRAEFERENZ[0][0],
-                                                    models.Meldung.PRAEFERENZ[1][0],
-                                                    models.Meldung.PRAEFERENZ[2][0],
-                                                    models.Meldung.PRAEFERENZ[3][0],
+                                           initial=[models.Meldung.Preferences.NEVER,
+                                                    models.Meldung.Preferences.RELUCTANTLY,
+                                                    models.Meldung.Preferences.OK,
+                                                    models.Meldung.Preferences.GLADLY,
                                                     ],
                                              )
     __layout = Layout(
