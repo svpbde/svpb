@@ -11,8 +11,8 @@
 
 {% if user.is_authenticated %}
 
-
     <div class="row row-cols-1 row-cols-lg-2 g-4">
+
         <div class="col">        
             <div class="card h-100">
                 <div class="row">
@@ -30,9 +30,8 @@
             </div>
         </div>
 
-        {% for g in  user.groups.all %}
-        {% if g.name == "Boote" %}
-        
+        {% for g in user.groups.all %}
+        {% if g.name == "Boote" %}        
         <div class="col">        
             <div class="card h-100">
                 <div class="row">
@@ -48,30 +47,46 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>        
         {% endif %}
         {% endfor %}
 
-
-        {% for g in  user.groups.all %}
+        {% for g in user.groups.all %}
         {% if g.name == "Vorstand" %}
-            <div class="col">        
-                <div class="card h-100">
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-users fa-fw fa-6x"></i>
-                        </div>
-                        <div class="col-sm-8">    
-                            <div class="card-body">
-                                <h5 class="card-title">Mitgliederverwaltung</h5>
-                                <p class="card-text">Mitglieder verwalten, neu anlegen, ....</p>
-                                <a href="/accounts/" class="btn btn-primary">Zur Mitgliederverwaltung</a>
-                            </div>
+        <div class="col">        
+            <div class="card h-100">
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-users fa-fw fa-6x"></i>
+                    </div>
+                    <div class="col-sm-8">    
+                        <div class="card-body">
+                            <h5 class="card-title">Mitgliederverwaltung</h5>
+                            <p class="card-text">Mitglieder verwalten, neu anlegen, ....</p>
+                            <a href="/accounts/" class="btn btn-primary">Zur Mitgliederverwaltung</a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        {% if user.is_staff %}
+        <div class="col">        
+            <div class="card h-100">
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-screwdriver-wrench fa-fw fa-6x"></i>
+                    </div>
+                    <div class="col-sm-8">    
+                        <div class="card-body">
+                            <h5 class="card-title">Administration</h5>
+                            <p class="card-text">Achtung, direkter Datenbankzugriff! Gefährlich!</p>
+                            <a href="/admin/" class="btn btn-primary">Ich weiß, was ich tue...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {% endif %}
         {% endfor %}
     </div>
