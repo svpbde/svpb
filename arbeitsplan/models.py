@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Django models for the Arbeitsplan at SVPB.
 
 Main classes:
@@ -18,24 +16,25 @@ Main classes:
 * :class:`Leistung` : Mitglied claims to have performaed a certain amount of
   work on a particular job
 """
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
-
-import datetime
-# needed for auto_now fields with veto
+from django.core.exceptions import ValidationError
+# Needed for auto_now fields with veto
 from django.utils.timezone import utc
-
 from phonenumber_field.modelfields import PhoneNumberField
 
-### patch the display of a user:
 
-User.__str__ = lambda s: "%s %s (Nr.: %s)" % (s.first_name,
-                                                   s.last_name,
-                                                   s.mitglied.mitgliedsnummer)
+# Patch the display of a user:
+User.__str__ = lambda s: "%s %s (Nr.: %s)" % (
+    s.first_name,
+    s.last_name,
+    s.mitglied.mitgliedsnummer,
+)
 
 
-
-class Mitglied (models.Model):
+class Mitglied(models.Model):
     """Provide additional information on a User by a 1:1 relationship:
     ID, dates of messages
 
@@ -49,6 +48,7 @@ class Mitglied (models.Model):
     last message - there simply might not have anything happened to
     this member since its last message.
     """
+
     class Status(models.TextChoices):
         ADULT = "Er", "Erwachsene"
         YOUTH = "Ju", "Jugendlicher"
@@ -66,40 +66,37 @@ class Mitglied (models.Model):
         W = "W", "W"
 
     excelFields = [
-        ('Vorname', 'user__first_name'),
-        ('Nachname', 'user__last_name'),
-        ('M/W', 'gender'), 
-        ('E-Mail', 'user__email'), 
-        ('ID', 'mitgliedsnummer'),
-        ('Straße', 'strasse'), 
-        ('PLZ', 'plz'), 
-        ('Ort', 'ort'), 
-        ('Status', 'status'), 
-        ('Arbeitslast', 'arbeitslast'), 
-        ('# Meldungen', 'gemeldeteAnzahlAufgaben'), 
-        ('Stunden Meldungen ', 'gemeldeteStunden'), 
-        ('# Zuteilungen', 'zugeteilteAufgaben'), 
-        ('Stunden Zuteilungen', 'zugeteilteStunden'),
-        ('Behauptete Leistungen (h) insges.', 'behaupteteStunden'), 
-        ('Unbearbeitete Leistungen (h)', 'offeneStunden'), 
-        ('Abgelehnte Leistungen (h)', 'abgelehnteStunden'), 
-        ('Akzeptierte Leistungen (h)', 'akzeptierteStunden'), 
-        # ('', ''), 
+        ("Vorname", "user__first_name"),
+        ("Nachname", "user__last_name"),
+        ("M/W", "gender"),
+        ("E-Mail", "user__email"),
+        ("ID", "mitgliedsnummer"),
+        ("Straße", "strasse"),
+        ("PLZ", "plz"),
+        ("Ort", "ort"),
+        ("Status", "status"),
+        ("Arbeitslast", "arbeitslast"),
+        ("# Meldungen", "gemeldeteAnzahlAufgaben"),
+        ("Stunden Meldungen ", "gemeldeteStunden"),
+        ("# Zuteilungen", "zugeteilteAufgaben"),
+        ("Stunden Zuteilungen", "zugeteilteStunden"),
+        ("Behauptete Leistungen (h) insges.", "behaupteteStunden"),
+        ("Unbearbeitete Leistungen (h)", "offeneStunden"),
+        ("Abgelehnte Leistungen (h)", "abgelehnteStunden"),
+        ("Akzeptierte Leistungen (h)", "akzeptierteStunden"),
     ]
-    
-    user = models.OneToOneField(User,
-                on_delete=models.CASCADE)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     """Couple Mitglied to User via 1:1 field."""
 
     mitgliedsnummer = models.CharField(max_length=10, default=0)
     """ID as assigned by Verein. Unique?! Use this as default login."""
 
     zuteilungsbenachrichtigung = models.DateTimeField(
-        help_text="Wann war die letzte Benachrichtigung"
-        " zu einer Zuteilung?",
+        help_text="Wann war die letzte Benachrichtigung zu einer Zuteilung?",
         default=datetime.datetime(1900, 1, 1),
         verbose_name="Letzte Benachrichtigung",
-        )
+    )
     """Date and time of most recent message to user"""
 
     zuteilungBenachrichtigungNoetig = models.BooleanField(
@@ -109,83 +106,77 @@ class Mitglied (models.Model):
         "Zuteilungen gesendet werden?",
         default=False,
         verbose_name="Benachrichtigung zu Zuteilungen nötig?",
-        )
+    )
     """Does Mitglied need a message?"""
 
     zustimmungsDatum = models.DateTimeField(
         help_text="Wann hat der Nutzer Zustimmung erteilt?",
         default=datetime.datetime(1900, 1, 1),
         verbose_name="Datum der Zustimmung",
-        )
+    )
     """At what date did the member agree to the use of this system?"""
 
     geburtsdatum = models.DateField(
         default=datetime.datetime(1900, 1, 1),
         verbose_name="Geburtsdatum",
-        )
+    )
 
-    strasse = models.CharField(max_length=50,
-                               verbose_name="Straße und Hausnummer",
-                               default="")
+    strasse = models.CharField(
+        max_length=50, verbose_name="Straße und Hausnummer", default=""
+    )
 
-    plz = models.DecimalField(max_digits=5,
-                              verbose_name="PLZ",
-                              decimal_places=0,
-                              default=0)
+    plz = models.DecimalField(
+        max_digits=5, verbose_name="PLZ", decimal_places=0, default=0
+    )
 
-    gender = models.CharField(max_length=1,
-                              verbose_name="Geschlecht",
-                              default=Gender.M,
-                              choices=Gender.choices)
+    gender = models.CharField(
+        max_length=1,
+        verbose_name="Geschlecht",
+        default=Gender.M,
+        choices=Gender.choices,
+    )
 
-    ort = models.CharField(max_length=50,
-                           verbose_name="Ort",
-                           default="")
+    ort = models.CharField(max_length=50, verbose_name="Ort", default="")
 
-    festnetz = PhoneNumberField(blank=True,
-                                verbose_name="Festnetznummer",
-                                default="")
-    
-    mobil = PhoneNumberField(blank=True,
-                             verbose_name="Mobilnummer",
-                             default="")
+    festnetz = PhoneNumberField(blank=True, verbose_name="Festnetznummer", default="")
 
-    status = models.CharField(max_length=20,
-                              verbose_name="Mitgliedsstatus",
-                              default=Status.ADULT,
-                              choices=Status.choices)
+    mobil = PhoneNumberField(blank=True, verbose_name="Mobilnummer", default="")
+
+    status = models.CharField(
+        max_length=20,
+        verbose_name="Mitgliedsstatus",
+        default=Status.ADULT,
+        choices=Status.choices,
+    )
 
     erstbenachrichtigt = models.BooleanField(
         verbose_name="Erstbenachrichtigung",
         help_text="Wurde die Erstbenachrichtigung mit Password bereits generiert?",
-        default=False)
+        default=False,
+    )
 
     arbeitslast = models.IntegerField(
         verbose_name="Arbeitslast (h/Jahr)",
         default=12,
-        )
+    )
 
     def __str__(self):
         return self.user.__str__()
 
     def gemeldeteAnzahlAufgaben(self):
-
-        return self.user.meldung_set.exclude(prefMitglied=Meldung.Preferences.NEVER).count()
+        return self.user.meldung_set.exclude(
+            prefMitglied=Meldung.Preferences.NEVER
+        ).count()
 
     def gemeldeteStunden(self):
-        """Compute hours for which the Mitglied has entered
-        a Meldung. 
-        """
-
-        echteMeldungen = (self.user.meldung_set
-                          .exclude(prefMitglied=Meldung.Preferences.NEVER))
-
+        """Compute hours for which the Mitglied has entered a Meldung."""
+        echteMeldungen = self.user.meldung_set.exclude(
+            prefMitglied=Meldung.Preferences.NEVER
+        )
         return sum([m.aufgabe.stunden for m in echteMeldungen])
 
     def zugeteilteAufgaben(self):
-
         z = self.user.zuteilung_set.all()
-
         return z.count()
 
     def zugeteilteStunden(self, time=None):
@@ -197,12 +188,11 @@ class Mitglied (models.Model):
 
         :param time: -1: tasks from past,
                      +1: tasks from future,
-                     0: Tasks without date (not sure this is useful?), 
-                     None: do not filter assigned tasks any more. 
+                     0: Tasks without date (not sure this is useful?),
+                     None: do not filter assigned tasks any more.
         :returns: Hours assigned to user, for the desired time frame.
-        :rtype: int 
+        :rtype: int
         """
-
         qs = self.user.zuteilung_set.all()
 
         if time == -1:
@@ -217,60 +207,56 @@ class Mitglied (models.Model):
 
     def behaupteteStunden(self):
         leistungen = self.user.leistung_set.all()
-        return sum([l.zeit for l in leistungen])
+        return sum([leistung.zeit for leistung in leistungen])
 
     def akzeptierteStunden(self):
         leistungen = self.user.leistung_set.filter(status=Leistung.Status.ACCEPTED)
-        return sum([l.zeit for l in leistungen])
-    
+        return sum([leistung.zeit for leistung in leistungen])
+
     def offeneStunden(self):
         leistungen = self.user.leistung_set.filter(status=Leistung.Status.OPEN)
-        return sum([l.zeit for l in leistungen])
-    
+        return sum([leistung.zeit for leistung in leistungen])
+
     def abgelehnteStunden(self):
         leistungen = self.user.leistung_set.filter(status=Leistung.Status.REJECTED)
-        return sum([l.zeit for l in leistungen])
+        return sum([leistung.zeit for leistung in leistungen])
 
     def profileIncomplete(self):
         r = []
         if not self.user.email:
-            r.append('E-Mail')
+            r.append("E-Mail")
         if not self.festnetz and not self.mobil:
-            r.append('Telefonummer (Festnetznummer oder Mobil)')
-        return ', '.join(r)
-                
+            r.append("Telefonummer (Festnetznummer oder Mobil)")
+        return ", ".join(r)
+
     class Meta:
         verbose_name_plural = "Mitglieder"
         verbose_name = "Mitglied"
 
 
 def get_default_vorstand(self):
-    """When deleteing an entry with a Vorstand in charge, 
-    assign a default Vorstand member"""
-
+    """When deleting an entry with a Vorstand in charge,
+    assign a default Vorstand member."""
     # TODO
     pass
 
-        
-class Aufgabengruppe (models.Model):
-    gruppe = models.CharField(max_length=30,
-                              help_text="Aussagefähiger Name für Gruppe"
-                              " von Aufgaben")
 
-    verantwortlich = models.ForeignKey(User,
-                                    # actually, we should do this: 
-                                    #   on_delete=models.SET(models.get_default_vorstand),
-                                    # but for simplicity, let's just do that: TODO
-                                    # (means: have to remove responsibility from Vorstand, before deleting it)
-                                       on_delete=models.PROTECT,
-                                       help_text="Verantwortliches "
-                                       "Vorstandsmitglied")
+class Aufgabengruppe(models.Model):
+    gruppe = models.CharField(
+        max_length=30, help_text="Aussagefähiger Name für Gruppe von Aufgaben"
+    )
+
+    verantwortlich = models.ForeignKey(
+        User,
+        # actually, we should do this:
+        #   on_delete=models.SET(models.get_default_vorstand),
+        # but for simplicity, let's just do that: TODO
+        # (means: have to remove responsibility from Vorstand, before deleting it)
+        on_delete=models.PROTECT,
+        help_text="Verantwortliches Vorstandsmitglied",
+    )
 
     bemerkung = models.TextField(blank=True)
-
-    
-    def __str__(self):
-        return self.gruppe
 
     def __str__(self):
         return self.gruppe
@@ -278,55 +264,55 @@ class Aufgabengruppe (models.Model):
     class Meta:
         verbose_name_plural = "Aufgabengruppen"
         verbose_name = "Aufgabengruppe"
-        ordering = ['gruppe']
+        ordering = ["gruppe"]
 
 
-###############
-# work around the django_tables2 issue:  
-from django.core.exceptions import ValidationError
-
-
+# Work around the django_tables2 issue:
 def validate_notDot(value):
-    if '.' in value:
-        raise ValidationError("Leider dürfen Aufgabennamen keinen . "
-                              "enthalten! "
-                              "Bitte umformulieren, danke.")
+    if "." in value:
+        raise ValidationError(
+            "Leider dürfen Aufgabennamen keinen . enthalten! "
+            "Bitte umformulieren, danke."
+        )
 
 
 class Aufgabe(models.Model):
-    aufgabe = models.CharField(max_length=50,
-                               validators=[validate_notDot],
-                               unique=True)
-    verantwortlich = models.ForeignKey(User,
-                                       on_delete=models.PROTECT,
-                                       help_text="Verantwortliches "
-                                       "Vorstandsmitglied")
-    teamleader = models.ForeignKey(User,
-                                   on_delete=models.SET_NULL, # ok not to have a teamleader 
-                                   related_name="teamleader_set",
-                                   help_text="Ein optionaler Teamleader für "
-                                   "die Aufgabe (nicht notwendig Vorstand)",
-                                   verbose_name="Team-Leader",
-                                   blank=True, null=True,
-                                   )
+    aufgabe = models.CharField(max_length=50, validators=[validate_notDot], unique=True)
+    verantwortlich = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        help_text="Verantwortliches Vorstandsmitglied",
+    )
+    teamleader = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,  # ok not to have a teamleader
+        related_name="teamleader_set",
+        help_text="Ein optionaler Teamleader für "
+        "die Aufgabe (nicht notwendig Vorstand)",
+        verbose_name="Team-Leader",
+        blank=True,
+        null=True,
+    )
 
-    gruppe = models.ForeignKey(Aufgabengruppe,
-                                   on_delete=models.PROTECT)
-    
-    anzahl = models.IntegerField(default=0,
-                                 help_text="Wieviele Personen werden für "
-                                 "diese Aufgabe gebraucht?",
-                                 verbose_name="Anzahl benötigte Helfer")
+    gruppe = models.ForeignKey(Aufgabengruppe, on_delete=models.PROTECT)
 
-    stunden = models.IntegerField(default=0,
-                                  help_text="Wieviele Stunden Arbeit "
-                                  "pro Person?",
-                                  verbose_name="Stunden",
-                                  )
+    anzahl = models.IntegerField(
+        default=0,
+        help_text="Wieviele Personen werden für diese Aufgabe gebraucht?",
+        verbose_name="Anzahl benötigte Helfer",
+    )
 
-    datum = models.DateField(blank=True, null=True,
-                             help_text="Wann fällt die Aufgabe an? "
-                             "(freilassen möglich)")
+    stunden = models.IntegerField(
+        default=0,
+        help_text="Wieviele Stunden Arbeit pro Person?",
+        verbose_name="Stunden",
+    )
+
+    datum = models.DateField(
+        blank=True,
+        null=True,
+        help_text="Wann fällt die Aufgabe an? (freilassen möglich)",
+    )
 
     bemerkung = models.TextField(blank=True)
 
@@ -337,14 +323,13 @@ class Aufgabe(models.Model):
             return self.verantwortlich
 
     def numMeldungen(self):
-        """How many Meldungen of status better than No!
+        """How many Meldungen of status better than NEVER
         exist for this Aufgabe?
         """
-        return self.meldung_set.exclude(prefMitglied=
-                                        Meldung.Preferences.NEVER).count()
+        return self.meldung_set.exclude(prefMitglied=Meldung.Preferences.NEVER).count()
 
     def has_Stundenplan(self):
-        """Is there a STundenplan for this Aufgabe?"""
+        """Is there a Stundenplan for this Aufgabe?"""
 
         return self.stundenplan_set.filter(anzahl__gt=0).count() > 0
 
@@ -353,8 +338,10 @@ class Aufgabe(models.Model):
         stundenplan = self.stundenplan_set.filter(anzahl__gt=0)
         if stundenplan.count() > 0:
             for s in stundenplan:
-                zuteilungen = self.zuteilung_set.filter(stundenzuteilung__uhrzeit=s.uhrzeit)
-                zugewiesen = sum([z.zusatzhelfer +1 for z in zuteilungen])
+                zuteilungen = self.zuteilung_set.filter(
+                    stundenzuteilung__uhrzeit=s.uhrzeit
+                )
+                zugewiesen = sum([z.zusatzhelfer + 1 for z in zuteilungen])
                 if zugewiesen < s.anzahl:
                     return False
 
@@ -362,7 +349,6 @@ class Aufgabe(models.Model):
 
     def is_open(self):
         """Do enough Zuteilungen already exist for this Aufgabe?"""
-
         return self.zuteilung_set.count() < self.anzahl
 
     def __str__(self):
@@ -371,27 +357,28 @@ class Aufgabe(models.Model):
     class Meta:
         verbose_name_plural = "Aufgaben"
         verbose_name = "Aufgabe"
-        ordering = ['aufgabe']
+        ordering = ["aufgabe"]
 
 
-class Stundenplan (models.Model):
-    aufgabe = models.ForeignKey(Aufgabe,
-                                    on_delete=models.CASCADE,
-                                    # no need to have Stundenplan for non-existing Aufgabe 
-                                    )
-    
+class Stundenplan(models.Model):
+    aufgabe = models.ForeignKey(
+        Aufgabe,
+        on_delete=models.CASCADE,
+        # no need to have Stundenplan for non-existing Aufgabe
+    )
+
     uhrzeit = models.IntegerField(help_text="Beginn")
-    anzahl = models.IntegerField(default=0,
-                                 help_text="Wieviele Personen werden um "
-                                 "diese Uhrzeit benötigt?")
+    anzahl = models.IntegerField(
+        default=0, help_text="Wieviele Personen werden um diese Uhrzeit benötigt?"
+    )
 
     startZeit = 8
     stopZeit = 23
 
     def __str__(self):
-        return (self.aufgabe.__str__() +
-                "@" + str(self.uhrzeit) +
-                ": " + str(self.anzahl))
+        return (
+            self.aufgabe.__str__() + "@" + str(self.uhrzeit) + ": " + str(self.anzahl)
+        )
 
     class Meta:
         verbose_name_plural = "Stundenpläne"
@@ -456,26 +443,25 @@ class Meldung(models.Model):
         verbose_name = "Meldung"
 
 
-class Zuteilung (models.Model):
-    aufgabe = models.ForeignKey(Aufgabe,
-                        on_delete=models.PROTECT)
-    ausfuehrer = models.ForeignKey(User,
-                        on_delete=models.CASCADE)
-    
+class Zuteilung(models.Model):
+    aufgabe = models.ForeignKey(Aufgabe, on_delete=models.PROTECT)
+    ausfuehrer = models.ForeignKey(User, on_delete=models.CASCADE)
+
     automatisch = models.BooleanField(default=False)
     zusatzhelfer = models.IntegerField(default=0)
 
     def __str__(self):
-        return (self.aufgabe.__str__() + ": " + self.ausfuehrer.__str__() 
-                + (" @ " + ','.join([s.__str__() for s in self.stundenzuteilung_set.all()] ))
-                # + ('@' + ','.join(self.StundenZuteilung_set.all().values('uhrzeit')))
-                )
+        return (
+            self.aufgabe.__str__()
+            + ": "
+            + self.ausfuehrer.__str__()
+            + (" @ " + ",".join([s.__str__() for s in self.stundenzuteilung_set.all()]))
+        )
 
     def save(self, *args, **kwargs):
         super(Zuteilung, self).save(*args, **kwargs)
         self.ausfuehrer.zuteilungBenachrichtigungNoetig = True
         self.ausfuehrer.save()
-
 
     def delete(self, *args, **kwargs):
         self.ausfuehrer.zuteilungBenachrichtigungNoetig = True
@@ -495,28 +481,23 @@ class Zuteilung (models.Model):
             return self.aufgabe.stunden
 
     def stundenTuple(self):
-        """Produce a list of tuples with the Stunden
-        correpsonding to this Zuteilung. Compress it
-        so that only consecutive intervals show up. 
-
-        Arguments:
-        - `self`:
+        """Produce a list of tuples with the Stunden correpsonding to this Zuteilung.
+        Compress it so that only consecutive intervals show up.
         """
-
-        outlist = []    
+        outlist = []
         inlist = sorted([s.uhrzeit for s in self.stundenzuteilung_set.all()])
 
-        try: 
+        try:
             if inlist:
                 now = inlist.pop(0)
-                currentTuple = (now, now+1)
+                currentTuple = (now, now + 1)
                 while inlist:
                     now = inlist.pop(0)
                     if now == currentTuple[1]:
-                        currentTuple = (currentTuple[0], now +1)
+                        currentTuple = (currentTuple[0], now + 1)
                     else:
                         outlist.append(currentTuple)
-                        currentTuple = (now, now+1)
+                        currentTuple = (now, now + 1)
 
                 outlist.append(currentTuple)
         except Exception:
@@ -525,14 +506,9 @@ class Zuteilung (models.Model):
 
         return outlist
 
-
     def stundenString(self):
         st = self.stundenTuple()
-        r = ', '.join([
-            '{0} Uhr - {1} Uhr'.format(s[0], s[1])
-            for s in st
-            ])
-
+        r = ", ".join(["{0} Uhr - {1} Uhr".format(s[0], s[1]) for s in st])
         return r
 
     class Meta:
@@ -541,9 +517,8 @@ class Zuteilung (models.Model):
 
 
 class StundenZuteilung(models.Model):
-    zuteilung = models.ForeignKey(Zuteilung,
-                        on_delete=models.CASCADE)
-    
+    zuteilung = models.ForeignKey(Zuteilung, on_delete=models.CASCADE)
+
     uhrzeit = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
