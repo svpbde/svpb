@@ -18,7 +18,16 @@
 mein.svpb.de
 {% endblock %}
 </title>
-{% block extrastyle %}{% endblock %}
+{% block extrastyle %}
+<style>
+  body {
+    background-image: url("{% static 'background.jpg'%}");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+</style> 
+{% endblock %}
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/fontawesome.min.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/solid.min.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/regular.min.css' %}" type="text/css">
@@ -82,7 +91,7 @@ mein.svpb.de
     </div>
   </nav>
 
-    <div class="container pt-4" role="main">
+    <div class="container pt-3 mt-5 px-4 bg-body-tertiary" style="--bs-bg-opacity: 0.95;" role="main">
 
     <div class="page-header">
       <h1>       {% block branding %}
