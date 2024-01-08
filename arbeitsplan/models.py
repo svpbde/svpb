@@ -564,7 +564,9 @@ class Leistung(models.Model):
     zeit = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        help_text="Wieviel Zeit (in Stunden) haben Sie gearbeitet? Eingabe von Zentelstunden möglich. Je nach Browsereinstellung mit . oder , die Nachkommastelle abtrennen: 1.4 oder 1,4 für 1 Stunde 24 Minuten. ",
+        help_text="Wie viele Stunden hast du gearbeitet? Eingabe von Zehntelstunden "
+        "möglich. Je nach Browsereinstellung mit . oder , die Nachkommastelle abtrennen"
+        ": 1.4 oder 1,4 für 1 Stunde 24 Minuten.",
     )
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.OPEN)
 
