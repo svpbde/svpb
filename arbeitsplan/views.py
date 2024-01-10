@@ -536,7 +536,7 @@ class AufgabengruppeCreate(isVorstandMixin, SimpleCreateView):
 class AufgabengruppeList(isVorstandMixin, FilteredListView):
     title = "Aufgabegruppen"
     tableClass = AufgabengruppeTable
-    intro_text = "Übersicht über alle Aufgabengruppe."
+    intro_text = "Übersicht über alle Aufgabengruppen."
     model = models.Aufgabengruppe
 
 
