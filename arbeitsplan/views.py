@@ -1728,7 +1728,8 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
     ]
     intro_text = (
         "Bitte akzeptiere, lehne ab, oder rückfrage die folgenden gemeldeten Leistungen"
-        ". Wähle einen neuen Status und trage ggf. eine Bemerkung ein."
+        ". Wähle einen neuen Status und trage ggf. eine Bemerkung ein. Die Bemerkung "
+        "wird in der E-Mail-Benachrichtigung an das Mitglied inkludiert."
     )
     model = models.Leistung
 
@@ -1819,7 +1820,43 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
                     f"{leistung.aufgabe.aufgabe} aktualisiert.",
                 )
 
-        # TODO: bei Rueckfrage koennte man eine email senden? oder immer?
+                # Send notification mail
+                if leistung.melder.email:
+                    # Construct context dict for mail template
+                    d = {
+                        "melder": leistung.melder,
+                        "mitglied": leistung.melder.mitglied,
+                        "aufgabe": leistung.aufgabe.aufgabe,
+                        "wann": leistung.wann,
+                        "bemerkung": leistung.bemerkung,
+                        "bemerkungVorstand": leistung.bemerkungVorstand,
+                        "status": leistung.get_status_display(),
+                        "vorstand": leistung.aufgabe.verantwortlich,
+                        "teamleader": leistung.aufgabe.teamleader,
+                    }
+                    mail.send(
+                        [leistung.melder.email], template="leistungEmail", context=d,
+                    )
+
+                    # TODO: Remove this, just reproduces behaviour of old
+                    # LeistungEmailView
+                    leistung.benachrichtigt = datetime.datetime.utcnow().replace(
+                        tzinfo=utc
+                    )
+                    leistung.save(veraendert=False)
+
+                    messages.success(
+                        request,
+                        f"Benachrichtigung an Mitglied {leistung.melder.first_name} "
+                        f"{leistung.melder.last_name} gesendet.",
+                    )
+                else:
+                    messages.error(
+                        request,
+                        f"Für Nutzer {leistung.melder.first_name} "
+                        f"{leistung.melder.last_name} liegt keine E-Mail-Adresse vor, "
+                        "keine Benachrichtigung gesendet",
+                    )
 
         return redirect(self.request.get_full_path())
 
@@ -2062,66 +2099,6 @@ class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
         ## TODO: better redirect home
         return redirect(request.get_full_path())
 
-
-class LeistungEmailView (isVorstandMixin, FilteredEmailCreateView):
-
-    title = "Benachrichtigungen für bearbeitete Leistungen"
-    model = models.Leistung
-
-    tableClass = LeistungEmailTable
-
-    filterform_class = forms.LeistungEmailFilter
-
-    def benachrichtigt_filter (self, qs, includeSchonBenachrichtigt):
-        # filter out those were the "benachrichtigt" is later than the last change
-        if includeSchonBenachrichtigt:
-            pass
-        else:
-            # if veraendert <= benachrichtigt,
-            # then an instance has alredy been notified
-            # so we leave only those in the queryset
-            # where the opposite  is true
-            # (filter keeps those where the
-            # attribute is TRUE!!!
-
-            qs = qs.filter(veraendert__gt=F('benachrichtigt'))
-        return qs
-
-    filterconfig = [('aufgabengruppe', 'aufgabe__gruppe__gruppe'),
-                    ('status', 'status__in'),
-                    ('benachrichtigt', benachrichtigt_filter),
-                    ]
-    # specific data about the email handling:
-    emailTemplate = "leistungEmail"
-
-    def getUser(self, instance):
-        return instance.melder
-
-    def saveUpdate(self, instance, thisuser):
-        instance.benachrichtigt = datetime.datetime.utcnow().replace(tzinfo=utc)
-        instance.save(veraendert=False)
-
-    def annotate_data(self, qs):
-        qs = super(LeistungEmailView, self).annotate_data(qs)
-        for q in qs:
-            q.sendit = True if q.veraendert > q.benachrichtigt else False
-
-        return qs
-
-    def constructTemplateDict (self, instance):
-        d = {'first_name': instance.melder.first_name,
-             'last_name': instance.melder.last_name,
-             'aufgabe': instance.aufgabe.aufgabe,
-             'wann': instance.wann,
-             'stunden': instance.zeit,
-             'bemerkung': instance.bemerkung,
-             'bemerkungVorstand': instance.bemerkungVorstand,
-             'status': instance.get_status_display(),
-             'schonbenachrichtigt': instance.veraendert < instance.benachrichtigt,
-             'vorstand': instance.aufgabe.verantwortlich,
-             'teamleader': instance.aufgabe.teamleader,
-             }
-        return d
 
 class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
     """Display a list of all users where not enough Zuteilungen have happened so far.

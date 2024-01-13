@@ -4,11 +4,11 @@
         "pk": 2,
         "fields": {
             "name": "leistungEmail",
-            "description": "Eine E-Mail, die gesendet wird, wenn Leistungen verändert wurden. \r\n\r\nContext: \r\n\r\n        d = {'first_name': instance.melder.first_name,\r\n             'last_name': instance.melder.last_name,\r\n             'aufgabe': instance.aufgabe.aufgabe,\r\n             'wann': instance.wann,\r\n             'stunden': instance.zeit,\r\n             'bemerkung': instance.bemerkung,\r\n             'bemerkungVorstand': instance.bemerkungVorstand,\r\n             'status': instance.status,\r\n             }\r\n\r\nund anmerkung und ergaenzung",
+            "description": "Eine E-Mail, die gesendet wird, wenn Leistungen verändert wurden.",
             "created": "2014-05-31T01:29:21.786Z",
-            "last_updated": "2023-11-26T17:28:26.734Z",
+            "last_updated": "2024-01-13T16:25:54.367Z",
             "subject": "[SVPB] Deine Leistungsmeldung wurde bearbeitet!",
-            "content": "Liebe(r) {{first_name}} {{last_name}}, \r\n\r\ndeine Leistungsmeldung für Aufgabe {{aufgabe}}, ausgeführt am {{wann}}, wurde von einem Vorstandsmitglied bearbeitet. Der neue Status ist: {{status}}. \r\n{% if anmerkung %}\r\n{{anmerkung}}\r\n{% endif %}\r\n{% if ergaenzung %}\r\n{{ergaenzung}}\r\n{% endif %}\r\nBei Rückfragen sprich bitte an:\r\n* das für diese Aufgabe zuständige Vorstandsmitglied: {{vorstand.first_name}} {{vorstand.last_name}},{{vorstand.email}} \r\n{% if teamleader %}\r\n* den Teamleiter dieser Aufgabe: {{teamleader.first_name}} {{teamleader.last_name}}, {{teamleader.email}} \r\n{% endif %} \r\n(Eine direkte Antwort auf diese Mail ist nicht hilfreich, da dies eine automatisch generierte Mail ist.) \r\n\r\nBeste Grüße\r\nmein.svpb.de",
+            "content": "Liebe{% if mitglied.gender == 'M' %}r{% elif mitglied.gender != 'W' %}(r){% endif %} {{melder.first_name}} {{melder.last_name}}, \r\n\r\ndeine Leistungsmeldung für die Aufgabe {{aufgabe}}, ausgeführt am {{wann}}, wurde bearbeitet. Der neue Status ist: {{status}}. \r\n{% if bemerkung %}\r\nDeine Bemerkung: {{Bemerkung}}\r\n{% endif %}{% if bemerkungVorstand %}\r\nBemerkung des Bearbeiters: {{bemerkungVorstand}}\r\n{% endif %}\r\nBei Rückfragen sprich bitte an:\r\n* das für diese Aufgabe zuständige Vorstandsmitglied: {{vorstand.first_name}} {{vorstand.last_name}}, {{vorstand.email}} \r\n{% if teamleader %}* den Teamleiter dieser Aufgabe: {{teamleader.first_name}} {{teamleader.last_name}}, {{teamleader.email}}{% endif %}\r\nDies ist eine automatisch generierte E-Mail, bitte nicht darauf antworten.\r\n\r\nBeste Grüße\r\nmein.svpb.de",
             "html_content": "",
             "language": "",
             "default_template": null

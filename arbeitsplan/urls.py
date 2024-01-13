@@ -21,11 +21,6 @@ urlpatterns = [
         name="homeArbeitsplan",
     ),
     url(
-        r"^benachrichtigen/leistung/$",
-        active_and_login_required(arbeitsplan.views.LeistungEmailView.as_view()),
-        name="arbeitsplan-benachrichtigen-leistung",
-    ),
-    url(
         r"^benachrichtigen/zuteilung/$",
         active_and_login_required(arbeitsplan.views.ZuteilungEmailView.as_view()),
         name="arbeitsplan-benachrichtigen-zuteilung",
