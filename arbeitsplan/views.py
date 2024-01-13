@@ -1705,135 +1705,122 @@ class ListLeistungView (FilteredListView):
         return qsLeistungen
 
 
-class LeistungBearbeitenView (isVorstandOrTeamleaderMixin, FilteredListView):
-    """
-    A view to show a table of non-accepted/rejected Leistungen to a Vorstand.
-    Allows to accept, reject, or enquiry them.
+class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
+    """A view to show a table of non-accepted/rejected Leistungen.
+
+    Only accessible to Vorstand or teamleaders. Allows to accept, reject, or enquiry
+    Leistungen.
     """
 
     title = "Gemeldete Leistungen bearbeiten"
     tableClass = LeistungBearbeitenTable
     tabletitle = "Leistungen akzeptieren, ablehnen, oder rückfragen"
-    tableform = {'name': "submit",
-                 'value': "Leistungen ändern"}
-
+    tableform = {"name": "submit", "value": "Leistungen ändern"}
     filtertitle = "Nach Mitglied, Aufgabe, Datum oder Status filtern"
     filterform_class = forms.LeistungFilter
-    filterconfig = [('first_name', 'melder__first_name__icontains'),
-                    ('last_name', 'melder__last_name__icontains'),
-                    ('aufgabengruppe', 'aufgabe__gruppe__gruppe'),
-                    ('von', 'datum__gte'),
-                    ('bis', 'datum__lte'),
-                    ('status', 'status__in')
-                    ]
-    intro_text = """
-    Bitte akzeptieren, lehnen ab, oder rückfragen Sie die folgenden gemeldeten Leistungen. Wählen Sie einen neuen Status und tragen ggf. eine Bemerkung ein.
-    """
-
+    filterconfig = [
+        ("first_name", "melder__first_name__icontains"),
+        ("last_name", "melder__last_name__icontains"),
+        ("aufgabengruppe", "aufgabe__gruppe__gruppe"),
+        ("von", "datum__gte"),
+        ("bis", "datum__lte"),
+        ("status", "status__in"),
+    ]
+    intro_text = (
+        "Bitte akzeptiere, lehne ab, oder rückfrage die folgenden gemeldeten Leistungen"
+        ". Wähle einen neuen Status und trage ggf. eine Bemerkung ein."
+    )
     model = models.Leistung
 
+    def get_data(self):
+        """Get data according to user permissions.
 
-    def get_data (self):
-        """Vorstand can elect to see all or just some.
-        Teamleaders are restricted to those tasks where they are
-        indeed the teamleader.
+        Vorstand can choose to see all or just some. Teamleaders are restricted to those
+        tasks where they are indeed the teamleader.
         """
-
         if isVorstand(self.request.user):
-            zustaendig = self.kwargs['zustaendig']
+            zustaendig = self.kwargs["zustaendig"]
 
-            if zustaendig=="me":
-                mainqs = models.Leistung.objects.filter(aufgabe__verantwortlich=
-                                                        self.request.user)
+            if zustaendig == "me":
+                mainqs = models.Leistung.objects.filter(
+                    aufgabe__verantwortlich=self.request.user
+                )
             else:
                 mainqs = models.Leistung.objects.all()
         elif isTeamlead(self.request.user):
             leadingTheseTasks = self.request.user.teamleader_set.all()
 
-            mainqs = models.Leistung.objects.filter(aufgabe__in = leadingTheseTasks)
+            mainqs = models.Leistung.objects.filter(aufgabe__in=leadingTheseTasks)
         else:
             return None
 
         return mainqs
 
-    def post (self, request, zustaendig, *args, **kwargs):
-        """need to carefully check:
+    def post(self, request, zustaendig, *args, **kwargs):
+        """Save changes to the database.
+
+        Need to carefully check permissions:
         - vorstand may do everything
         - teamleaders only for those tasks they lead.
         They only see those tasks in regular operation, but
-        hackers might try to inject wierd stuff here.
+        hackers might try to inject weird stuff here.
         """
-
         if isVorstand(request.user):
-            checkNeeded = False
+            permission_check_required = False
         elif isTeamlead(request.user):
-            checkNeeded = True
+            permission_check_required = True
             leadingTheseTasks = self.request.user.teamleader_set.all()
         else:
-            messages.error(request,
-                           "Sie dürfen diese Funktion nicht benutzen!"
-                           )
+            messages.error(request, "Du darfst diese Funktion nicht benutzen!")
 
             redirect("homeArbeitsplan")
 
-
+        # Sort data from request into dict for easier access
         data = {}
-        for k, v in request.POST.items():
-            try:
-                # TODO: shorten to startswith construction
-                if "status" == k[:6]:
-                    opt, num = k.split('_')
-                    if not num in list(data.keys()):
-                        data[num] = {'status': "",
-                                     'bemerkungVorstand': "",
-                        }
+        for key, value in request.POST.items():
+            if key.startswith("status_") or key.startswith("bemerkungVorstand_"):
+                option, num = key.split("_")
+                # Initialize dict if necessary
+                if num not in data:
+                    data[num] = {
+                        "status": "",
+                        "bemerkungVorstand": "",
+                    }
+                # Save option and value
+                data[num][option] = value
 
-                    data[num]['status'] = v
-
-                if 'bemerkungVorstand' == k[:17]:
-                    tag, num = k.split('_')
-                    if not num in list(data.keys()):
-                        data[num] = {'status': "",
-                                     'bemerkungVorstand': "",
-                        }
-
-                    data[num][tag] = v
-
-            except:
-                pass
-
-        # and now save the updated values in the data
-        for k, v in data.items():
-            l = models.Leistung.objects.get(id=int(k))
-            if checkNeeded:
-                if l.aufgabe not in leadingTheseTasks:
-                    messages.error(request,
-                                   "Sie dürfen Leistungsmeldungen"
-                                   " für diese Aufgabe nicht bearbeiten!")
+        # Check if values were updated and save them to the database
+        for num, options in data.items():
+            leistung = models.Leistung.objects.get(id=int(num))
+            if permission_check_required:
+                if leistung.aufgabe not in leadingTheseTasks:
+                    messages.error(
+                        request,
+                        "Sie dürfen Leistungsmeldungen für diese Aufgabe nicht "
+                        "bearbeiten!",
+                    )
                     continue
 
-            safeit = False
-            if l.bemerkungVorstand != v['bemerkungVorstand']:
-                l.bemerkungVorstand = v['bemerkungVorstand']
-                safeit = True
+            save_it = False
+            if leistung.bemerkungVorstand != options["bemerkungVorstand"]:
+                leistung.bemerkungVorstand = options["bemerkungVorstand"]
+                save_it = True
 
-            if l.status != v['status'] and v['status'] != "":
-                l.status = v['status']
-                safeit = True
+            if leistung.status != options["status"] and options["status"] != "":
+                leistung.status = options["status"]
+                save_it = True
 
-            if safeit:
-                l.save()
-                messages.success(request,
-                                 "Leistungsmeldung von {0} {1} "
-                                 "für Aufgabe {2} aktualisiert.".format(
-                                     l.melder.first_name,
-                                     l.melder.last_name,
-                                     l.aufgabe.aufgabe)
-                                     )
+            if save_it:
+                leistung.save()
+                messages.success(
+                    request,
+                    f"Leistungsmeldung von {leistung.melder.first_name} "
+                    f"{leistung.melder.last_name} für Aufgabe "
+                    f"{leistung.aufgabe.aufgabe} aktualisiert.",
+                )
 
         # TODO: bei Rueckfrage koennte man eine email senden? oder immer?
 
-        # return redirect ('/arbeitsplan/leistungenBearbeiten/z=all')
         return redirect(self.request.get_full_path())
 
 
