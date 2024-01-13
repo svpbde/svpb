@@ -1970,47 +1970,6 @@ class Salden(isVorstandMixin, FilteredListView):
         return res
 
 
-
-########################################################################################
-### EXPERIMENTELL
-########################################################################################
-
-
-class ErstelleZuteilungView(View):
-    """Automatisches Berechnen von Zuteilungen"""
-
-    def get (self,request, *args, **kwargs):
-        # Vorgehen:
-        # - alle automatisch erstellten Zuordnungen loecshen
-        # - aus den Meldungen einen bipartiten Graph erstellen (networkx nutzen)
-        # - aus dem Graphen die manuell erstellten Zuordnungen entfernen
-        # - maximales Matching ausrechnen
-        # - als Zuordnungen in Tabelle eintragen
-        # - redirect zur Zuordnungsanzeigen machen
-
-        ## qs = models.Zuteilung.objects.filter (automatisch__exact=True)
-        ## for o in qs:
-        ##     o.delete()
-
-        ## #######
-        ## # den Graph bauen
-        ## G = nx.Graph()
-        ## # alle Mitglieder einfuegen
-        ## for m in models.User.objects.all():
-        ##     G.add_node ('P' + str(m.id))
-
-        ## for a in models.Aufgabe.objects.all():
-        ##     for i in range(a.anzahl):
-        ##         G.add_node ('A' + str(a.id) + ':' + str(i))
-
-        ## for m in models.Meldung.objects.all():
-        ##     G.add_edge ('')
-
-        messages.error(request,
-                        "Diese Funktion ist noch nicht implementiert!")
-        return redirect ('homeArbeitsplan')
-
-
 ########################
 ## BENACHRICHTIGUNGEN
 ########################

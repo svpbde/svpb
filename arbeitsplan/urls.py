@@ -71,11 +71,6 @@ urlpatterns = [
         name="arbeitsplan-meldungVorstand",
     ),
     url(
-        r"^erstelleZuteilung/$",
-        active_and_login_required(arbeitsplan.views.ErstelleZuteilungView.as_view()),
-        name="arbeitsplan-erstellezuteilung",
-    ),
-    url(
         r"^manuelleZuteilung/$",
         active_and_login_required(arbeitsplan.views.ManuelleZuteilungView.as_view()),
         name="arbeitsplan-manuellezuteilung",
