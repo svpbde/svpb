@@ -12,48 +12,201 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 
 {% if msg %}
 <div class="alert alert-{{msgclass}}">
-{{ msg }}
+  {{ msg }}
 </div>
 <p>
-{% endif %}
+  {% endif %}
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'custom_css/svpb.css'%}" />
 
 <p>
-Dir stehen folgende Funktionen zur Verfügung: 
+  Dir stehen folgende Funktionen zur Verfügung:
+<p>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-list-ul fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/aufgaben/" class="icon-link">Aufgaben anzeigen</a>
+      <p>Eine Übersicht aller Aufgaben anzeigen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-hand-point-up fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/meldung/" class="icon-link">Melden</a>
+      <p>Für Aufgaben melden oder Meldungen bearbeiten.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-hand-point-right fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/zuteilungAnzeige/me/" class="icon-link">Zuteilungen anzeigen</a>
+      <p>Eine Übersicht meiner Zuteilungen anzeigen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-pen-to-square fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/leistung/" class="icon-link">Leistung eintragen (eigene)</a>
+      <p>Geleisteten Arbeitsdienst für zugeteilte Aufgabe eintragen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-rectangle-xmark fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/meldung/?gemeldet=GA&filter=Filter+anwenden" class="icon-link">Meldung löschen</a>
+      <p>Zum Löschen die Präferenz auf Nein setzen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-magnifying-glass fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/meldung/liste" class="icon-link">Meldungsübersicht</a>
+      <p>Eine Übersicht meiner Meldungen anzeigen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-eye fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/leistungListe/" class="icon-link">Leistungsübersicht</a>
+      <p> Eine Übersicht meiner geleistenen Arbeiten anzeigen.</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-file-pen fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/leistungAlle/" class="icon-link">Leistung eintragen (beliebige)</a>
+      <p>Geleisteten Arbeitsdienst für beliebige Aufgabe eintragen.</p>
+    </div>
+  </div>
+</div>
+
+{% if user.teamleader_set.count > 0 %}
+
+<h2 class="pb-2 border-bottom"></h2>
+<h2> Teamleiter-Funktionen </h2>
+<p>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-people-group fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="{% url 'arbeitsplan-aufgabenTeamleader' %}" class="icon-link">Aufgaben anzeigen</a>
+      <p>Für welche Aufgaben bin ich Teamleiter?</p>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-check fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/arbeitsplan/leistungenBearbeiten/z=team/" class="icon-link">Leistungsmeldungen anzeigen</a>
+      <p>Vorliegende Leistungsmeldungen für mein Team bearbeiten.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% for g in user.groups.all %}
+{% if g.name == "Vorstand" %}
+<h2 class="pb-2 border-bottom"></h2>
+<h2> Vorstandsfunktionen </h2>
 <p>
 
 <div class="row row-cols-1 row-cols-lg-2 g-4">
-  
-  <div class="col">        
+  <div class="col">
     <div class="card">
-      <div class="card-header text-bg-secondary text-bg-secondary text-center">
-        <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
+      <div class="card-header text-bg-secondary text-center">
+        <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben und Aufgabengruppen
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/aufgaben/">Welche Aufgaben gibt es?</a></li>
+        <li class="list-group-item"><a href="/arbeitsplan/aufgabeErzeugen/"> Neue Aufgabe anlegen </a> </li>
+        <li class="list-group-item"><a href="/arbeitsplan/aufgabenVorstand/"> Aufgaben anzeigen und editieren </a> </li>
+        <li class="list-group-item"><a href="/arbeitsplan/aufgabengruppeErzeugen/"> Neue Aufgabengruppe anlegen </a>
+        </li>
+        <li class="list-group-item"><a href="/arbeitsplan/aufgabengruppen/"> Aufgabengruppen anzeigen und editieren </a>
+        </li>
       </ul>
     </div>
   </div>
 
-  <div class="col">        
+  <div class="col">
     <div class="card">
       <div class="card-header text-bg-secondary text-center">
         <i class="fa-regular fa-hand-point-up fa-lg fa-fw"></i>&nbsp;Meldung
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/meldung/liste">Übersicht</a> Eine Liste meiner Meldungen </li>
-        <li class="list-group-item"><a href="/arbeitsplan/meldung/">Melden</a> Für Aufgaben melden oder Meldungen bearbeiten </li>
-        <li class="list-group-item"><a href="/arbeitsplan/meldung/?gemeldet=GA&filter=Filter+anwenden">Löschen</a> Meldungen löschen: Präferenz auf "Nein" setzen </li>
+        <li class="list-group-item"><a href="/arbeitsplan/meldungVorstand/">Existierende Meldungen anzeigen und bewerten
+          </a> </li>
       </ul>
     </div>
   </div>
 
-  <div class="col">        
+  <div class="col">
     <div class="card">
       <div class="card-header text-bg-secondary text-center">
         <i class="fa-regular fa-hand-point-right fa-lg fa-fw"></i>&nbsp;Zuteilung
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/zuteilungAnzeige/me/">Für welche Aufgaben wurde ich eingeteilt?</a></li>
+        <li class="list-group-item"> <a href="/arbeitsplan/zuteilungAnzeige/all/"> Existierende Zuteilungen anzeigen
+          </a> </li>
+        <li class="list-group-item"> Aufgaben und Zuteilungsübersicht
+          <ul>
+            <li> <a href="/arbeitsplan/zuteilungUebersicht/"> Alle Aufgaben </a> </li>
+            <li> Vorgefiltert: <a
+                href="/arbeitsplan/zuteilungUebersicht/?zuteilungen_ausreichend=UN&filter=Filter+anwenden"> Nur Aufgaben
+                mit fehlenden Zuteilungen </a> </li>
+          </ul>
+        </li>
+        <li class="list-group-item"> Zuteilungen manuell vornehmen in großer Tabelle: <a
+            href="/arbeitsplan/manuelleZuteilung/"> Alle Aufgaben, alle Mitglieder. </a> </li>
+        <li class="list-group-item"> Zuteilungen manuell vornehmen in vorgefilterter Tabelle: nur Aufgaben mit fehlenden
+          Zuteilungen, nur Mitglieder mit freier Kapazität
+          <ul>
+            <li><a
+                href="/arbeitsplan/manuelleZuteilung/?zuteilungen_ausreichend=UN&mitglied_ausgelastet=FR&filter=Filter+anwenden">
+                Alle Aufgabengruppen </a> </li>
+            {% for ag in aufgabengruppen %}
+            <li> <a
+                href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden">
+                Nur Aufgabengruppe {{ ag.name }}</a> </li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% comment %}
+        <li class="list-group-item"> Zuteilungen ohne Meldung vornehmen (TODO) </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/erstelleZuteilung/"> Zuteilungen automatisch erstellen </a>
+          (noch nicht implementiert!) </li>
+        {% endcomment %}
       </ul>
     </div>
   </div>
@@ -64,139 +217,38 @@ Dir stehen folgende Funktionen zur Verfügung:
         <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"> <a href="/arbeitsplan/leistung/">Eintragen (eigene Aufgaben)</a> Ich möchte einen geleisteten Arbeitsdienst eintragen für eine Aufgabe, die mir zugeteilt war. </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/leistungAlle/">Eintragen (beliebige Aufgaben)</a> Ich möchte einen geleisteten Arbeitsdienst eintragen für eine beliebige Aufgabe (bitte mit Bedacht benutzen). </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/leistungListe/">Anzeigen</a> Ich möchte eine Übersicht meiner geleistenen Arbeiten sehen. </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=all/"> Vorliegende Leistungsmeldungen
+            für <b> alle </b> Zuständigen bearbeiten </a> </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=me/"> Vorliegende Leistungsmeldungen
+            für <b> mich </b> als Zuständigen bearbeiten </a> </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/salden/"> Saldenübersicht der geleisteten Arbeitsstunden
+            anzeigen </a>
       </ul>
     </div>
   </div>
 
-</div>
-
-
-{% if user.teamleader_set.count > 0 %}
-<h2> Teamleiter-Funktionen </h2>
-<p> 
-
-<div class="row row-cols-1 row-cols-lg-2 g-4">
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="{% url 'arbeitsplan-aufgabenTeamleader' %}">Für welche Aufgaben bin ich Teamleiter? </a> </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/leistungenBearbeiten/z=team/">Vorliegende Leistungsmeldungen für mein Team bearbeiten </a> </li>
-      </ul>
-    </div>
-  </div>
-
-</div>
-{% endif %}
-
-
-{% for g in user.groups.all %}
-{% if g.name == "Vorstand" %}
-<h2> Vorstandsfunktionen </h2>
-<p>
-
-<div class="row row-cols-1 row-cols-lg-2 g-4">
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-solid fa-list-ul fa-lg fa-fw"></i>&nbsp;Aufgaben und Aufgabengruppen
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/aufgabeErzeugen/"> Neue Aufgabe anlegen </a> </li>
-        <li class="list-group-item"><a href="/arbeitsplan/aufgabenVorstand/"> Aufgaben anzeigen und editieren </a> </li>
-        <li class="list-group-item"><a href="/arbeitsplan/aufgabengruppeErzeugen/"> Neue Aufgabengruppe anlegen </a> </li>
-        <li class="list-group-item"><a href="/arbeitsplan/aufgabengruppen/"> Aufgabengruppen anzeigen und editieren </a> </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-regular fa-hand-point-up fa-lg fa-fw"></i>&nbsp;Meldung
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href="/arbeitsplan/meldungVorstand/">Existierende Meldungen anzeigen und bewerten </a> </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-regular fa-hand-point-right fa-lg fa-fw"></i>&nbsp;Zuteilung
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"> <a href="/arbeitsplan/zuteilungAnzeige/all/"> Existierende Zuteilungen anzeigen </a> </li>
-        <li class="list-group-item"> Aufgaben und Zuteilungsübersicht
-          <ul>
-            <li> <a href="/arbeitsplan/zuteilungUebersicht/"> Alle Aufgaben </a> </li>
-            <li> Vorgefiltert: <a href="/arbeitsplan/zuteilungUebersicht/?zuteilungen_ausreichend=UN&filter=Filter+anwenden"> Nur Aufgaben mit fehlenden Zuteilungen </a> </li>
-          </ul>
-        </li>
-        <li class="list-group-item"> Zuteilungen manuell vornehmen in großer Tabelle: <a href="/arbeitsplan/manuelleZuteilung/"> Alle Aufgaben, alle Mitglieder. </a> </li>
-        <li class="list-group-item"> Zuteilungen manuell vornehmen in vorgefilterter Tabelle: nur Aufgaben mit fehlenden Zuteilungen, nur Mitglieder mit freier Kapazität
-          <ul>
-            <li><a href="/arbeitsplan/manuelleZuteilung/?zuteilungen_ausreichend=UN&mitglied_ausgelastet=FR&filter=Filter+anwenden"> Alle Aufgabengruppen </a> </li>
-            {% for ag in aufgabengruppen %}
-            <li> <a href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden"> Nur Aufgabengruppe {{ ag.name }}</a> </li>
-            {% endfor %}
-          </ul>
-        </li>
-        {% comment %}
-        <li class="list-group-item"> Zuteilungen ohne Meldung vornehmen (TODO) </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/erstelleZuteilung/"> Zuteilungen automatisch erstellen </a> (noch nicht implementiert!) </li>
-        {% endcomment %}
-      </ul>
-    </div>
-  </div>
-
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=all/"> Vorliegende Leistungsmeldungen für <b> alle </b> Zuständigen bearbeiten </a> </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=me/"> Vorliegende Leistungsmeldungen für <b> mich </b> als Zuständigen bearbeiten </a> </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/salden/"> Saldenübersicht der geleisteten Arbeitsstunden anzeigen </a>
-      </ul>
-    </div>
-  </div>
-
-  <div class="col">        
+  <div class="col">
     <div class="card">
       <div class="card-header text-bg-secondary text-center">
         <i class="fa-solid fa-envelope fa-lg fa-fw"></i>&nbsp;Benachrichtigungen
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/zuteilung/">Zuteilungen</a>: Mitglieder über erfolgte oder geänderte Zuteilungen informieren </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/leistung/"> Leistungen</a>: Mitglieder über Bearbeitungen von Leistungsmeldungen informieren </li>
-        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/meldungsAufforderung/"> Meldungsaufforderung</a>: Mitglieder mit mangelnden Zuteilungen zu weiteren Meldungen aufforden </li>           
-        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/senden/"> Benachrichtigungen absenden</a> (ohne Rückfragen, ggf. zeitintensiv!) </li>  
-        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/templateListe/"> Liste der E-Mail-Vorlagen</a>: Überblick der existierenden Vorlagen für E-Mails, mit Kommentaren. NICHT die tatsächlichen E-Mails! </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/zuteilung/">Zuteilungen</a>: Mitglieder über
+          erfolgte oder geänderte Zuteilungen informieren </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/leistung/"> Leistungen</a>: Mitglieder über
+          Bearbeitungen von Leistungsmeldungen informieren </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/meldungsAufforderung/">
+            Meldungsaufforderung</a>: Mitglieder mit mangelnden Zuteilungen zu weiteren Meldungen aufforden </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/senden/"> Benachrichtigungen absenden</a>
+          (ohne Rückfragen, ggf. zeitintensiv!) </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/templateListe/"> Liste der
+            E-Mail-Vorlagen</a>: Überblick der existierenden Vorlagen für E-Mails, mit Kommentaren. NICHT die
+          tatsächlichen E-Mails! </li>
       </ul>
     </div>
   </div>
 
-  <div class="col">        
+  <div class="col">
     <div class="card">
       <div class="card-header text-bg-secondary text-center">
         <i class="fa-solid fa-users fa-lg fa-fw"></i> Mitgliederdaten verwalten
@@ -205,24 +257,26 @@ Dir stehen folgende Funktionen zur Verfügung:
         <li class="list-group-item"> <a href="/accounts/add/"> Mitglied hinzufügen</a> </li>
         <li class="list-group-item"> <a href="/accounts/list/"> Mitgliederliste</a> </li>
         <li class="list-group-item"> <a href="/accounts/filteredList/"> Mitgliederliste filtern</a> </li>
-        <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> <i class="fa-solid fa-file-excel fa-lg fa-fw"></i> Mitglieder als Excel, mit unterschiedlichen Filtern </a> </li>
+        <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> Mitglieder als Excel, mit unterschiedlichen Filtern </a> </li>
         {% comment %}
-        <li class="list-group-item"> <a href="/accounts/inaktiveReset/"> Inaktive Mitglieder mit neuen Passwörtern versehen</a> </li>
+        <li class="list-group-item"> <a href="/accounts/inaktiveReset/"> Inaktive Mitglieder mit neuen Passwörtern
+            versehen</a> </li>
         {% endcomment %}
         {% if user.is_staff %}
-        <li class="list-group-item"> <a href="/admin/"><i class="fa-solid fa-database fa-lg fa-fw"></i>&nbsp; Rohdaten verwalten</a> Achtung, direkter Datenbankzugriff! Gefährlich!</li>
-        {% endif %}        
+        <li class="list-group-item"> <a href="/admin/"><i class="fa-solid fa-database fa-lg fa-fw"></i>&nbsp; Rohdaten
+            verwalten</a> Achtung, direkter Datenbankzugriff! Gefährlich!</li>
+        {% endif %}
       </ul>
     </div>
   </div>
 
 </div>
 
-{% endif %} 
-{% endfor %} 
+{% endif %}
+{% endfor %}
 
 {% else %}
-<a href="login/?next=/home/"> Bitte loggen Sie sich ein! </a>          
+<a href="login/?next=/home/"> Bitte loggen Sie sich ein! </a>
 {% endif %}
 
 {% endblock %}
