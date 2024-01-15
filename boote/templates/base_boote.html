@@ -6,52 +6,59 @@ Boote und Kran | mein.svpb.de
 {% endblock %}
 
 {% block apphome %}
-<a class="nav-link" href="/boote/">    
-    <i class="fa-solid fa-home fa-fw"></i>
-    Home
+<a class="nav-link" href="/boote/">
+	<i class="fa-solid fa-home fa-fw"></i>
+	Home
 </a>
 {% endblock %}
 
 {% block appnav %}
-<link rel="stylesheet" href="{% static 'boote/css/boote.css'%}" type="text/css" />
 
 <!-- BOOTE -->
 <li class="dropdown">
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-sailboat fa-fw"></i>
-        Boote
-    </a>
-    <ul class="dropdown-menu">    	
-        <li><a class="dropdown-item" href="/boote/boots_liste/">Alle Boote</a></li>                
-         {% for g in user.groups.all %}
-            {% if g.name == "Vorstand" %}
-        <li><hr class="dropdown-divider"></li>
-        <li><h6 class="dropdown-header">Vorstandsfunktionen</h6></li>
-        <li><a class="dropdown-item" href="/boote/boot/edit/">Mein Boot</a></li>
-        <li><a class="dropdown-item" href="/boote/boot_issues/all/">Alle Meldungen</a></li>
-            {% endif %}
-        {% endfor %}        
-    </ul>    
+	<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="fa-solid fa-sailboat fa-fw"></i>
+		Boote
+	</a>
+	<ul class="dropdown-menu">
+		<li><a class="dropdown-item" href="/boote/boots_liste/">Alle Boote</a></li>
+		{% for g in user.groups.all %}
+		{% if g.name == "Vorstand" %}
+		<li>
+			<hr class="dropdown-divider">
+		</li>
+		<li>
+			<h6 class="dropdown-header">Vorstandsfunktionen</h6>
+		</li>
+		<li><a class="dropdown-item" href="/boote/boot/edit/">Mein Boot</a></li>
+		<li><a class="dropdown-item" href="/boote/boot_issues/all/">Alle Meldungen</a></li>
+		{% endif %}
+		{% endfor %}
+	</ul>
 </li>
 
 <!-- BOOT RESERVIEREN -->
 <li class="dropdown">
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-regular fa-calendar-check fa-fw"></i>
-        Reservieren
-    </a>
-    <ul class="dropdown-menu">        
-        <li><a class="dropdown-item" href="/boote/booking/today/">Verfügbarkeit Heute</a></li>        
-        <li><a class="dropdown-item" href="/boote/booking/overview/">Termin Reservieren</a></li>        
-        <li><a class="dropdown-item" href="/boote/booking/my_bookings/">Meine Reservierungen</a></li>
-        {% for g in  user.groups.all %}
-            {% if g.name == "Vorstand" %}
-        <li><hr class="dropdown-divider"></li>
-        <li><h6 class="dropdown-header">Vorstandsfunktionen</h6></li>
-        <li><a class="dropdown-item" href="/boote/booking/priority/">Regata/Ausbildung</a></li>
-        <li><a class="dropdown-item" href="/boote/booking/all/">Alle Reservierungen</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+	<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="fa-regular fa-calendar-check fa-fw"></i>
+		Reservieren
+	</a>
+	<ul class="dropdown-menu">
+		<li><a class="dropdown-item" href="/boote/booking/today/">Verfügbarkeit heute</a></li>
+		<li><a class="dropdown-item" href="/boote/booking/overview/">Termin reservieren</a></li>
+		<li><a class="dropdown-item" href="/boote/booking/my_bookings/">Termin stornieren</a></li>
+		{% for g in user.groups.all %}
+		{% if g.name == "Vorstand" %}
+		<li>
+			<hr class="dropdown-divider">
+		</li>
+		<li>
+			<h6 class="dropdown-header">Vorstandsfunktionen</h6>
+		</li>
+		<li><a class="dropdown-item" href="/boote/booking/priority/">Regata/Ausbildung</a></li>
+		<li><a class="dropdown-item" href="/boote/booking/all/">Alle Reservierungen</a></li>
+		{% endif %}
+		{% endfor %}
+	</ul>
 </li>
 {% endblock %}

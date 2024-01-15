@@ -1,56 +1,85 @@
 {% extends "base_boote.html" %}
 {% load static %}
 
-
 {% block branding %}
-Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}{% endif %}!
 {% endblock %}
 
 {% block content %}
-
 
 {% if user.is_authenticated %}
 
 {% if msg %}
 <div class="alert alert-{{msgclass}}">
-  {{ msg }}
+	{{ msg }}
 </div>
 {% endif %}
 
-
 <p>
-Bist du schon mal am Lippesee angekommen und hast erst dann festgestellt, dass dein Lieblings-Vereinsboot schon <b>besetzt ist</b> (z.B. wegen Ausbildung)?
-</p>
-<p>
-Oder hattest du vielleicht Schwierigkeiten um nachzuvollziehen, ob die von dir gemeldete 'lose Wante' vom Bootspaten schon <b>repariert worden ist</b>? 
-</p>
-<p>
-Diese App soll es uns ermöglichen die Vereinsboote effizienter zu nutzen und noch mehr Spass am Segeln haben! 
-</p>
-<p>
-<img src="{% static 'boote/banner.png' %}" style="width: 786px;" class="img-fluid"><br>
-</p>
-<p>
-<div class="row row-cols-1 row-cols-lg-2 g-4">
-  <div class="col">        
-    <div class="card">
-      <div class="card-header text-bg-secondary text-center">
-        <i class="fa-solid fa-sailboat fa-lg fa-fw"></i> Boote und Kran
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"> <a href="boots_liste/"> Alle Boote und Kran anschauen</a> </li>
-        <li class="list-group-item"> <a href="booking/today/"> Heutige Verfügbarkeit prüfen</a> </li>
-        <li class="list-group-item"> <a href="booking/overview/"> Vereinsboote oder Kran reservieren</a> </li>
-        <li class="list-group-item"> <a href="boots_liste/"> Probleme melden und anschauen</a> </li>       
-      </ul>
-    </div>
-  </div>
+<div class="container">
+	<div class="row text-center mb-4">
+		<div class="col-md-12">
+			<img class="img-fluid" src="{% static 'boote/banner.png' %}">
+		</div>
+	</div>
 </div>
-</p>
-<p style="font-weight: bold;">
-Handbreit Wasser unterm Kiel! 
-</p>
+<div class="row text-center">
+	<p>
+		Bist du schon mal am Lippesee angekommen und hast erst dann festgestellt, dass dein Lieblings-Vereinsboot schon
+		<b>besetzt ist</b> (z.B. wegen Ausbildung)?
+	</p>
+	<p>
+		Oder hattest du vielleicht Schwierigkeiten um nachzuvollziehen, ob die von dir gemeldete 'lose Wante' vom
+		Bootspaten schon <b>repariert worden ist</b>?
+	</p>
+	<p>
+		Diese App soll es uns ermöglichen die Vereinsboote effizienter zu nutzen und noch mehr Spaß am Segeln zu haben!
+	</p>
+</div>
 
+<hr>
+
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+	<div class="col d-flex align-items-start">
+		<div
+			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+			<i class="bi fa-solid fa-magnifying-glass fa-fw" width="1em" height="1em"></i>
+		</div>
+		<div>
+			<a href="boots_liste/" class="link">Übersicht</a>
+			<p>Boote/Kran listen oder Probleme melden.</p>
+		</div>
+	</div>
+	<div class="col d-flex align-items-start">
+		<div
+			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+			<i class="bi fa-solid fa-eye fa-lg" width="1em" height="1em"></i>
+		</div>
+		<div>
+			<a href="booking/today/" class="link">Verfügbarkeit</a>
+			<p>Die heutige Verfügbarkeit anzeigen.</p>
+		</div>
+	</div>
+	<div class="col d-flex align-items-start">
+		<div
+			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+			<i class="bi fa-solid fa-calendar-check fa-lg" width="1em" height="1em"></i>
+		</div>
+		<div>
+			<a href="booking/overview/" class="link">Reservieren</a>
+			<p>Vereinsboote oder Kran reservieren.</p>
+		</div>
+	</div>
+	<div class="col d-flex align-items-start">
+		<div
+			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+			<i class="bi fa-solid fa-rectangle-xmark fa-lg" width="1em" height="1em"></i>
+		</div>
+		<div>
+			<a href="booking/my_bookings/" class="link">Stornieren</a>
+			<p>Meine Reservierungen anzeigen und/oder stornieren.</p>
+		</div>
+	</div>
+</div>
 {% else %}
 
 <a href="login/?next=/home/"> Bitte loggen Sie sich ein! </a>
