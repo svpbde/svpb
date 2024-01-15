@@ -176,8 +176,12 @@ IMPERSONATE = {
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 DJANGO_TABLES2_TABLE_ATTRS = {
     "class": "table table-hover table-striped border",
-    "style": "width: auto;"
+    "style": "width: auto;",
+    "thead": {
+        "class": "sticky-top",
+    },
 }
+
 
 def user_is_vorstand(request):
     return request.user.groups.filter(name="Vorstand")

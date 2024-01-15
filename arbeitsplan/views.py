@@ -536,7 +536,7 @@ class AufgabengruppeCreate(isVorstandMixin, SimpleCreateView):
 class AufgabengruppeList(isVorstandMixin, FilteredListView):
     title = "Aufgabegruppen"
     tableClass = AufgabengruppeTable
-    intro_text = "Übersicht über alle Aufgabengruppe."
+    intro_text = "Übersicht über alle Aufgabengruppen."
     model = models.Aufgabengruppe
 
 
@@ -2358,16 +2358,18 @@ class MediaChecks(View):
 
 ##########
 
-# A siomple home-view to provide aufgabengruppe to the template
-# seems heavy-handed, but no other option seems handy to push data into a TemplateView
 
 class HomeView(TemplateView):
+    """A simple home-view to provide aufgabengruppen to the template."""
 
-    def get_context_data(self, *args, **kwargs):
-        c = super(HomeView, self).get_context_data()
-        c.update({'aufgabengruppen': [
-            {'name': a.gruppe,
-             'id': a.id}
-            for a in models.Aufgabengruppe.objects.all()],
-                  'bla': 'blub', })
+    def get_context_data(self, **kwargs):
+        c = super(HomeView, self).get_context_data(**kwargs)
+        c.update(
+            {
+                "aufgabengruppen": [
+                    {"name": a.gruppe, "id": a.id}
+                    for a in models.Aufgabengruppe.objects.all()
+                ],
+            }
+        )
         return c

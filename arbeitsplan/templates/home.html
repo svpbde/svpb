@@ -157,15 +157,13 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 		</div>
 	</div>
 
-	<div class="col">
+<div class="col">
 		<div class="card">
 			<div class="card-header text-bg-secondary text-center">
 				<i class="fa-regular fa-hand-point-up fa-lg fa-fw"></i>&nbsp;Meldung
 			</div>
 			<ul class="list-group list-group-flush">
-				<li class="list-group-item"><a href="/arbeitsplan/meldungVorstand/">Existierende Meldungen anzeigen und
-						bewerten
-					</a> </li>
+				<li class="list-group-item"><a href="/arbeitsplan/meldungVorstand/">Existierende Meldungen anzeigen und	bewerten </a> </li>
 			</ul>
 		</div>
 	</div>
@@ -176,113 +174,59 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 				<i class="fa-regular fa-hand-point-right fa-lg fa-fw"></i>&nbsp;Zuteilung
 			</div>
 			<ul class="list-group list-group-flush">
-				<li class="list-group-item"> <a href="/arbeitsplan/zuteilungAnzeige/all/"> Existierende Zuteilungen
-						anzeigen
-					</a> </li>
+				<li class="list-group-item"> <a href="/arbeitsplan/zuteilungAnzeige/all/"> Existierende Zuteilungen	anzeigen </a> </li>
 				<li class="list-group-item"> Aufgaben und Zuteilungsübersicht
 					<ul>
 						<li> <a href="/arbeitsplan/zuteilungUebersicht/"> Alle Aufgaben </a> </li>
-						<li> Vorgefiltert: <a
-								href="/arbeitsplan/zuteilungUebersicht/?zuteilungen_ausreichend=UN&filter=Filter+anwenden">
-								Nur Aufgaben
-								mit fehlenden Zuteilungen </a> </li>
+						<li> Vorgefiltert: <a	href="/arbeitsplan/zuteilungUebersicht/?zuteilungen_ausreichend=UN&filter=Filter+anwenden">	Nur Aufgaben mit fehlenden Zuteilungen </a> </li>
 					</ul>
 				</li>
-				<li class="list-group-item"> Zuteilungen manuell vornehmen in großer Tabelle: <a
-						href="/arbeitsplan/manuelleZuteilung/"> Alle Aufgaben, alle Mitglieder. </a> </li>
-				<li class="list-group-item"> Zuteilungen manuell vornehmen in vorgefilterter Tabelle: nur Aufgaben mit
-					fehlenden
-					Zuteilungen, nur Mitglieder mit freier Kapazität
-					<ul>
-						<li><a
-								href="/arbeitsplan/manuelleZuteilung/?zuteilungen_ausreichend=UN&mitglied_ausgelastet=FR&filter=Filter+anwenden">
-								Alle Aufgabengruppen </a> </li>
+				<li class="list-group-item"> Zuteilungen manuell vornehmen in großer Tabelle: <a href="/arbeitsplan/manuelleZuteilung/"> Alle Aufgaben, alle Mitglieder. </a> </li>
+				<li class="list-group-item"> Zuteilungen manuell vornehmen in vorgefilterter Tabelle: nur Aufgaben mit fehlenden Zuteilungen, nur Mitglieder mit freier Kapazität
+          <ul>
+						<li><a href="/arbeitsplan/manuelleZuteilung/?zuteilungen_ausreichend=UN&mitglied_ausgelastet=FR&filter=Filter+anwenden"> Alle Aufgabengruppen </a> </li>
 						{% for ag in aufgabengruppen %}
-						<li> <a
-								href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden">
-								Nur Aufgabengruppe {{ ag.name }}</a> </li>
+						<li> <a	href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden"> Nur Aufgabengruppe {{ ag.name }}</a> </li>
 						{% endfor %}
 					</ul>
 				</li>
 				{% comment %}
 				<li class="list-group-item"> Zuteilungen ohne Meldung vornehmen (TODO) </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/erstelleZuteilung/"> Zuteilungen automatisch
-						erstellen </a>
+				<li class="list-group-item"> <a href="/arbeitsplan/erstelleZuteilung/"> Zuteilungen automatisch erstellen </a>
 					(noch nicht implementiert!) </li>
 				{% endcomment %}
 			</ul>
 		</div>
 	</div>
 
-	<div class="col">
-		<div class="card">
-			<div class="card-header text-bg-secondary text-center">
-				<i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
-			</div>
-			<ul class="list-group list-group-flush">
-				<li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=all/"> Vorliegende
-						Leistungsmeldungen
-						für <b> alle </b> Zuständigen bearbeiten </a> </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=me/"> Vorliegende
-						Leistungsmeldungen
-						für <b> mich </b> als Zuständigen bearbeiten </a> </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/salden/"> Saldenübersicht der geleisteten
-						Arbeitsstunden
-						anzeigen </a>
-			</ul>
-		</div>
-	</div>
+  <div class="col">        
+    <div class="card">
+      <div class="card-header text-bg-secondary text-center">
+        <i class="fa-solid fa-check fa-lg fa-fw"></i>&nbsp;Leistung
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=all/"> Vorliegende Leistungsmeldungen für <b> alle </b> Zuständigen bearbeiten </a> </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/leistungenBearbeiten/z=me/"> Vorliegende Leistungsmeldungen für <b> mich </b> als Zuständigen bearbeiten </a> </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/salden/"> Saldenübersicht der geleisteten Arbeitsstunden anzeigen </a>
+        <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> <i class="fa-solid fa-file-excel fa-lg fa-fw"></i> Mitglieder-Exceldatei, mit unterschiedlichen Filtern </a> </li>
+      </ul>
+    </div>
+  </div>
 
-	<div class="col">
-		<div class="card">
-			<div class="card-header text-bg-secondary text-center">
-				<i class="fa-solid fa-envelope fa-lg fa-fw"></i>&nbsp;Benachrichtigungen
-			</div>
-			<ul class="list-group list-group-flush">
-				<li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/zuteilung/">Zuteilungen</a>:
-					Mitglieder über
-					erfolgte oder geänderte Zuteilungen informieren </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/leistung/"> Leistungen</a>:
-					Mitglieder über
-					Bearbeitungen von Leistungsmeldungen informieren </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/meldungsAufforderung/">
-						Meldungsaufforderung</a>: Mitglieder mit mangelnden Zuteilungen zu weiteren Meldungen aufforden
-				</li>
-				<li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/senden/"> Benachrichtigungen
-						absenden</a>
-					(ohne Rückfragen, ggf. zeitintensiv!) </li>
-				<li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/templateListe/"> Liste der
-						E-Mail-Vorlagen</a>: Überblick der existierenden Vorlagen für E-Mails, mit Kommentaren. NICHT
-					die
-					tatsächlichen E-Mails! </li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="col">
-		<div class="card">
-			<div class="card-header text-bg-secondary text-center">
-				<i class="fa-solid fa-users fa-lg fa-fw"></i> Mitgliederdaten verwalten
-			</div>
-			<ul class="list-group list-group-flush">
-				<li class="list-group-item"> <a href="/accounts/add/"> Mitglied hinzufügen</a> </li>
-				<li class="list-group-item"> <a href="/accounts/list/"> Mitgliederliste</a> </li>
-				<li class="list-group-item"> <a href="/accounts/filteredList/"> Mitgliederliste filtern</a> </li>
-				<li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> Mitglieder als Excel, mit
-						unterschiedlichen Filtern </a> </li>
-				{% comment %}
-				<li class="list-group-item"> <a href="/accounts/inaktiveReset/"> Inaktive Mitglieder mit neuen
-						Passwörtern
-						versehen</a> </li>
-				{% endcomment %}
-				{% if user.is_staff %}
-				<li class="list-group-item"> <a href="/admin/"><i class="fa-solid fa-database fa-lg fa-fw"></i>&nbsp;
-						Rohdaten
-						verwalten</a> Achtung, direkter Datenbankzugriff! Gefährlich!</li>
-				{% endif %}
-			</ul>
-		</div>
-	</div>
+  <div class="col">        
+    <div class="card">
+      <div class="card-header text-bg-secondary text-center">
+        <i class="fa-solid fa-envelope fa-lg fa-fw"></i>&nbsp;Benachrichtigungen
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/zuteilung/">Zuteilungen</a>: Mitglieder über erfolgte oder geänderte Zuteilungen informieren </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/leistung/"> Leistungen</a>: Mitglieder über Bearbeitungen von Leistungsmeldungen informieren </li>
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/meldungsAufforderung/"> Meldungsaufforderung</a>: Mitglieder mit mangelnden Zuteilungen zu weiteren Meldungen aufforden </li>           
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/senden/"> Benachrichtigungen absenden</a> (ohne Rückfragen, ggf. zeitintensiv!) </li>  
+        <li class="list-group-item"> <a href="/arbeitsplan/benachrichtigen/templateListe/"> Liste der E-Mail-Vorlagen</a>: Überblick der existierenden Vorlagen für E-Mails, mit Kommentaren. NICHT die tatsächlichen E-Mails! </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 {% endif %}

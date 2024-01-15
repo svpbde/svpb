@@ -27,10 +27,6 @@ Mitgliederverwaltung | mein.svpb.de
         <li><a class="dropdown-item" href="/accounts/list/"> Liste</a></li>
         <li><a class="dropdown-item" href="/accounts/filteredList/"> Liste filtern</a></li>
         <li><a class="dropdown-item" href="/accounts/mitgliederexcel.xlsx"><i class="fa-solid fa-file-excel fa-fw"></i> Liste als Excel</a></li>
-        <!-- Rohdaten Admin -->
-        {% if user.is_staff %}
-        <li><a class="dropdown-item" href="/admin/"><i class="fa-solid fa-database fa-fw"></i> Rohdaten</a></li>
-        {% endif %}
     </ul>
 </li>
 {% endif %}
