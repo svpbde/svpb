@@ -23,7 +23,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-list-ul fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-list-ul fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/aufgaben/">Aufgaben anzeigen</a>
@@ -33,7 +33,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-hand-point-up fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-hand-point-up fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/meldung/">Melden</a>
@@ -43,7 +43,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-hand-point-right fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-hand-point-right fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/zuteilungAnzeige/me/">Zuteilungen anzeigen</a>
@@ -53,7 +53,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-pen-to-square fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-pen-to-square fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/leistung/">Leistung eintragen (eigene)</a>
@@ -63,7 +63,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-rectangle-xmark fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-rectangle-xmark fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/meldung/?gemeldet=GA&filter=Filter+anwenden">Meldung löschen</a>
@@ -73,7 +73,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-magnifying-glass fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-magnifying-glass fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/meldung/liste">Meldungsübersicht</a>
@@ -83,7 +83,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-eye fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-eye fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/leistungListe/">Leistungsübersicht</a>
@@ -93,7 +93,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-file-pen fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-file-pen fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/leistungAlle/">Leistung eintragen (beliebige)</a>
@@ -111,7 +111,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-people-group fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-people-group fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="{% url 'arbeitsplan-aufgabenTeamleader' %}">Aufgaben anzeigen</a>
@@ -121,7 +121,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 	<div class="col d-flex align-items-start">
 		<div
 			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-check fa-lg" width="1em" height="1em"></i>
+			<i class="bi fa-solid fa-check fa-fw fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
 			<a href="/arbeitsplan/leistungenBearbeiten/z=team/">Leistungsmeldungen anzeigen</a>
