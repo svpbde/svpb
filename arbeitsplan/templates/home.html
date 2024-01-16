@@ -26,7 +26,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-list-ul fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/aufgaben/" class="link">Aufgaben anzeigen</a>
+			<a href="/arbeitsplan/aufgaben/">Aufgaben anzeigen</a>
 			<p>Eine Übersicht aller Aufgaben anzeigen.</p>
 		</div>
 	</div>
@@ -36,7 +36,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-hand-point-up fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/meldung/" class="link">Melden</a>
+			<a href="/arbeitsplan/meldung/">Melden</a>
 			<p>Für Aufgaben melden oder Meldungen bearbeiten.</p>
 		</div>
 	</div>
@@ -46,7 +46,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-hand-point-right fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/zuteilungAnzeige/me/" class="link">Zuteilungen anzeigen</a>
+			<a href="/arbeitsplan/zuteilungAnzeige/me/">Zuteilungen anzeigen</a>
 			<p>Eine Übersicht meiner Zuteilungen anzeigen.</p>
 		</div>
 	</div>
@@ -56,7 +56,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-pen-to-square fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/leistung/" class="link">Leistung eintragen (eigene)</a>
+			<a href="/arbeitsplan/leistung/">Leistung eintragen (eigene)</a>
 			<p>Geleisteten Arbeitsdienst für zugeteilte Aufgabe eintragen.</p>
 		</div>
 	</div>
@@ -66,7 +66,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-rectangle-xmark fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/meldung/?gemeldet=GA&filter=Filter+anwenden" class="link">Meldung löschen</a>
+			<a href="/arbeitsplan/meldung/?gemeldet=GA&filter=Filter+anwenden">Meldung löschen</a>
 			<p>Zum Löschen die Präferenz auf Nein setzen.</p>
 		</div>
 	</div>
@@ -76,7 +76,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-magnifying-glass fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/meldung/liste" class="link">Meldungsübersicht</a>
+			<a href="/arbeitsplan/meldung/liste">Meldungsübersicht</a>
 			<p>Eine Übersicht meiner Meldungen anzeigen.</p>
 		</div>
 	</div>
@@ -86,7 +86,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-eye fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/leistungListe/" class="link">Leistungsübersicht</a>
+			<a href="/arbeitsplan/leistungListe/">Leistungsübersicht</a>
 			<p> Eine Übersicht meiner geleistenen Arbeiten anzeigen.</p>
 		</div>
 	</div>
@@ -96,7 +96,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-file-pen fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/leistungAlle/" class="link">Leistung eintragen (beliebige)</a>
+			<a href="/arbeitsplan/leistungAlle/">Leistung eintragen (beliebige)</a>
 			<p>Geleisteten Arbeitsdienst für beliebige Aufgabe eintragen.</p>
 		</div>
 	</div>
@@ -114,7 +114,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-people-group fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="{% url 'arbeitsplan-aufgabenTeamleader' %}" class="link">Aufgaben anzeigen</a>
+			<a href="{% url 'arbeitsplan-aufgabenTeamleader' %}">Aufgaben anzeigen</a>
 			<p>Für welche Aufgaben bin ich Teamleiter?</p>
 		</div>
 	</div>
@@ -124,7 +124,7 @@ Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}
 			<i class="bi fa-solid fa-check fa-lg" width="1em" height="1em"></i>
 		</div>
 		<div>
-			<a href="/arbeitsplan/leistungenBearbeiten/z=team/" class="link">Leistungsmeldungen anzeigen</a>
+			<a href="/arbeitsplan/leistungenBearbeiten/z=team/">Leistungsmeldungen anzeigen</a>
 			<p>Vorliegende Leistungsmeldungen für mein Team bearbeiten.</p>
 		</div>
 	</div>
