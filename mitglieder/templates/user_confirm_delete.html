@@ -1,27 +1,19 @@
 {% extends "base_arbeitsplan.html" %}
 {% load static %}
-{% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 
 {% block branding %}
 Mitglied löschen 
 {% endblock %}
 
-
 {% block content %}
-
-Wollen Sie dieses Mitglied wirklich löschen? 
-
 <p>
-<b>
-{{ object }}
-</b>
-<p>
-
+Bist du sicher, dass du das Mitglied <b>{{ object }}</b> löschen möchtest?
+Diese Aktion kann nicht rückgängig gemacht werden!
+</p>
 
 <form action="" method="post">{% csrf_token %}
 <input type="submit" class="btn btn-danger"  value="Löschen!"/>
 <input type="button" class="btn btn-secondary"  value="Nein, zurück ..." onclick="window.history.go(-1);"/>
 </form>
-
 {% endblock %}

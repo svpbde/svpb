@@ -923,9 +923,9 @@ class LeistungTable(django_tables2.Table):
     def render_id(self, record):
         if ((record.status == models.Leistung.Status.ACCEPTED) or
             (record.status == models.Leistung.Status.REJECTED)):
-            return "---"
+            return "nicht mehr möglich"
         else:
-            return mark_safe('<a href="{}">Zurückziehen</a>'.format(
+            return mark_safe('<a href="{}"><i class="fa-solid fa-trash-can text-danger"></i></a>'.format(
                 reverse('arbeitsplan-leistungDelete', args=[record.id])
             ))
 
