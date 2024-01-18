@@ -1,6 +1,9 @@
 """Base Django settings for svpb project."""
 from pathlib import Path
 
+from django.contrib.messages import constants as messages
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -180,6 +183,13 @@ DJANGO_TABLES2_TABLE_ATTRS = {
     "thead": {
         "class": "sticky-top",
     },
+}
+
+# Customize message tags for usage with bootstrap alerts
+# See https://docs.djangoproject.com/en/5.0/ref/contrib/messages/#message-tags
+MESSAGE_TAGS = {
+    messages.DEBUG: "secondary",
+    messages.ERROR: "danger",
 }
 
 
