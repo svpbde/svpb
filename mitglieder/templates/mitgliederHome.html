@@ -23,25 +23,46 @@ Ihnen stehen folgende Funktionen zur Mitgliederverwaltung zur Verfügung:
 
 {% for g in  user.groups.all %}
 {% if g.name == "Vorstand" %}
-<div class="row row-cols-1 row-cols-lg-2 g-4">
-    <div class="col">        
-        <div class="card">
-            <div class="card-header text-bg-secondary text-center">
-                <i class="fa-solid fa-users fa-lg fa-fw"></i> Mitgliederdaten verwalten
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"> <a href="/accounts/add/"> Mitglied hinzufügen</a> </li>
-                <li class="list-group-item"> <a href="/accounts/list/"> Mitgliederliste</a> </li>
-                <li class="list-group-item"> <a href="/accounts/filteredList/"> Mitgliederliste filtern</a> </li>
-                <li class="list-group-item"> <a href="/accounts/mitgliederexcel.xlsx"> <i class="fa-solid fa-file-excel fa-lg fa-fw"></i> Mitglieder als Excel, mit unterschiedlichen Filtern </a> </li>
-                {% comment %}
-                <li class="list-group-item"> <a href="/accounts/inaktiveReset/"> Inaktive Mitglieder mit neuen Passwörtern versehen</a> </li>
-                {% endcomment %}  
-            </ul>
-        </div>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-user-plus fa-fw fa-lg" width="1em" height="1em"></i>
     </div>
+    <div>
+      <a href="/accounts/add/"> Mitglied hinzufügen</a>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-address-book fa-fw fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/accounts/list/"> Mitgliederliste</a>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-address-card fa-fw fa-lg" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/accounts/filteredList/"> Mitgliederliste filtern</a>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div
+      class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+      <i class="bi fa-solid fa-file-excel fa-lg fa-fw" width="1em" height="1em"></i>
+    </div>
+    <div>
+      <a href="/accounts/mitgliederexcel.xlsx"> Mitglieder als Excel, mit unterschiedlichen Filtern </a>
+    </div>
+  </div>
 </div>
 {% endif %}
 {% endfor %}
+
 {% endif %}
 {% endblock %}
