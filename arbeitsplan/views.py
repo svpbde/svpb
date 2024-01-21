@@ -627,7 +627,7 @@ class MeldungEdit (FilteredListView):
                                          format(m.aufgabe.aufgabe))
 
                 if key == 'prefMitglied':
-                    if m.prefMitglied != value:
+                    if m.prefMitglied != int(value):
                         safeit = True
 
                         if (m.prefMitglied ==
@@ -673,8 +673,8 @@ class MeldungEdit (FilteredListView):
                         m.prefMitglied = value
 
                 if key == 'prefVorstand' and isVorstand(self.request.user):
-                    if m.prefVorstand != value:
-                        m.prefVorstand  = value
+                    if m.prefVorstand != int(value):
+                        m.prefVorstand = int(value)
                         safeit = True
                         messages.success(request,
                                          "Bei Aufgabe {0} wurde die Präferenz des Vorstandes aktualisiert".
@@ -684,7 +684,7 @@ class MeldungEdit (FilteredListView):
                     m.save()
 
                 if mailcomment:
-                    notifyVorstand (m, mailcomment)
+                    notifyVorstand(m, mailcomment)
 
             else:
                 # not interested in those keys
