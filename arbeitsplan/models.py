@@ -410,10 +410,12 @@ class Meldung(models.Model):
 
     erstellt = models.DateField(auto_now_add=True)
     veraendert = models.DateField(auto_now=True)
+    # on_delete: Deleting User deletes the Meldung
     melder = models.ForeignKey(User, on_delete=models.CASCADE)
-    aufgabe = models.ForeignKey(Aufgabe, on_delete=models.PROTECT)
-    # Man kann Meldung löschen, wenn es den Melder nicht mehr gibt.
-    # aber man kann eine Aufgabe nicht löschen, wenn es schon Meldungen dafür gibt
+    # on_delete: Deleting Aufgabe deletes the Meldung. Using PROTECT is not feasible
+    # here, as Meldungen are created for every existing Aufgabe once a user visits the
+    # Meldung page, effectively blocking deletion.
+    aufgabe = models.ForeignKey(Aufgabe, on_delete=models.CASCADE)
 
     prefMitglied = models.IntegerField(
         choices=Preferences.choices,
