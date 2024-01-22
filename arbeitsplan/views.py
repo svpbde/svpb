@@ -2091,10 +2091,6 @@ class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
                                                                               )
                     users_no_email.append(thisuser)
 
-        if idlist:
-            messages.warning(request,
-                             "Vergessen Sie nicht, die Benachrichtigungen explizit abzuschicken!")
-
         ## TODO: better redirect home
         return redirect(request.get_full_path())
 
