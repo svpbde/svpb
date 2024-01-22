@@ -1,5 +1,6 @@
 """Tests of arbeitsplan app"""
 from django.core import mail
+from django.core.management import call_command
 from django.test import Client, TestCase
 
 from arbeitsplan.models import Mitglied
@@ -70,7 +71,6 @@ class SimpleTest(TestCase):
         self.assertEqual(len(mail.outbox), 0)
 
         # and actually send it off:
-        response = cl.get("/arbeitsplan/benachrichtigen/senden/",
-                          follow=True)
+        call_command("send_queued_mail")
         self.assertEqual(len(mail.outbox), 1)
         print(mail.outbox[0])

@@ -26,11 +26,6 @@ urlpatterns = [
         name="arbeitsplan-benachrichtigen-zuteilung",
     ),
     url(
-        r"^benachrichtigen/senden/$",
-        active_and_login_required(arbeitsplan.views.EmailSendenView.as_view()),
-        name="arbeitsplan-benachrichtigen-senden",
-    ),
-    url(
         r"^benachrichtigen/templateListe/$",
         active_and_login_required(arbeitsplan.views.ListEmailTemplate.as_view()),
         name="arbeitsplan-benachrichtigen-liste",

@@ -10,7 +10,6 @@ from collections import defaultdict
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.management import call_command
 # from django.core.urlresolvers import reverse_lazy
 from django.urls import reverse_lazy
 from django.db.models import Q
@@ -2205,42 +2204,6 @@ class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
             }
 
         return d
-
-
-class EmailSendenView(isVorstandMixin, View):
-    """Trigger sending emails via the post_office command line managemenet command
-    """
-
-    def get(self, request, *args, **kwargs):
-
-        import post_office.models as pom
-
-        now = datetime.datetime.utcnow().replace(tzinfo=utc)
-
-        call_command('send_queued_mail')
-
-        # count how many newly genereated log entries have relevant status values:
-        newEmailLogs = pom.Log.objects.filter(date__gt = now)
-
-        if newEmailLogs.count() == 0:
-            messages.success(request,
-                             "Es waren keine E-Mails zu versenden."
-                             )
-        else:
-            failed = newEmailLogs.filter(status=pom.STATUS.failed).count()
-            sent = newEmailLogs.filter(status=pom.STATUS.sent).count()
-
-            if sent > 0:
-                messages.success(request,
-                                 "Es wurden {0} Nachrichten versandt"
-                                 .format(sent))
-            if failed > 0:
-                messages.error(request,
-                               "Es konnten {0} Nachrichten nicht versendet"
-                               "werden! Sysadmin kontaktieren!".
-                               format(failed))
-
-        return redirect('homeArbeitsplan')
 
 
 ################################
