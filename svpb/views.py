@@ -76,7 +76,7 @@ class SvpbLogin(FormView):
         if settings.JAHRESENDE:
             context[
                 "intro_text"
-            ] = "Zur Zeit ist eine Anmeldung nur für Vorstände und Teamleiter möglich!"
+            ] = "Zur Zeit ist eine Anmeldung nur für Vorstände möglich!"
         else:
             context["intro_text"] = ""
         context["post_text"] = format_html(
@@ -101,11 +101,11 @@ class SvpbLogin(FormView):
         if user is not None:
             login(self.request, user)
 
-            if settings.JAHRESENDE and not isVorstandOrTeamleader(user):
+            if settings.JAHRESENDE and not isVorstand(user):
                 messages.warning(
                     self.request,
                     format_html(
-                        "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich."
+                        "Derzeit ist ein Anmeldung nur für Vorstände möglich."
                     ),
                 )
                 # make normal users go away

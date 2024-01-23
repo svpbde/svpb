@@ -43,18 +43,19 @@ class MitgliederTest(TestCase):
 
     @override_settings(JAHRESENDE=True)
     def test_login_works_year_end(self):
-        # Test blocked user
-        cl, response = self.login_user(self.member, self.plainpassword)
-        self.assertContains(
-            response,
-            "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich.",
-        )
+        # Test blocked users
+        for user in [self.member, self.teamleader]:
+            cl, response = self.login_user(user, self.plainpassword)
+            self.assertContains(
+                response,
+                "Derzeit ist ein Anmeldung nur für Vorstände möglich.",
+            )
         # Test allowed users
-        for user in [self.superuser, self.board, self.teamleader]:
+        for user in [self.superuser, self.board]:
             cl, response = self.login_user(user, self.plainpassword)
             self.assertNotContains(
                 response,
-                "Derzeit ist ein Anmeldung nur für Vorstände oder Teamleiter möglich.",
+                "Derzeit ist ein Anmeldung nur für Vorstände möglich.",
             )
 
     def test_wrong_password_fails(self):
