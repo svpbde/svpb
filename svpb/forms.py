@@ -10,6 +10,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 class LoginForm(forms.Form):
     username = forms.CharField(
         label="Mitgliedsnummer (fünfstellig)",
+        required=True
     )
     password = forms.CharField(
         widget=forms.PasswordInput,
@@ -25,10 +26,10 @@ class LoginForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("""<h3>Anmeldung</h3>"""), css_class="mb-3 fw-normal"),
-                FloatingField("username"),
+                FloatingField("username", autocomplete="username"),
                 FloatingField("password"),
                 Submit("apply", "Anmelden", css_class="btn-primary w-100 py-2"),
-                css_class="form-signin w-100 m-auto",
+                css_class="w-100 m-auto",
                 style="max-width: 330px; padding: 1rem",
             )
         )
