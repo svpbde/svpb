@@ -4,7 +4,6 @@
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 
-
 <!doctype html>
 <html lang="de">
 <head>
@@ -20,7 +19,6 @@
 mein.svpb.de
 {% endblock %}
 </title>
-{% block extrastyle %}
 <style>
   body {
     background-image: url("{% static 'background.jpg'%}");
@@ -29,6 +27,7 @@ mein.svpb.de
     background-size: cover;
   }
 </style> 
+{% block extrastyle %}
 {% endblock %}
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/fontawesome.min.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/solid.min.css' %}" type="text/css">
