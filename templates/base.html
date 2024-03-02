@@ -27,8 +27,6 @@ mein.svpb.de
     background-size: cover;
   }
 </style> 
-{% block extrastyle %}
-{% endblock %}
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/fontawesome.min.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/solid.min.css' %}" type="text/css">
 <link rel="stylesheet" href="{% static 'fontawesomefree/css/regular.min.css' %}" type="text/css">
@@ -37,6 +35,8 @@ mein.svpb.de
 <link rel="stylesheet" href="{% static 'datepicker/css/bootstrap-datepicker3.min.css'%}" type="text/css">
 <link rel="stylesheet" href="{% static 'custom_css/svpb.css'%}" type="text/css"/>
 <link rel="stylesheet" href="{% static 'boote/css/boote.css'%}" type="text/css"/>
+{% block extrastyle %}
+{% endblock %}
 </head>
 
 <body role="document">
