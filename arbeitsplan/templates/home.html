@@ -1,6 +1,20 @@
 {% extends "base_arbeitsplan.html" %}
 {% load static %}
 
+{% block extrastyle %}
+<style>
+:target {
+    animation: blinking-bg 0.5s 2 step-end;
+    background-color: var(--bs-dark-bg-subtle);
+}
+@keyframes blinking-bg {
+50% {
+    background-color: var(--bs-list-group-bg);
+}
+}
+</style>
+{% endblock %}
+
 {% block branding %}
 Willkommen{% if user.is_authenticated %}, {{user.first_name}} {{user.last_name}}{% endif %}!
 {% endblock %}
@@ -176,12 +190,12 @@ Dir stehen folgende Funktionen zur Verfügung:
 						<li> Vorgefiltert: <a	href="/arbeitsplan/zuteilungUebersicht/?zuteilungen_ausreichend=UN&filter=Filter+anwenden">Nur Aufgaben mit fehlenden Zuteilungen</a> </li>
 					</ul>
 				</li>
-				<li class="list-group-item"> Zuteilungen manuell vornehmen in großer Tabelle: <a href="/arbeitsplan/manuelleZuteilung/">Alle Aufgaben, alle Mitglieder.</a> </li>
-				<li class="list-group-item"> Zuteilungen manuell vornehmen in vorgefilterter Tabelle: nur Aufgaben mit fehlenden Zuteilungen, nur Mitglieder mit freier Kapazität 
+				<li class="list-group-item"> Zuteilungen vornehmen in großer Tabelle: <a href="/arbeitsplan/manuelleZuteilung/">Alle Aufgaben, alle Mitglieder.</a> </li>
+				<li class="list-group-item" id="zuteilung-vorgefiltert"> Zuteilungen vornehmen nach Aufgabengruppe (vorgefiltert: nur Aufgaben mit fehlenden Zuteilungen, nur Mitglieder mit freier Kapazität) 
           <ul>
 						<li><a href="/arbeitsplan/manuelleZuteilung/?zuteilungen_ausreichend=UN&mitglied_ausgelastet=FR&filter=Filter+anwenden"> Alle Aufgabengruppen</a> </li>
 						{% for ag in aufgabengruppen %}
-						<li> <a	href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden"> Nur Aufgabengruppe {{ ag.name }}</a> </li>
+						<li> <a	href="/arbeitsplan/manuelleZuteilung/?aufgabengruppe={{ ag.id }}&zuteilungen_ausreichend=UN&mitglied_ausgelastet=FRAM&filter=Filter+anwenden">{{ ag.name }}</a> </li>
 						{% endfor %}
 					</ul>
 				</li>
