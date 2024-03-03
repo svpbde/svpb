@@ -1,7 +1,7 @@
 svpb
 ====
 
-Some simple Django webapps for the member area our sailing club "Segler-Verein Paderborn e.V." (SVPB).
+Some simple Django webapps for the member area of our sailing club "Segler-Verein Paderborn e.V." (SVPB).
 
 Features
 --------
