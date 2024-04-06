@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 from datetime import datetime, timedelta
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Hidden, HTML
@@ -83,7 +84,7 @@ class NewReservationForm(forms.Form):
     res_start = forms.ChoiceField(label="Von", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=TIME)
     res_duration = forms.ChoiceField(label="Dauer", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=DURATION)
     
-    accepted_agb = forms.BooleanField(label="Ich akzeptiere die <a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>Allgemeine Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: Durch die Reservierung wird mein Vor- und Nachname fuer bestehende oder angehende Vereinsmitglieder im internen und geschuetzen Bereich auf mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugaenglich.", required=True)
+    accepted_agb = forms.BooleanField(label=mark_safe("Ich akzeptiere die <a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: Durch die Reservierung wird mein Vor- und Nachname für bestehende oder angehende Vereinsmitglieder im internen und geschützen Bereich auf mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugänglich."), required=True)
     
     def __init__(self, *args, **kwargs):
         super(NewReservationForm, self).__init__(*args, **kwargs)
