@@ -50,239 +50,263 @@ DURATION.append(["120", "2 Stunden"])
 DURATION.append(["150", "2.5 Stunden"])
 DURATION.append(["180", "3 Stunden"])
 
-
 BOOKING_TYPE = []
-BOOKING_TYPE.append(['AUS', 'Ausbildung'])
-BOOKING_TYPE.append(['REG', 'Regatta'])
+BOOKING_TYPE.append(["AUS", "Ausbildung"])
+BOOKING_TYPE.append(["REG", "Regatta"])
 
-MONTHS= []
-MONTHS.append(['01', 'Januar'])
-MONTHS.append(['02', 'Februar'])
-MONTHS.append(['03', 'Maerz'])
-MONTHS.append(['04', 'April'])
-MONTHS.append(['05', 'Mai'])
-MONTHS.append(['06', 'Juni'])
-MONTHS.append(['07', 'Juli'])
-MONTHS.append(['08', 'August'])
-MONTHS.append(['09', 'September'])
-MONTHS.append(['10', 'Oktober'])
-MONTHS.append(['11', 'November'])
-MONTHS.append(['12', 'Dezember'])
+MONTHS = []
+MONTHS.append(["01", "Januar"])
+MONTHS.append(["02", "Februar"])
+MONTHS.append(["03", "Maerz"])
+MONTHS.append(["04", "April"])
+MONTHS.append(["05", "Mai"])
+MONTHS.append(["06", "Juni"])
+MONTHS.append(["07", "Juli"])
+MONTHS.append(["08", "August"])
+MONTHS.append(["09", "September"])
+MONTHS.append(["10", "Oktober"])
+MONTHS.append(["11", "November"])
+MONTHS.append(["12", "Dezember"])
 
 DAYS = []
 for i in range(1, 10):
-    DAYS.append(['0'+str(i), '0'+str(i)])
+    DAYS.append(["0" + str(i), "0" + str(i)])
 for i in range(10, 32):
     DAYS.append([str(i), str(i)])
 
-    
+
 class NewReservationForm(forms.Form):
-    
-    res_date = forms.ChoiceField(label="Datum", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=[])
-    res_start = forms.ChoiceField(label="Von", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=TIME)
-    res_duration = forms.ChoiceField(label="Dauer", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=DURATION)
-    
-    accepted_agb = forms.BooleanField(label=mark_safe("Ich akzeptiere die <a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: Durch die Reservierung wird mein Vor- und Nachname für bestehende oder angehende Vereinsmitglieder im internen und geschützen Bereich auf mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugänglich."), required=True)
-    
+    res_date = forms.ChoiceField(
+        label="Datum",
+        required=True,
+        widget=forms.Select(attrs={"onChange": "showbooking()"}),
+        choices=[],
+    )
+    res_start = forms.ChoiceField(
+        label="Von",
+        required=True,
+        widget=forms.Select(attrs={"onChange": "showbooking()"}),
+        choices=TIME,
+    )
+    res_duration = forms.ChoiceField(
+        label="Dauer",
+        required=True,
+        widget=forms.Select(attrs={"onChange": "showbooking()"}),
+        choices=DURATION,
+    )
+
+    accepted_agb = forms.BooleanField(
+        label=mark_safe(
+            "Ich akzeptiere die <a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: Durch die Reservierung wird mein Vor- und Nachname für bestehende oder angehende Vereinsmitglieder im internen und geschützen Bereich auf mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugänglich."
+        ),
+        required=True,
+    )
+
     def __init__(self, *args, **kwargs):
         super(NewReservationForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_id = 'id-reservation-form'
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'POST'
+        self.helper.form_id = "id-reservation-form"
+        self.helper.form_class = "blueForms"
+        self.helper.form_method = "POST"
 
-        # initialize DATES   
+        # initialize DATES
         DATES = []
         d = datetime.now()
         for i in range(1, 7):
             d = d + timedelta(days=1)
             DATES.append([d.strftime("%Y-%m-%d"), d.strftime("%A (%d. %b)")])
-        self.fields['res_date'] = forms.ChoiceField(label="Datum", required=True, widget=forms.Select(attrs={"onChange":'showbooking()'}), choices=DATES)
+        self.fields["res_date"] = forms.ChoiceField(
+            label="Datum",
+            required=True,
+            widget=forms.Select(attrs={"onChange": "showbooking()"}),
+            choices=DATES,
+        )
 
-        self.helper.add_input(Submit('submit', 'Verbindlich reservieren'))
-        
-        
+        self.helper.add_input(Submit("submit", "Verbindlich reservieren"))
+
     def clean(self):
-        import re
-        
         cleaned_data = super(NewReservationForm, self).clean()
-        
+
         # check date and time
         try:
-            res_date = cleaned_data['res_date']
-            res_start = cleaned_data['res_start']        
+            res_date = cleaned_data["res_date"]
+            res_start = cleaned_data["res_start"]
         except KeyError:
-            res_date = ''
-            res_start =''
-             
+            res_date = ""
+            res_start = ""
+
         try:
-            start = datetime.strptime(res_date + " " + res_start, '%Y-%m-%d %H:%M')
+            start = datetime.strptime(res_date + " " + res_start, "%Y-%m-%d %H:%M")
         except ValueError:
-            raise forms.ValidationError("Bitte Datum und Uhrzeit auswaehlen.")
-        
+            raise forms.ValidationError("Bitte Datum und Uhrzeit auswählen.")
+
         # check duration
-        res_duration = cleaned_data['res_duration']
+        res_duration = cleaned_data["res_duration"]
         try:
             res_duration = int(res_duration)
         except ValueError:
-            raise forms.ValidationError("Bitte Dauer auswaehlen.")
-        
-        if (res_duration<30):
-            raise forms.ValidationError("Minimal sind 30 Minuten moeglich.")
-        if (res_duration>180):
-            raise forms.ValidationError("Maximal sind 3 Stunden moeglich.")
-        
-        end = start + timedelta(0, 0, 0, 0, res_duration) # minutes                        
-        res_end =  end            
-                    
-class NewClubReservationForm(forms.Form):       
+            raise forms.ValidationError("Bitte Dauer auswählen.")
+
+        if res_duration < 30:
+            raise forms.ValidationError("Minimal sind 30 Minuten möglich.")
+        if res_duration > 180:
+            raise forms.ValidationError("Maximal sind 3 Stunden möglich.")
+
+        end = start + timedelta(0, 0, 0, 0, res_duration)  # minutes
+        res_end = end
+
+
+class NewClubReservationForm(forms.Form):
     CBOATS = []
 
-    try: 
+    try:
         club_boats = Boat.objects.filter(club_boat=True)
         for cb in club_boats:
             CBOATS.append([cb.pk, cb.name + " (" + cb.type.name + ")"])
     except Exception:
-        pass 
-    
-    res_type = forms.ChoiceField(label="Reservations-Typ", required=True, widget=forms.Select(), choices=BOOKING_TYPE)
-    res_boat = forms.MultipleChoiceField(label="Vereinsboot", required=True, widget=forms.CheckboxSelectMultiple, choices=CBOATS)    
-    res_month = forms.ChoiceField(label="Monat", required=True, widget=forms.Select(), choices=MONTHS)
-    res_day = forms.ChoiceField(label="Tag des Monats", required=True, widget=forms.Select(), choices=DAYS)
-    res_start = forms.ChoiceField(label="Von", required=True, widget=forms.Select(), choices=TIME, initial='08:00')
-    res_end = forms.ChoiceField(label="Bis", required=True, widget=forms.Select(), choices=TIME, initial='19:00')
+        pass
 
-    
+    res_type = forms.ChoiceField(
+        label="Reservations-Typ",
+        required=True,
+        widget=forms.Select(),
+        choices=BOOKING_TYPE,
+    )
+    res_boat = forms.MultipleChoiceField(
+        label="Vereinsboot",
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=CBOATS,
+    )
+    res_month = forms.ChoiceField(
+        label="Monat", required=True, widget=forms.Select(), choices=MONTHS
+    )
+    res_day = forms.ChoiceField(
+        label="Tag des Monats", required=True, widget=forms.Select(), choices=DAYS
+    )
+    res_start = forms.ChoiceField(
+        label="Von", required=True, widget=forms.Select(), choices=TIME, initial="08:00"
+    )
+    res_end = forms.ChoiceField(
+        label="Bis", required=True, widget=forms.Select(), choices=TIME, initial="19:00"
+    )
+
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
-        self.helper.form_id = 'id-reservation-form-club'
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'POST'
+        self.helper.form_id = "id-reservation-form-club"
+        self.helper.form_class = "blueForms"
+        self.helper.form_method = "POST"
 
-        self.helper.add_input(Submit('submit', 'Termin speichern'))
+        self.helper.add_input(Submit("submit", "Termin speichern"))
         super(NewClubReservationForm, self).__init__(*args, **kwargs)
-        
+
     def clean(self):
-        import re
-        
         cleaned_data = super(NewClubReservationForm, self).clean()
-        
+
         # check date and time
         now = datetime.now()
         res_year = now.year
-        res_month = cleaned_data['res_month']
-        res_day = cleaned_data['res_day']
-        res_start = cleaned_data['res_start']
-        res_end = cleaned_data['res_end']              
-        
-        res_date=str(res_year) + "-" + res_month + "-"+ res_day
-         
-        try:            
-            start = datetime.strptime(res_date + " " + res_start, '%Y-%m-%d %H:%M')
-        except ValueError:
-            raise forms.ValidationError("Bitte Datum und Uhrzeit auswaehlen.")
-        
-        try:
-            start = datetime.strptime(res_date + " " + res_start, '%Y-%m-%d %H:%M')
-        except ValueError:
-            raise forms.ValidationError("Bitte Datum und Start-Uhrzeit auswaehlen.")
-        try:
-            end = datetime.strptime(res_date + " " + res_end, '%Y-%m-%d %H:%M')
-        except ValueError:
-            raise forms.ValidationError("Bitte Datum und End-Uhrzeit auswaehlen.")
-        
-        if start>=end:
-            raise forms.ValidationError("Das Ende muss nach dem Start sein.")
-        
+        res_month = cleaned_data["res_month"]
+        res_day = cleaned_data["res_day"]
+        res_start = cleaned_data["res_start"]
+        res_end = cleaned_data["res_end"]
 
-class BootIssueForm(forms.Form):    
-    res_reported_descr = forms.CharField(label="Beschreibung", required=True, widget= forms.Textarea)    
-    
+        res_date = str(res_year) + "-" + res_month + "-" + res_day
+
+        try:
+            start = datetime.strptime(res_date + " " + res_start, "%Y-%m-%d %H:%M")
+        except ValueError:
+            raise forms.ValidationError("Bitte Datum und Start-Uhrzeit auswählen.")
+        try:
+            end = datetime.strptime(res_date + " " + res_end, "%Y-%m-%d %H:%M")
+        except ValueError:
+            raise forms.ValidationError("Bitte Datum und End-Uhrzeit auswählen.")
+
+        if start >= end:
+            raise forms.ValidationError("Das Ende muss nach dem Start sein.")
+
+
+class BootIssueForm(forms.Form):
+    res_reported_descr = forms.CharField(
+        label="Beschreibung", required=True, widget=forms.Textarea
+    )
+
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
-        self.helper.form_id = 'id-boot-issue'
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'POST'
+        self.helper.form_id = "id-boot-issue"
+        self.helper.form_class = "blueForms"
+        self.helper.form_method = "POST"
 
-        self.helper.add_input(Submit('submit', 'Speichern'))
+        self.helper.add_input(Submit("submit", "Speichern"))
         super(BootIssueForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = super(BootIssueForm, self).clean()
         res_reported_descr = cleaned_data.get("res_reported_descr")
-        
-        
-class BootEditForm(forms.ModelForm):    
 
+
+class BootEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BootEditForm, self).__init__(*args, **kwargs)
-        
-        self.helper = FormHelper()
-        self.helper.form_id = 'id-boot-edit'
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'POST'
 
-        self.helper.add_input(Submit('submit', 'Speichern'))
-                
+        self.helper = FormHelper()
+        self.helper.form_id = "id-boot-edit"
+        self.helper.form_class = "blueForms"
+        self.helper.form_method = "POST"
+
+        self.helper.add_input(Submit("submit", "Speichern"))
+
         self.helper.layout = Layout(
             TabHolder(
-                    Tab(
-                          'Hauptinformationen',
-                          'active',
-                          'type',
-                          'name',
-                          'remarks',                          
-                          
-                    ),
-                    Tab(
-                          'Bild',
-                          'photo',
-                    ),                   
-                    Tab(
-                          'Reservierung',
-                          'club_boat',
-                          'briefing',
-                          'booking_remarks'
-                    ),
+                Tab(
+                    "Hauptinformationen",
+                    "active",
+                    "type",
+                    "name",
+                    "remarks",
+                ),
+                Tab(
+                    "Bild",
+                    "photo",
+                ),
+                Tab("Reservierung", "club_boat", "briefing", "booking_remarks"),
             )
-        ) 
-        
-        self.fields['booking_remarks'].required = False
-        self.fields['booking_remarks'].label = "Wichtige Hinweise (Reservierung)"
-        
-        self.fields['briefing'].required = False
-        self.fields['briefing'].label = "Einweisung"
-        
-        self.fields['club_boat'].label = "Vereinsboot"
-        
-        self.fields['photo'].required = False
-        self.fields['photo'].label = "Bild (Format: JPG)"
-         
+        )
+
+        self.fields["booking_remarks"].required = False
+        self.fields["booking_remarks"].label = "Wichtige Hinweise (Reservierung)"
+
+        self.fields["briefing"].required = False
+        self.fields["briefing"].label = "Einweisung"
+
+        self.fields["club_boat"].label = "Vereinsboot"
+
+        self.fields["photo"].required = False
+        self.fields["photo"].label = "Bild (Format: JPG)"
 
     def clean(self):
         cleaned_data = super(BootEditForm, self).clean()
-        
-        # scale image        
-        image_field = self.cleaned_data.get('photo')
+
+        # scale image
+        image_field = self.cleaned_data.get("photo")
         if image_field:
             image_file = io.StringIO(image_field.read())
             image = Image.open(image_file)
             w, h = image.size
 
-            image = image.resize((400, 400*h/w), Image.ANTIALIAS)
+            image = image.resize((400, 400 * h / w), Image.ANTIALIAS)
 
             image_file = io.StringIO()
-            image.save(image_file, 'JPEG', quality=90)
+            image.save(image_file, "JPEG", quality=90)
 
-            image_field.file = image_file        
-    
+            image_field.file = image_file
+
     class Meta:
         model = Boat
-        exclude = ('owner',)
+        exclude = ("owner",)
         widgets = {
-          'remarks': forms.Textarea(attrs={'rows':4, 'cols':15}),
-          'booking_remarks': forms.Textarea(attrs={'rows':4, 'cols':15}),
-          'briefing': forms.Textarea(attrs={'rows':4, 'cols':15}),          
-          'photo': AdvancedFileInput()          
+            "remarks": forms.Textarea(attrs={"rows": 4, "cols": 15}),
+            "booking_remarks": forms.Textarea(attrs={"rows": 4, "cols": 15}),
+            "briefing": forms.Textarea(attrs={"rows": 4, "cols": 15}),
+            "photo": AdvancedFileInput(),
         }
-               
