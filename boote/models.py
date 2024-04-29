@@ -83,19 +83,28 @@ class Boat(models.Model):
     
     def getNumberOfIssues(self):
         return BoatIssue.objects.filter(boat=self, status=1).count()
-        
+
+
 class Booking(models.Model):
-    user = models.ForeignKey(User,
-                on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_date = models.DateField(default=datetime.now)
-    boat = models.ForeignKey(Boat,
-                on_delete=models.CASCADE)
+    boat = models.ForeignKey(Boat, on_delete=models.CASCADE)
     status = models.IntegerField(default=1)
-    type = models.CharField(max_length=3, choices=(('PRV', 'Freie Nutzung'), ('AUS', 'Ausbildung'), ('REG', 'Regatta'),), default='PRV')
+    type = models.CharField(
+        max_length=3,
+        choices=(
+            ("PRV", "Freie Nutzung"),
+            ("AUS", "Ausbildung"),
+            ("REG", "Regatta"),
+            ("REP", "Reparatur"),
+        ),
+        default="PRV",
+    )
     date = models.DateField()
     time_from = models.TimeField()
     time_to = models.TimeField()
     notified = models.BooleanField(default=False)
+
 
 class BoatIssue(models.Model):
     boat = models.ForeignKey(Boat,
