@@ -225,6 +225,7 @@ def booking_priority_boot(request, new_booking=False):
     user = request.user
     bookings_reg = Booking.objects.filter(status=1, type='REG', date__gte=datetime.now()).order_by('date')
     bookings_aus = Booking.objects.filter(status=1, type='AUS', date__gte=datetime.now()).order_by('date')
+    bookings_rep = Booking.objects.filter(status=1, type='REP', date__gte=datetime.now()).order_by('date')
     d = datetime.now()    
    
     error_list=[]
@@ -273,7 +274,7 @@ def booking_priority_boot(request, new_booking=False):
         'edit': new_booking,
         'bookings_reg': bookings_reg,
         'bookings_aus': bookings_aus,
-
+        'bookings_rep': bookings_rep,
     }
 
     return render(request, 'boote/booking_priority_boot.html', context)

@@ -87,9 +87,11 @@ DURATION.append(["120", "2 Stunden"])
 DURATION.append(["150", "2.5 Stunden"])
 DURATION.append(["180", "3 Stunden"])
 
-BOOKING_TYPE = []
-BOOKING_TYPE.append(["AUS", "Ausbildung"])
-BOOKING_TYPE.append(["REG", "Regatta"])
+BOOKING_TYPE = [
+    ["AUS", "Ausbildung"],
+    ["REG", "Regatta"],
+    ["REP", "Reparatur"],
+]
 
 MONTHS = []
 MONTHS.append(["01", "Januar"])
@@ -204,7 +206,7 @@ class NewClubReservationForm(forms.Form):
         pass
 
     res_type = forms.ChoiceField(
-        label="Reservations-Typ",
+        label="Reservierungs-Typ",
         required=True,
         widget=forms.Select(),
         choices=BOOKING_TYPE,
