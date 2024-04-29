@@ -42,6 +42,43 @@ TIME.append(["18:00", "18:00"])
 TIME.append(["18:30", "18:30"])
 TIME.append(["19:00", "19:00"])
 
+# Time for priority reservations has to be longer than time for standard bookings, as
+# standard bookings may end at TIME[-1] + DURATION[-1].
+# Note that PRIORITY_TIME is intentionally not set to 24 hours, as the booking views
+# available to club members only show a limited time frame, i.e. bookings outside this
+# frame wouldn't be noticed by anyone.
+PRIORITY_TIME = [
+    ["08:00", "08:00"],
+    ["08:30", "08:30"],
+    ["09:00", "09:00"],
+    ["09:30", "09:30"],
+    ["10:00", "10:00"],
+    ["10:30", "10:30"],
+    ["11:00", "11:00"],
+    ["11:30", "11:30"],
+    ["12:00", "12:00"],
+    ["12:30", "12:30"],
+    ["13:00", "13:00"],
+    ["13:30", "13:30"],
+    ["14:00", "14:00"],
+    ["14:30", "14:30"],
+    ["15:00", "15:00"],
+    ["15:30", "15:30"],
+    ["16:00", "16:00"],
+    ["16:30", "16:30"],
+    ["17:00", "17:00"],
+    ["17:30", "17:30"],
+    ["18:00", "18:00"],
+    ["18:30", "18:30"],
+    ["19:00", "19:00"],
+    ["19:30", "19:30"],
+    ["20:00", "20:00"],
+    ["20:30", "20:30"],
+    ["21:00", "21:00"],
+    ["21:30", "21:30"],
+    ["22:00", "22:00"],
+]
+
 DURATION = []
 DURATION.append(["-", "-"])
 DURATION.append(["60", "1 Stunde"])
@@ -185,10 +222,10 @@ class NewClubReservationForm(forms.Form):
         label="Tag des Monats", required=True, widget=forms.Select(), choices=DAYS
     )
     res_start = forms.ChoiceField(
-        label="Von", required=True, widget=forms.Select(), choices=TIME, initial="08:00"
+        label="Von", required=True, widget=forms.Select(), choices=PRIORITY_TIME, initial="08:00"
     )
     res_end = forms.ChoiceField(
-        label="Bis", required=True, widget=forms.Select(), choices=TIME, initial="19:00"
+        label="Bis", required=True, widget=forms.Select(), choices=PRIORITY_TIME, initial="22:00"
     )
 
     def __init__(self, *args, **kwargs):
