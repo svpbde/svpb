@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 import arbeitsplan.views
 import arbeitsplan.models
@@ -6,160 +6,160 @@ from svpb.activeTest import active_and_login_required
 
 
 urlpatterns = [
-    url(
+    re_path(
         r"^home/$",
         active_and_login_required(
             arbeitsplan.views.HomeView.as_view(template_name="home.html")
         ),
         name="home2Arbeitsplan",
     ),
-    url(
+    re_path(
         r"^$",
         active_and_login_required(
             arbeitsplan.views.HomeView.as_view(template_name="home.html")
         ),
         name="homeArbeitsplan",
     ),
-    url(
+    re_path(
         r"^benachrichtigen/zuteilung/$",
         active_and_login_required(arbeitsplan.views.ZuteilungEmailView.as_view()),
         name="arbeitsplan-benachrichtigen-zuteilung",
     ),
-    url(
+    re_path(
         r"^benachrichtigen/templateListe/$",
         active_and_login_required(arbeitsplan.views.ListEmailTemplate.as_view()),
         name="arbeitsplan-benachrichtigen-liste",
     ),
-    url(
+    re_path(
         r"^benachrichtigen/meldungsAufforderung/$",
         active_and_login_required(arbeitsplan.views.MeldungNoetigEmailView.as_view()),
         name="arbeitsplan-benachrichtigen-meldungsaufforderung",
     ),
-    url(
+    re_path(
         r"^aufgaben/$",
         active_and_login_required(arbeitsplan.views.ListAufgabenView.as_view()),
         name="arbeitsplan-aufgaben",
     ),
-    url(
+    re_path(
         r"^aufgabenTeamleader/$",
         active_and_login_required(arbeitsplan.views.ListAufgabenTeamleader.as_view()),
         name="arbeitsplan-aufgabenTeamleader",
     ),
-    url(
+    re_path(
         r"^aufgabenVorstand/$",
         active_and_login_required(arbeitsplan.views.ListAufgabenVorstandView.as_view()),
         name="arbeitsplan-aufgabenVorstand",
     ),
-    url(
+    re_path(
         r"^zuteilungAnzeige/(?P<wer>[a-zA-Z]+)/$",
         active_and_login_required(arbeitsplan.views.ListZuteilungenView.as_view()),
         name="arbeitsplan-zuteilunglist",
     ),
-    url(
+    re_path(
         r"^meldungVorstand/$",
         active_and_login_required(arbeitsplan.views.MeldungVorstandView.as_view()),
         name="arbeitsplan-meldungVorstand",
     ),
-    url(
+    re_path(
         r"^manuelleZuteilung/$",
         active_and_login_required(arbeitsplan.views.ManuelleZuteilungView.as_view()),
         name="arbeitsplan-manuellezuteilung",
     ),
-    url(
+    re_path(
         r"^manuelleZuteilung/(?P<aufgabe>\d+)/$",
         active_and_login_required(arbeitsplan.views.ManuelleZuteilungView.as_view()),
         name="arbeitsplan-manuellezuteilungAufgabe",
     ),
-    url(
+    re_path(
         r"^zuteilungUebersicht/$",
         active_and_login_required(arbeitsplan.views.ZuteilungUebersichtView.as_view()),
         name="arbeitsplan-zuteilungUebersicht",
     ),
-    url(
+    re_path(
         r"^zuteilungDelete/(?P<pk>\d+)/$",
         active_and_login_required(arbeitsplan.views.ZuteilungLoeschenView.as_view()),
         name="arbeitsplan-zuteilungDelete",
     ),
-    url(
+    re_path(
         r"^stundenplaene/(?P<aufgabeid>\d+)/$",
         active_and_login_required(arbeitsplan.views.StundenplaeneEdit.as_view()),
         name="arbeitsplan-stundenplaeneEdit",
     ),
-    url(
+    re_path(
         r"^meldung/$",
         active_and_login_required(arbeitsplan.views.CreateMeldungenView.as_view()),
         name="arbeitsplan-meldung",
     ),
-    url(
+    re_path(
         r"^meldung/liste/$",
         active_and_login_required(arbeitsplan.views.MeldungenListeView.as_view()),
         name="arbeitsplan-meldungListe",
     ),
-    url(
+    re_path(
         r"^meldung/quick/(?P<aufgabeid>\d+)/$",
         active_and_login_required(arbeitsplan.views.QuickMeldung.as_view()),
         name="arbeitsplan-quickmeldung",
     ),
-    url(
+    re_path(
         r"^leistung/$",
         active_and_login_required(
             arbeitsplan.views.CreateLeistungView.as_view(success_url="/home/")
         ),
         name="arbeitsplan-leistung",
     ),
-    url(
+    re_path(
         r"^leistungAlle/$",
         active_and_login_required(
             arbeitsplan.views.CreateLeistungView.as_view(success_url="/home/")
         ),
         name="arbeitsplan-leistung",
     ),
-    url(
+    re_path(
         r"^leistungenBearbeiten/z=(?P<zustaendig>[a-zA-Z]+)/$",
         active_and_login_required(arbeitsplan.views.LeistungBearbeitenView.as_view()),
         name="arbeitsplan-leistungBearbeiten",
     ),
-    url(
+    re_path(
         r"^leistungListe/$",
         active_and_login_required(arbeitsplan.views.ListLeistungView.as_view()),
         name="arbeitsplan-leistungListe",
     ),
-    url(
+    re_path(
         r"^leistungDelete/(?P<pk>[0-9]+)/$",
         active_and_login_required(arbeitsplan.views.DeleteLeistungView.as_view()),
         name="arbeitsplan-leistungDelete",
     ),
-    url(
+    re_path(
         r"^salden/$",
         active_and_login_required(arbeitsplan.views.Salden.as_view()),
         name="arbeitsplan-salden",
     ),
-    url(
+    re_path(
         r"^aufgabeErzeugen/$",
         active_and_login_required(arbeitsplan.views.AufgabenCreate.as_view()),
         name="arbeitsplan-aufgabenErzeugen",
     ),
-    url(
+    re_path(
         r"^aufgabeEditieren/(?P<pk>\d+)/$",
         active_and_login_required(arbeitsplan.views.AufgabenUpdate.as_view()),
         name="arbeitsplan-aufgabenEdit",
     ),
-    url(
+    re_path(
         r"^aufgabeLoeschen/(?P<pk>\d+)/$",
         active_and_login_required(arbeitsplan.views.AufgabeLoeschen.as_view()),
         name="arbeitsplan-aufgabenDelete",
     ),
-    url(
+    re_path(
         r"^aufgabengruppeErzeugen/$",
         active_and_login_required(arbeitsplan.views.AufgabengruppeCreate.as_view()),
         name="arbeitsplan-aufgabengruppeCreate",
     ),
-    url(
+    re_path(
         r"^aufgabengruppen/$",
         active_and_login_required(arbeitsplan.views.AufgabengruppeList.as_view()),
         name="arbeitsplan-aufgabengruppeList",
     ),
-    url(
+    re_path(
         r"^aufgabengruppeEditieren/(?P<pk>\d+)/$",
         active_and_login_required(arbeitsplan.views.AufgabengruppeUpdate.as_view()),
         name="arbeitsplan-aufgabengruppeEdit",

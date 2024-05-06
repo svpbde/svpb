@@ -1,9 +1,9 @@
-crispy-bootstrap5==0.7
-Django==3.2.23
+crispy-bootstrap5==2023.10
+Django==4.2.10
 django-crispy-forms==2.0
 django-extensions==3.2.3
 django-impersonate==1.9.1
-django-password-reset==2.0
+django-password-reset @ git+https://github.com/brutasse/django-password-reset.git@97e99ee6304e05f49614fe997caf6c9cb182fd9e
 django-phonenumber-field[phonenumbers]==7.1.0
 django-post-office==3.7.0
 django-select2==8.1.2
