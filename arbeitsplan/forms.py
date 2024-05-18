@@ -107,22 +107,27 @@ class AufgabeForm(forms.ModelForm):
     class Meta:
         model = models.Aufgabe
         fields = (
-            'aufgabe',
-            'verantwortlich',
-            'gruppe',
-            'anzahl',
-            'stunden',
-            'teamleader',
-            'datum',
-            'bemerkung',
-            )
+            "aufgabe",
+            "verantwortlich",
+            "gruppe",
+            "anzahl",
+            "stunden",
+            "teamleader",
+            "datum",
+            "bemerkung",
+        )
         widgets = {
             # Force data-width to 100% to keep select2 from calculating a
             # fixed width (which would break responsiveness), see
             # https://select2.org/appearance#container-width
-            'verantwortlich': Select2Widget({'data-width': '100%'}),
-            'teamleader': Select2Widget({'data-width': '100%'}),
-            }
+            "verantwortlich": Select2Widget({"data-width": "100%"}),
+            "teamleader": Select2Widget(
+                {
+                    "data-width": "100%",
+                    "data-allow-clear": "true",
+                }
+            ),
+        }
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
