@@ -324,18 +324,18 @@ class BootEditForm(forms.ModelForm):
         self.fields["photo"].label = "Bild (Format: JPG)"
 
     def clean(self):
-        cleaned_data = super(BootEditForm, self).clean()
+        super(BootEditForm, self).clean()
 
         # scale image
         image_field = self.cleaned_data.get("photo")
         if image_field:
-            image_file = io.StringIO(image_field.read())
+            image_file = io.BytesIO(image_field.read())
             image = Image.open(image_file)
             w, h = image.size
 
-            image = image.resize((400, 400 * h / w), Image.ANTIALIAS)
+            image = image.resize((400, int(400 * h / w)), Image.ANTIALIAS)
 
-            image_file = io.StringIO()
+            image_file = io.BytesIO()
             image.save(image_file, "JPEG", quality=90)
 
             image_field.file = image_file
