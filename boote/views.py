@@ -432,7 +432,13 @@ def boot_edit(request, boot_pk, edit=True, new_boat=False):
             boat.booking_remarks = form.cleaned_data["booking_remarks"]
             if form.cleaned_data["photo"] is not None:
                 boat.photo = form.cleaned_data["photo"]
-            boat.instructions = form.cleaned_data["instructions"]
+            # Only update DB if field changed
+            if form.cleaned_data["instructions"] is not None:
+                # Delete file if widget is reset
+                if form.cleaned_data["instructions"] is False:
+                    boat.instructions.delete(save=False)
+                else:
+                    boat.instructions = form.cleaned_data["instructions"]
 
             # persist in DB
             boat.save()
