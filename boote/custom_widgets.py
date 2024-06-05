@@ -3,7 +3,9 @@ from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.forms.widgets import ClearableFileInput, CheckboxInput
 
+
 class AdvancedFileInput(ClearableFileInput):
+    # see https://djangosnippets.org/snippets/2581/
 
     def __init__(self, *args, **kwargs):
 

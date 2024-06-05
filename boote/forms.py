@@ -96,7 +96,7 @@ BOOKING_TYPE = [
 MONTHS = []
 MONTHS.append(["01", "Januar"])
 MONTHS.append(["02", "Februar"])
-MONTHS.append(["03", "Maerz"])
+MONTHS.append(["03", "März"])
 MONTHS.append(["04", "April"])
 MONTHS.append(["05", "Mai"])
 MONTHS.append(["06", "Juni"])
@@ -136,7 +136,12 @@ class NewReservationForm(forms.Form):
 
     accepted_agb = forms.BooleanField(
         label=mark_safe(
-            "Ich akzeptiere die <a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: Durch die Reservierung wird mein Vor- und Nachname für bestehende oder angehende Vereinsmitglieder im internen und geschützen Bereich auf mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugänglich."
+            "Ich akzeptiere die "
+            "<a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>"
+            "Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: "
+            "Durch die Reservierung wird mein Vor- und Nachname für bestehende oder "
+            "angehende Vereinsmitglieder im internen und geschützen Bereich auf "
+            "mein.svpb.de und auf dem Tabletdisplay im Vereinshaus zugänglich."
         ),
         required=True,
     )
@@ -191,9 +196,6 @@ class NewReservationForm(forms.Form):
         if res_duration > 180:
             raise forms.ValidationError("Maximal sind 3 Stunden möglich.")
 
-        end = start + timedelta(0, 0, 0, 0, res_duration)  # minutes
-        res_end = end
-
 
 class NewClubReservationForm(forms.Form):
     CBOATS = []
@@ -224,10 +226,18 @@ class NewClubReservationForm(forms.Form):
         label="Tag des Monats", required=True, widget=forms.Select(), choices=DAYS
     )
     res_start = forms.ChoiceField(
-        label="Von", required=True, widget=forms.Select(), choices=PRIORITY_TIME, initial="08:00"
+        label="Von",
+        required=True,
+        widget=forms.Select(),
+        choices=PRIORITY_TIME,
+        initial="08:00",
     )
     res_end = forms.ChoiceField(
-        label="Bis", required=True, widget=forms.Select(), choices=PRIORITY_TIME, initial="22:00"
+        label="Bis",
+        required=True,
+        widget=forms.Select(),
+        choices=PRIORITY_TIME,
+        initial="22:00",
     )
 
     def __init__(self, *args, **kwargs):
@@ -278,10 +288,6 @@ class BootIssueForm(forms.Form):
 
         self.helper.add_input(Submit("submit", "Speichern"))
         super(BootIssueForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super(BootIssueForm, self).clean()
-        res_reported_descr = cleaned_data.get("res_reported_descr")
 
 
 class BootEditForm(forms.ModelForm):
