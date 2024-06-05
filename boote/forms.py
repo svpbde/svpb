@@ -305,8 +305,9 @@ class BootEditForm(forms.ModelForm):
                     "remarks",
                 ),
                 Tab(
-                    "Bild",
+                    "Bild und Benutzungshinweise",
                     "photo",
+                    "instructions",
                 ),
                 Tab("Reservierung", "club_boat", "briefing", "booking_remarks"),
             )
@@ -322,6 +323,9 @@ class BootEditForm(forms.ModelForm):
 
         self.fields["photo"].required = False
         self.fields["photo"].label = "Bild (Format: JPG)"
+
+        self.fields["instructions"].required = False
+        self.fields["instructions"].label = "Hinweise zur Bootsbenutzung (Format: pdf)"
 
     def clean(self):
         super(BootEditForm, self).clean()

@@ -58,9 +58,16 @@ function mark(x, y, d) {
 <p>
 Möchtest du <b>"{{ boot.name }}"</b> verbindlich reservieren?
 </p>
-
-<p style='border: 1px solid rgb(159, 159, 230); padding: 5px; background-color: rgb(199, 199, 255)'><b>Wichtiger Hinweis</b>: {{ boot.booking_remarks }}</p>
-
+{% if boot.booking_remarks or boot.instructions %}
+<p style='border: 1px solid rgb(159, 159, 230); padding: 5px; background-color: rgb(199, 199, 255)'><b>Wichtige Hinweise</b>:
+	{% if boot.booking_remarks %}
+		{{ boot.booking_remarks }}
+	{% endif %}
+	{% if boot.instructions %}
+		Beachte bitte die <a href="{{ boot.instructions.url }}">Hinweise zur Bootsbenutzung (pdf)</a>.
+	{% endif %}
+</p>
+{% endif %}
 {% if error_list %}
 <div class='alert alert-block alert-danger'>
 	<ul>
@@ -74,9 +81,9 @@ Möchtest du <b>"{{ boot.name }}"</b> verbindlich reservieren?
 {% crispy form %}
 {% csrf_token %}
 
-<p>
-Verfügbarkeit des Vereinsboots "{{ boot.name }}" in den kommenden 7 Tagen.
-</p>
+<h3 class="mb-3 mt-4">
+Verfügbarkeit "{{ boot.name }}" in den kommenden 7 Tagen
+</h3>
 
 <TABLE id='boatslist'>
  <thead>

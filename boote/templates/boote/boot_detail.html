@@ -29,13 +29,21 @@ Boot
   <dt>Tiefgang</dt><dd>{{ boot.type.draught }}</dd>
   <dt>Beschreibung</dt><dd>{{ boot.remarks }}</dd>
   
-  <dt>Hinweise</dt><dd>{{ boot.booking_remarks }}
+  {% if boot.booking_remarks or boot.briefing or boot.instructions %}
+  <dt>Hinweise</dt><dd>
+  {% if boot.booking_remarks %}
+    {{ boot.booking_remarks }}
+  {% endif %}
   {% if boot.briefing %}
-  <br><i>Einweisung (erforderlich): {{ boot.briefing }}</i>
+    <br><i>Einweisung (erforderlich): {{ boot.briefing }}</i>
+  {% endif %}
+  {% if boot.instructions %}
+    <br><a href="{{ boot.instructions.url }}">Hinweise zur Bootsbenutzung (pdf)</a>
   {% endif %}
   </dd> 
+  {% endif %}
   
-  <dt>Einweisung</dt><dd>{{ boot.owner.first_name }} {{ boot.owner.last_name }} (<a href="mailto:{{ boot.owner.email }}">{{ boot.owner.email }} <!--NEW Telefon 22.06.2018--></a>)</dd>  
+  <dt>Einweisung</dt><dd>{{ boot.owner.first_name }} {{ boot.owner.last_name }} (<a href="mailto:{{ boot.owner.email }}">{{ boot.owner.email }}</a>)</dd>  
 
   {% if not boot.active %}
   <dt>Status</dt><dd style='color: red;'>Boot ist inactive</dd>
@@ -53,7 +61,7 @@ Boot
 
 {% if boot.club_boat %}
 <p>
-Hast Du kleinere Probleme am Boot entdeckt, melde diese bitte hier über <em>Meldungen</em>. Der Bootspate wird sich drum kümmern.</br> 
+Hast Du kleinere Probleme am Boot entdeckt, melde diese bitte hier über <em>Meldungen</em>. Der Bootspate wird sich darum kümmern.</br> 
 {% if numIssues %}
 	<span style='color: red'><i class="fa-solid fa-gear"></i> Offene Meldungen: {{ numIssues }}</span></br>
 {% endif %}
@@ -69,6 +77,6 @@ Du hast die Berechtigung alle Informationen dieser Seite zu aktualisieren:</br>
 {% endif %}
 
 
-<p style="font-size: 80%">* Bei fehlerhaften Informationen auf dieser Seite stehen Dir der Bootspate <b>{{ boot.owner.first_name }} {{ boot.owner.last_name }}</b> zur Verfügung. <!--"{{ boot.name }}"--></p>
+<p style="font-size: 80%">* Bei fehlerhaften Informationen auf dieser Seite steht dir der Bootspate <b>{{ boot.owner.first_name }} {{ boot.owner.last_name }}</b> zur Verfügung.</p>
 
 {% endblock %}
