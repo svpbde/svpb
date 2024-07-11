@@ -998,30 +998,6 @@ class BaseEmailTable (RadioButtonTable):
                             )
         return tmp
 
-class LeistungEmailTable(BaseEmailTable):
-
-    # a purely computed field: 
-    schonbenachrichtigt = django_tables2.Column (verbose_name="Schon benachrichtigt?",
-                                            orderable=False,
-                                            empty_values=(),
-                                            )
-
-    def render_schonbenachrichtigt(value, bound_row):
-        return ("Ja"
-                if (bound_row._record.veraendert <
-                    bound_row._record.benachrichtigt)
-                else "Nein")
-
-    melder = KontaktColumn()
-
-    class Meta:
-        model = models.Leistung
-        exclude = ("erstellt", "veraendert", 'id', 'benachrichtigt')
-        sequence = ('melder', 'aufgabe', 'wann', 'zeit',
-                    'bemerkung', 'status', 'bemerkungVorstand',
-                    'schonbenachrichtigt',
-                    'anmerkung', 'sendit'
-                    )
 
 class ZuteilungEmailTable(BaseEmailTable):
 
