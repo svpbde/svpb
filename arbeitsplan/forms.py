@@ -70,7 +70,6 @@ class CreateLeistungForm(CrispyFormMixin, forms.ModelForm):
                    'veraendert',
                    'status',
                    'bemerkungVorstand',
-                   'benachrichtigt',
                    )
 
 

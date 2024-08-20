@@ -1837,13 +1837,6 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
                         [leistung.melder.email], template="leistungEmail", context=d,
                     )
 
-                    # TODO: Remove this, just reproduces behaviour of old
-                    # LeistungEmailView
-                    leistung.benachrichtigt = datetime.datetime.utcnow().replace(
-                        tzinfo=utc
-                    )
-                    leistung.save(veraendert=False)
-
                     messages.success(
                         request,
                         f"Benachrichtigung an Mitglied {leistung.melder.first_name} "
