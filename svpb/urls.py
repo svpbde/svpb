@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import include, re_path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -76,12 +77,11 @@ urlpatterns = [
         ),
     re_path(r'^impersonate/', include('impersonate.urls')),
 
-    # password reset; compare http://django-password-reset.readthedocs.org/en/latest/quickstart.html
-    re_path(r'^reset/', include('password_reset.urls')),
-
     # django select2, see: https://github.com/codingjoe/django-select2
     re_path(r'^select2/', include('django_select2.urls')),
-
+    
+    #  simply include all django auth views for password reset
+    re_path('^', include('django.contrib.auth.urls')),
     ]
 
 if settings.DEBUG:
