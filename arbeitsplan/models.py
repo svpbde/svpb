@@ -558,8 +558,7 @@ class Leistung(models.Model):
     melder = models.ForeignKey(User, on_delete=models.CASCADE)
     aufgabe = models.ForeignKey(Aufgabe, on_delete=models.PROTECT)
     erstellt = models.DateTimeField(auto_now_add=True)
-    veraendert = models.DateTimeField()
-    benachrichtigt = models.DateTimeField(default=datetime.datetime(1900, 1, 1))
+    veraendert = models.DateTimeField(auto_now=True)
     wann = models.DateField(
         help_text="An welchem Tag haben Sie die Leistung erbracht?",
     )
@@ -578,26 +577,6 @@ class Leistung(models.Model):
     class Meta:
         verbose_name_plural = "Leistungen"
         verbose_name = "Leistung"
-
-    def save(self, veraendert=True, *args, **kwargs):
-        """
-        Override the save method to realize a auto_now field with a veto.
-        That is necessary for the email send logic, where save is called
-        with autonow=False.
-
-        Arguments:
-
-        - `self`:
-        - `veraendert`: IF true, the veranedert field is updated,
-                        similar to an auto_now field;
-                        else, no update (veto'ing the auto_now behavior)
-        - `*args`: Passed through to super class
-        - `**kwargs`: Passed through to super class
-        """
-        if veraendert:
-            self.veraendert = datetime.datetime.utcnow().replace(tzinfo=utc)
-
-        return super(Leistung, self).save(*args, **kwargs)
 
     def __str__(self):
         return (

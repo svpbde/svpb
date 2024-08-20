@@ -965,7 +965,7 @@ class LeistungBearbeitenTable (RadioButtonTable):
 
     class Meta:
         model = models.Leistung
-        exclude = ("erstellt", "veraendert", 'id', 'benachrichtigt')
+        exclude = ("erstellt", "veraendert", 'id')
         sequence = ('melder', 'aufgabe', 'wann', 'zeit',
                     'bemerkung', 'status', 'bemerkungVorstand')
 
