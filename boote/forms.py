@@ -137,7 +137,7 @@ class NewReservationForm(forms.Form):
     accepted_agb = forms.BooleanField(
         label=mark_safe(
             "Ich akzeptiere die "
-            "<a href='/static/boote/AlgemRegelnVereinsboote.pdf' target='_blank'>"
+            "<a href='/static/boote/AllgRegelnVereinsboote.pdf' target='_blank'>"
             "Allgemeinen Regeln zur Nutzung der Vereinsboote</a>. Datenschutzhinweis: "
             "Durch die Reservierung wird mein Vor- und Nachname für bestehende oder "
             "angehende Vereinsmitglieder im internen und geschützen Bereich auf "
