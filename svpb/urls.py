@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import include, re_path
+from django.urls import include, re_path, path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
@@ -80,8 +80,27 @@ urlpatterns = [
     # django select2, see: https://github.com/codingjoe/django-select2
     re_path(r'^select2/', include('django_select2.urls')),
     
-    #  simply include all django auth views for password reset
-    re_path('^', include('django.contrib.auth.urls')),
+    # Include specific django auth views for password reset
+    path(
+        "password_reset/",
+        auth_views.PasswordResetView.as_view(),
+        name="password_reset"
+    ),
+    path(
+        "password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        auth_views.PasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
+    ),
     ]
 
 if settings.DEBUG:
