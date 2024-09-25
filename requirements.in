@@ -11,7 +11,6 @@ django-tables2==2.6.0
 fontawesomefree==6.4.0
 Pillow==9.5.0
 psycopg2-binary==2.9.9
-pwgen==0.8.2.post0
 Sphinx==6.2.1
 sphinx-rtd-theme==1.2.2
 uWSGI==2.0.21
