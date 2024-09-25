@@ -6,6 +6,8 @@ Login and logout stays in SVPB
 """
 from datetime import date
 import os
+import string
+import secrets
 
 from django.contrib.auth.decorators import user_passes_test
 from django.core.management import call_command
@@ -25,7 +27,6 @@ from django.contrib.auth.models import User, Group
 
 from post_office import mail
 from post_office.models import EmailTemplate
-from pwgen import pwgen
 from django_sendfile import sendfile
 
 import mitglieder.forms
@@ -114,7 +115,10 @@ def preparePassword(accountList=None):
     r = []
 
     for u in accountList:
-        pw = pwgen(6, no_symbols=True, no_ambiguous=True)
+        pw = ''.join(
+            secrets.choice(string.ascii_letters + string.digits) for i in range(10)
+        )
+
         u.set_password(pw)
         u.save()
 
