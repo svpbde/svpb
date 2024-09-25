@@ -243,8 +243,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
     success_url = "/"
     post_text = format_html("""
     <p>
-    Passwort vergessen? Zum Zurücksetzen <a href="{{% url "password_reset_recover" %}}">
-    hier klicken</a>.
+    Passwort ändern? <a href="/password/change"> Hier klicken.</a>
     <p>
     """)
 
