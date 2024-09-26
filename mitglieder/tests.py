@@ -103,8 +103,8 @@ class MitgliederTest(TestCase):
         # Try to get the new password link, check for redirect loop
         cl2 = Client()
         response = cl2.post(
-            "/reset/recover/",
-            {"username_or_email": "666666"},
+            "/password_reset/",
+            {"email": "peter@pan.com"},
             follow=False,
         )
         self.assertEqual(response.status_code, 302)
@@ -113,15 +113,14 @@ class MitgliederTest(TestCase):
         body = sentmail.body
 
         # Grab the reset URL out of the mail body...
-        url = re.search("/reset/reset/.*/", body)
+        url = re.search("/reset/.*/", body)
         url = url.group(0)
-
         # ...and send the new password there
         response = cl2.post(
             url,
             {
-                "password1": self.plainpassword,
-                "password2": self.plainpassword,
+                "new_password1": self.plainpassword,
+                "new_password2": self.plainpassword,
             },
             follow=True,
         )
@@ -129,7 +128,7 @@ class MitgliederTest(TestCase):
 
         # Try to login with the new password
         cl3, response = self.login_user("666666")
-        self.assertNotIn("login", response.request["PATH_INFO"])
+        self.assertIn("login", response.request["PATH_INFO"])
 
     def test_profile_incomplete(self):
         cl, response = self.login_user(self.superuser)
