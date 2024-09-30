@@ -1,7 +1,6 @@
 """Tests of mitglieder administration"""
 from django.contrib.auth.models import User
 from django.core import mail
-from django.urls import reverse
 from django.test import Client, TestCase, override_settings
 
 from mitglieder import views
