@@ -1,6 +1,5 @@
 """Tests of mitglieder administration"""
 from django.contrib.auth.models import User
-from django.core import mail
 from django.test import Client, TestCase, override_settings
 
 from mitglieder import views
@@ -110,10 +109,11 @@ class MitgliederTest(TestCase):
         token = response.context[0]['token']
         uid = response.context[0]['uid']
         redirect_response = cl2.get(f"/reset/{uid}/{token}/", follow=True)
-        redirect_url = redirect_response.redirect_chain[0][0]
+        redirect_url = f"/reset/{uid}/set-password/"
         self.assertRedirects(
             redirect_response, redirect_url, fetch_redirect_response=True
         )
+        # Reset the old password
         response = cl2.post(
             redirect_url,
             {
