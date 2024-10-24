@@ -1,8 +1,5 @@
 """Tests of mitglieder administration"""
-import re
-
 from django.contrib.auth.models import User
-from django.core import mail
 from django.test import Client, TestCase, override_settings
 
 from mitglieder import views
@@ -103,32 +100,32 @@ class MitgliederTest(TestCase):
         # Try to get the new password link, check for redirect loop
         cl2 = Client()
         response = cl2.post(
-            "/reset/recover/",
-            {"username_or_email": "666666"},
+            "/password_reset/",
+            {"email": peter.email},
             follow=False,
         )
         self.assertEqual(response.status_code, 302)
-
-        sentmail = mail.outbox[0]
-        body = sentmail.body
-
-        # Grab the reset URL out of the mail body...
-        url = re.search("/reset/reset/.*/", body)
-        url = url.group(0)
-
-        # ...and send the new password there
+        
+        token = response.context[0]['token']
+        uid = response.context[0]['uid']
+        redirect_response = cl2.get(f"/reset/{uid}/{token}/", follow=True)
+        redirect_url = f"/reset/{uid}/set-password/"
+        self.assertRedirects(
+            redirect_response, redirect_url, fetch_redirect_response=True
+        )
+        # Reset the old password
         response = cl2.post(
-            url,
+            redirect_url,
             {
-                "password1": self.plainpassword,
-                "password2": self.plainpassword,
+                "new_password1": self.plainpassword,
+                "new_password2": self.plainpassword,
             },
             follow=True,
         )
         self.assertEqual(response.status_code, 200)
 
         # Try to login with the new password
-        cl3, response = self.login_user("666666")
+        cl3, response = self.login_user(peter.username)
         self.assertNotIn("login", response.request["PATH_INFO"])
 
     def test_profile_incomplete(self):

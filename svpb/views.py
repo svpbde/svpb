@@ -80,7 +80,7 @@ class SvpbLogin(FormView):
         else:
             context["intro_text"] = ""
         context["post_text"] = format_html(
-            'Passwort vergessen? <a href="/reset/recover/"> Hier zurücksetzen.</a>'
+            'Passwort vergessen? <a href="/password_reset/"> Hier zurücksetzen.</a>'
         )
         context["todo_text"] = ""
 
