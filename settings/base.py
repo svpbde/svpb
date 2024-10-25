@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'impersonate',
     'post_office',
     'django_sendfile',
-    'password_reset',
     'django_select2',
     'fontawesomefree',
     # svpb apps
