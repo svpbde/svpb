@@ -3,7 +3,7 @@
 import os
 
 from django.core.management.base import BaseCommand
-from django.utils import translation
+from django.utils import timezone, translation
 from django.conf import settings
 import xlsxwriter
 from xlsxcursor import XlsxCursor
@@ -148,6 +148,11 @@ class Command(BaseCommand):
             "Am Jahresende sind das die Mitglieder, von denen Geld abgebucht werden "
             "muss."
         )
+        cursor.cr()
+        cursor.cr()
+        cursor("Stand der Daten")
+        # Add date as string to circumvent dealing with excel's cell formating
+        cursor(timezone.make_naive(timezone.now()).strftime("%d.%m.%Y %H:%M"))
         cursor.cr()
 
     def handle(self, *args, **options):
