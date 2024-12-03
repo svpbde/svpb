@@ -100,20 +100,15 @@
     </div>
 </div>
 <div class="row text-center">
-    <p>Diese Web-Anwendung dient der Organisation des Vereinslebens (Arbeitsdienst, Boots- und Kranreservierung, Mitgliederverwaltung).
-    </p>
-
-    {% if OFFLINE %}
     <p>
-        <b><big>
-            Die Web-Anwendung ist wegen Wartungsarbeiten kurzfristig außer Betrieb. Anmelden ist derzeit nicht mögich. Bitte versuche es später erneut!
-        </big></b>
+            Diese Web-Anwendung dient der Organisation des Vereinslebens (Arbeitsdienst, Boots- und Kranreservierung, Mitgliederverwaltung).
     </p>
-    {% elif JAHRESENDE %}
+        {% if JAHRESENDE %}
+            <div class="alert alert-danger">
+                Wir bereiten das neue Jahr vor, daher ist die Anmeldung derzeit nur für Vorstandsmitglieder möglich.
+            </div>
     <p>
-        <b><big>
-            Wir bereiten das neue Jahr vor, daher ist die Anmeldung derzeit nur für Vorstandsmitglieder möglich. Bitte versuche es in einigen Tagen erneut.
-        </big></b>
+                <a href="/login/?next=/home/" class="btn btn-danger btn-lg" role="button"> Ich bin im Vorstand</a>
     </p>
     {% else %}
     <p>
@@ -121,13 +116,9 @@
         Bist du kein Mitglied, schau gerne auf unserem öffentlichen Auftritt <a href="https://svpb.de">svpb.de</a> vorbei.
     </p>
     <p>
-        <a href="/login/?next=/home/"
-           class="btn btn-primary btn-lg" role="button">
-            Anmelden</a>
+                <a href="/login/?next=/home/" class="btn btn-primary btn-lg" role="button"> Anmelden</a>
     </p>
     {% endif %}
 </div>
-
 {% endif %}
-
 {% endblock %}
