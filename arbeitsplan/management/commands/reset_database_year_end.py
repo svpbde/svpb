@@ -39,6 +39,10 @@ class Command(BaseCommand):
         # Delete entries related to working hours
         num_deletions, per_object = Leistung.objects.all().delete()
         print(f"Leistung: Deleted {num_deletions} objects, consisting of {per_object}")
+        # Note that deletions via the QuerySet API do not call the model's delete()
+        # method, so luckily the custom code modifying zuteilungBenachrichtigungNoetig
+        # is not triggered.
+        # See https://docs.djangoproject.com/en/4.2/ref/models/querysets/#delete
         num_deletions, per_object = Zuteilung.objects.all().delete()
         print(f"Zuteilung: Deleted {num_deletions} objects, consisting of {per_object}")
         num_deletions, per_object = Meldung.objects.all().delete()
