@@ -83,6 +83,321 @@ class SimpleTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
 
+class AufgabenCreateTests(TestCase):
+    """Tests for view AufgabenCreate."""
+
+    fixtures = [
+        "arbeitsplan/fixtures/members.json",
+        "arbeitsplan/fixtures/taskgroups.json",
+        "arbeitsplan/fixtures/tasks.json",
+        "arbeitsplan/fixtures/timetables.json",
+        "mitglieder/fixtures/groups.json",
+        "mitglieder/fixtures/po.json",
+        "mitglieder/fixtures/user.json",
+    ]
+
+    def setUp(self):
+        self.user = User.objects.get(username="Superuser")
+        self.worker = User.objects.get(username="Mitglied")
+
+    def test_quick_assignment(self):
+        """Test quick assignment feature when creating a new task."""
+        # Ensure no notification is pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+
+        # Test creation of new task with quick assignment
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenErzeugen"),
+            {
+                "aufgabe": "Schnellzuweisung testen",
+                "verantwortlich": "3",
+                "gruppe": "1",
+                "anzahl": "1",
+                "stunden": "1",
+                "teamleader": "",
+                "datum": "",
+                "bemerkung": "",
+                "schnellzuweisung": str(self.worker.id),
+                "uhrzeit_8": "0",
+                "uhrzeit_9": "0",
+                "uhrzeit_10": "0",
+                "uhrzeit_11": "0",
+                "uhrzeit_12": "0",
+                "uhrzeit_13": "0",
+                "uhrzeit_14": "0",
+                "uhrzeit_15": "0",
+                "uhrzeit_16": "0",
+                "uhrzeit_17": "0",
+                "uhrzeit_18": "0",
+                "uhrzeit_19": "0",
+                "uhrzeit_20": "0",
+                "uhrzeit_21": "0",
+                "uhrzeit_22": "0",
+                "uhrzeit_23": "0",
+                "_edit": "Aufgabe anlegen",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if task was created
+        try:
+            task = Aufgabe.objects.get(aufgabe="Schnellzuweisung testen")
+        except Aufgabe.DoesNotExist:
+            self.fail("Task not found.")
+
+        # Check if assignment was created
+        try:
+            Zuteilung.objects.get(aufgabe=task, ausfuehrer=self.worker)
+        except Zuteilung.DoesNotExist:
+            self.fail(f"Zuteilung not found for task {task} and user {self.worker}.")
+
+        # Check if notification is pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+
+
+class AufgabenUpdateTests(TestCase):
+    """Tests for view AufgabenUpdate."""
+
+    fixtures = [
+        "arbeitsplan/fixtures/members.json",
+        "arbeitsplan/fixtures/taskgroups.json",
+        "arbeitsplan/fixtures/tasks.json",
+        "arbeitsplan/fixtures/timetables.json",
+        "mitglieder/fixtures/groups.json",
+        "mitglieder/fixtures/po.json",
+        "mitglieder/fixtures/user.json",
+    ]
+
+    def setUp(self):
+        self.task = Aufgabe.objects.get(aufgabe="Feuchtfröhliche Bugfixsuche")
+        self.user = User.objects.get(username="Superuser")
+        self.worker = User.objects.get(username="Mitglied")
+        self.worker_2 = User.objects.get(username="Teamleiter")
+        self.post_data = {
+            # Note missing key "schnellzuweisung" (missing = empty)
+            "aufgabe": "Feuchtfröhliche Bugfixsuche",
+            "verantwortlich": "1",
+            "gruppe": "1",
+            "anzahl": "1",
+            "stunden": "12",
+            "teamleader": "4",
+            "datum": "",
+            "bemerkung": "Dies ist eine ganzjährige Testaufgabe.",
+            "uhrzeit_8": "0",
+            "uhrzeit_9": "0",
+            "uhrzeit_10": "0",
+            "uhrzeit_11": "0",
+            "uhrzeit_12": "0",
+            "uhrzeit_13": "0",
+            "uhrzeit_14": "0",
+            "uhrzeit_15": "0",
+            "uhrzeit_16": "0",
+            "uhrzeit_17": "0",
+            "uhrzeit_18": "0",
+            "uhrzeit_19": "0",
+            "uhrzeit_20": "0",
+            "uhrzeit_21": "0",
+            "uhrzeit_22": "0",
+            "uhrzeit_23": "0",
+            "_edit": "Änderung eintragen",
+        }
+
+    def test_quick_assignment_add_single(self):
+        """Test quick assignment feature - add single user."""
+        # Ensure no notification is pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        # Prepare data to post (copy dict to prevent side effects for other tests)
+        post_data = self.post_data.copy()
+        post_data["schnellzuweisung"] = str(self.worker.id)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignment was created
+        try:
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+        except Zuteilung.DoesNotExist:
+            self.fail(
+                f"Zuteilung not found for task {self.task} and user {self.worker}."
+            )
+
+        # Check if notification is pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+
+    def test_quick_assignment_add_multiple(self):
+        """Test quick assignment feature - add multiple users."""
+        # Ensure no notifications are pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+        self.worker_2.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker_2.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        # Prepare data to post (copy dict to prevent side effects for other tests)
+        post_data = self.post_data.copy()
+        post_data["schnellzuweisung"] = [str(self.worker.id), str(self.worker_2.id)]
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignments were created
+        try:
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+        except Zuteilung.DoesNotExist:
+            self.fail(
+                f"Zuteilung not found for task {self.task} and user {self.worker}."
+            )
+        try:
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker_2)
+        except Zuteilung.DoesNotExist:
+            self.fail(
+                f"Zuteilung not found for task {self.task} and user {self.worker_2}."
+            )
+
+        # Check if notifications are pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+        self.worker_2.refresh_from_db()
+        self.assertTrue(self.worker_2.mitglied.zuteilungBenachrichtigungNoetig)
+
+    def test_quick_assignment_delete_single(self):
+        """Test quick assignment feature - delete single user."""
+        # Ensure assignment exists
+        Zuteilung.objects.get_or_create(aufgabe=self.task, ausfuehrer=self.worker)
+        # Ensure no notification is pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            self.post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignment was deleted
+        with self.assertRaises(Zuteilung.DoesNotExist):
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+
+        # Check if notification is pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+
+    def test_quick_assignment_delete_multiple(self):
+        """Test quick assignment feature - delete multiple users."""
+        # Ensure assignment exists
+        Zuteilung.objects.get_or_create(aufgabe=self.task, ausfuehrer=self.worker)
+        Zuteilung.objects.get_or_create(aufgabe=self.task, ausfuehrer=self.worker_2)
+        # Ensure no notifications are pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+        self.worker_2.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker_2.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            self.post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignments were deleted
+        with self.assertRaises(Zuteilung.DoesNotExist):
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+        with self.assertRaises(Zuteilung.DoesNotExist):
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker_2)
+
+        # Check if notifications are pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+        self.worker_2.refresh_from_db()
+        self.assertTrue(self.worker_2.mitglied.zuteilungBenachrichtigungNoetig)
+
+    def test_quick_assignment_replace(self):
+        """Test quick assignment feature - replace assigned user with new one."""
+        # Ensure assignment exists
+        Zuteilung.objects.get_or_create(aufgabe=self.task, ausfuehrer=self.worker)
+        # Ensure no notifications are pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+        self.worker_2.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker_2.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        # Prepare data to post (copy dict to prevent side effects for other tests)
+        post_data = self.post_data.copy()
+        post_data["schnellzuweisung"] = str(self.worker_2.id)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignment for worker was deleted
+        with self.assertRaises(Zuteilung.DoesNotExist):
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+        # Check if assignment for worker_2 was created
+        try:
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker_2)
+        except Zuteilung.DoesNotExist:
+            self.fail(
+                f"Zuteilung not found for task {self.task} and user {self.worker_2}."
+            )
+
+        # Check if notifications are pending
+        self.worker.refresh_from_db()
+        self.assertTrue(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+        self.worker_2.refresh_from_db()
+        self.assertTrue(self.worker_2.mitglied.zuteilungBenachrichtigungNoetig)
+
+    def test_quick_assignment_no_change(self):
+        """Test quick assignment feature - no change to assigned user."""
+        # Ensure assignment exists
+        Zuteilung.objects.get_or_create(aufgabe=self.task, ausfuehrer=self.worker)
+        # Ensure no notification is pending
+        self.worker.mitglied.zuteilungBenachrichtigungNoetig = False
+        self.worker.mitglied.save()
+
+        # Test updating task with quick assignment
+        self.client.force_login(self.user)
+        # Prepare data to post
+        post_data = self.post_data.copy()
+        post_data["schnellzuweisung"] = str(self.worker.id)
+        response = self.client.post(
+            reverse("arbeitsplan-aufgabenEdit", kwargs={"pk": self.task.id}),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Check if assignment still exists
+        try:
+            Zuteilung.objects.get(aufgabe=self.task, ausfuehrer=self.worker)
+        except Zuteilung.DoesNotExist:
+            self.fail(
+                f"Zuteilung not found for task {self.task} and user {self.worker}."
+            )
+
+        # Check if no notification is pending (no change - no notification)
+        self.worker.refresh_from_db()
+        self.assertFalse(self.worker.mitglied.zuteilungBenachrichtigungNoetig)
+
+
 class ManuelleZuteilungViewTests(TestCase):
     """Tests for ManuelleZuteilungView."""
 
@@ -231,7 +546,9 @@ class StundenplaeneEditTests(TestCase):
         # Test deletion of timetable assignments
         self.client.force_login(self.user)
         response = self.client.post(
-            reverse("arbeitsplan-stundenplaeneEdit", kwargs={"aufgabeid": self.task.id}),
+            reverse(
+                "arbeitsplan-stundenplaeneEdit", kwargs={"aufgabeid": self.task.id}
+            ),
             {
                 "anzahl_3": "0",
                 "eintragen": "Stundenzuteilung+eintragen/ändern",
