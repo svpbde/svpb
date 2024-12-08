@@ -1258,10 +1258,6 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                                      ausfuehrerObj.first_name,
                                      ausfuehrerObj.last_name))
 
-                # setting (cause of add)  zuteilung benachrichtigung noetig for ausfuehrerObj
-                ausfuehrerObj.mitglied.zuteilungBenachrichtigungNoetig = True
-                ausfuehrerObj.mitglied.save()
-
         # find all items in prevState with a 1 there that do no appear in newState
         # remove that zuteilung
         for k, v in previousStatus.items():
@@ -1281,11 +1277,6 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                                  .format(aufgabeObj.aufgabe,
                                          ausfuehrerObj.first_name,
                                          ausfuehrerObj.last_name))
-
-                # setting (cause of delete) zuteilung benachrichtigung noetig for ausfuehrerObj
-                ausfuehrerObj.mitglied.zuteilungBenachrichtigungNoetig = True
-                ausfuehrerObj.mitglied.save()
-
 
         # TODO: emails senden?
 
