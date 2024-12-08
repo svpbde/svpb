@@ -462,12 +462,12 @@ class Zuteilung(models.Model):
 
     def save(self, *args, **kwargs):
         super(Zuteilung, self).save(*args, **kwargs)
-        self.ausfuehrer.zuteilungBenachrichtigungNoetig = True
-        self.ausfuehrer.save()
+        self.ausfuehrer.mitglied.zuteilungBenachrichtigungNoetig = True
+        self.ausfuehrer.mitglied.save()
 
     def delete(self, *args, **kwargs):
-        self.ausfuehrer.zuteilungBenachrichtigungNoetig = True
-        self.ausfuehrer.save()
+        self.ausfuehrer.mitglied.zuteilungBenachrichtigungNoetig = True
+        self.ausfuehrer.mitglied.save()
         super(Zuteilung, self).delete(*args, **kwargs)
 
     def stunden(self):
@@ -525,12 +525,12 @@ class StundenZuteilung(models.Model):
 
     def save(self, *args, **kwargs):
         super(StundenZuteilung, self).save(*args, **kwargs)
-        self.zuteilung.ausfuehrer.zuteilungBenachrichtigungNoetig = True
-        self.zuteilung.ausfuehrer.save()
+        self.zuteilung.ausfuehrer.mitglied.zuteilungBenachrichtigungNoetig = True
+        self.zuteilung.ausfuehrer.mitglied.save()
 
     def delete(self, *args, **kwargs):
-        self.zuteilung.ausfuehrer.zuteilungBenachrichtigungNoetig = True
-        self.zuteilung.ausfuehrer.save()
+        self.zuteilung.ausfuehrer.mitglied.zuteilungBenachrichtigungNoetig = True
+        self.zuteilung.ausfuehrer.mitglied.save()
         super(StundenZuteilung, self).delete(*args, **kwargs)
 
     class Meta:
