@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Create your views here.
-
 import collections
 import datetime
 import os
@@ -10,7 +6,6 @@ from collections import defaultdict
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-# from django.core.urlresolvers import reverse_lazy
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models import Sum, F, Count
@@ -293,51 +288,66 @@ class AufgabenUpdate (SuccessMessageMixin, isVorstandMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
+        if "_delete" in self.request.POST:
+            return redirect("arbeitsplan-aufgabenDelete", pk=self.object.id)
 
-        if '_delete' in self.request.POST:
-            return redirect('arbeitsplan-aufgabenDelete',
-                            pk=self.object.id)
-
-        # store the aufgabe
+        # Store the aufgabe
         super(AufgabenUpdate, self).form_valid(form)
 
-        # manipulate the stundenplan
-        stundenplan = collections.defaultdict(int,
-                                              form.cleaned_data['stundenplan'])
-        for u in range(models.Stundenplan.startZeit,
-                       models.Stundenplan.stopZeit+1):
+        # Manipulate the stundenplan
+        stundenplan = collections.defaultdict(int, form.cleaned_data["stundenplan"])
+        for u in range(models.Stundenplan.startZeit, models.Stundenplan.stopZeit + 1):
             anzahl = stundenplan[u]
             sobj, created = models.Stundenplan.objects.update_or_create(
-                aufgabe=self.object,
-                uhrzeit=u,
-                defaults={'anzahl': anzahl})
+                aufgabe=self.object, uhrzeit=u, defaults={"anzahl": anzahl}
+            )
 
-        # check whether there are fast assignments
-        # if form.cleaned_data['schnellzuweisung']:
-        if 'schnellzuweisung' in form.cleaned_data:
-            try:
-                mm = form.cleaned_data['schnellzuweisung']
-                for m in mm:
-                    z, zcreated = models.Zuteilung.objects.get_or_create(
-                        aufgabe=self.object,
-                        ausfuehrer=m)
-                    if created:
-                        messages.success(self.request,
-                                         "Die Aufgabe wurde direkt an Mitglied {} zugeteilt!".format(
-                                            m.__unicode__()))
-                        m.mitglied.zuteilungBenachrichtigungNoetig = True
-                        m.mitglied.save()
-                    else:
-                        messages.success(self.request,
-                                         "Die Aufgabe war bereits an Mitglied {} zugeteilt.".format(
-                                             m.__unicode__()))
+        # Check if there are quick assignments
+        if "schnellzuweisung" in form.cleaned_data:
+            # Get possibly updated workers
+            updated_workers = set(form.cleaned_data["schnellzuweisung"])
+            # Get previously assigned workers
+            assigned_workers = {
+                z.ausfuehrer for z in self.object.zuteilung_set.all()
+            }
+            # Get workers only present in quick assignments
+            workers_to_assign = updated_workers - assigned_workers
+            # Get workers not present in quick assignments
+            workers_to_unassign = assigned_workers - updated_workers
 
-                        # TODO: das abschalten, nur für Testzwekce!
-                        # m.mitglied.zuteilungBenachrichtigungNoetig = True
-                        # m.mitglied.save()
-            except Exception as e:
-                messages.error(self.request,
-                               "Die Aufgabe konnte nicht unmittelbar an ein Mitglied zugeteilt werden")
+            # Create new assignments
+            for worker in workers_to_assign:
+                try:
+                    models.Zuteilung.objects.create(
+                        aufgabe=self.object, ausfuehrer=worker
+                    )
+                    messages.success(
+                        self.request,
+                        f"Die Aufgabe wurde direkt an {worker} zugeteilt."
+                    )
+                except Exception:
+                    messages.error(
+                        self.request,
+                        f"Die Aufgabe konnte nicht direkt an {worker} zugeteilt werden."
+                    )
+            # Delete removed assignments
+            for worker in workers_to_unassign:
+                try:
+                    zuteilung = (
+                        models.Zuteilung.objects.get(
+                            aufgabe=self.object, ausfuehrer=worker
+                        )
+                    )
+                    zuteilung.delete()
+                    messages.success(
+                        self.request,
+                        f"Die Zuteilung an {worker} wurde gelöscht."
+                    )
+                except Exception:
+                    messages.error(
+                        self.request,
+                        f"Die Zuteilung an {worker} konnte nicht gelöscht werden.",
+                    )
 
         return redirect(self.request.get_full_path())
 
@@ -480,16 +490,35 @@ class AufgabenCreate (isVorstandMixin, SimpleCreateView):
         return context
 
     def form_valid(self, form):
-
-        # store the aufgabe
+        # Store the aufgabe
         super(AufgabenCreate, self).form_valid(form)
 
-        # and now store the STundenplan entries
-        for uhrzeit, anzahl  in form.cleaned_data['stundenplan'].items():
-            sobj = models.Stundenplan (aufgabe = self.object,
-                                       uhrzeit = uhrzeit,
-                                       anzahl = anzahl)
+        # Store the Stundenplan entries
+        for uhrzeit, anzahl in form.cleaned_data["stundenplan"].items():
+            sobj = models.Stundenplan(
+                aufgabe=self.object, uhrzeit=uhrzeit, anzahl=anzahl
+            )
             sobj.save()
+
+        # Check if there are quick assignments
+        if "schnellzuweisung" in form.cleaned_data:
+            workers_to_assign = set(form.cleaned_data["schnellzuweisung"])
+
+            # Create new assignments
+            for worker in workers_to_assign:
+                try:
+                    models.Zuteilung.objects.create(
+                        aufgabe=self.object, ausfuehrer=worker
+                    )
+                    messages.success(
+                        self.request,
+                        f"Die Aufgabe wurde direkt an {worker} zugeteilt."
+                    )
+                except Exception:
+                    messages.error(
+                        self.request,
+                        f"Die Aufgabe konnte nicht direkt an {worker} zugeteilt werden."
+                    )
 
         messages.success(self.request,
                          "Die Aufgabe wurde erfolgreich angelegt."
