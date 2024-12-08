@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-
-import django_select2
 from crispy_forms.bootstrap import FormActions, InlineCheckboxes, InlineField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, HTML
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django_select2.forms import Select2Widget, Select2MultipleWidget
 
 from . import models
 
@@ -87,21 +85,22 @@ class AufgabengruppeForm(CrispyFormMixin, forms.ModelForm):
                   )
 
 
-from django_select2.forms import ModelSelect2MultipleWidget, Select2Widget
-
-class Select2UserField(ModelSelect2MultipleWidget):
-    queryset = User.objects
-    search_fields = ['username__icontains', ]
-
-
 class AufgabeForm(forms.ModelForm):
-
-    # schnellzuweisung = django_select2.fields.ModelSelect2MultipleField(
-    schnellzuweisung = Select2UserField(
+    schnellzuweisung = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
-        label="Direkt ausführendes Mitglied auswählen",
-        help_text="Direktes Zuteilen eines Mitglieds zu dieser Aufgabe; Melden und Zuteilen dann nicht mehr nötig. ACHTUNG: Löschen ist hier NICHT möglich!",
-        required=False)
+        label="Direkt Zuteilung an ausführende(s) Mitglied(er) erstellen/löschen",
+        help_text=(
+            "Wenn bereits fest steht, wer diese Aufgabe ausführt, kann hier direkt eine"
+            " Zuteilung an das/die Mitglied(er) erstellt werden. Eine separate Meldung "
+            "und Zuteilung ist dann nicht mehr nötig. Löschen entfernt die Zuteilung. "
+            "Über geänderte Zuteilungen wird jedes Mitglied automatisch benachrichtigt."
+        ),
+        required=False,
+        # Force data-width to 100% to keep select2 from calculating a
+        # fixed width (which would break responsiveness), see
+        # https://select2.org/appearance#container-width
+        widget=Select2MultipleWidget({"data-width": "100%"}),
+    )
 
     class Meta:
         model = models.Aufgabe
