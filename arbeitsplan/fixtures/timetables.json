@@ -1,0 +1,29 @@
+[
+    {
+        "model": "arbeitsplan.stundenplan",
+        "pk": 1,
+        "fields": {
+            "aufgabe": 2,
+            "uhrzeit": 14,
+            "anzahl": 1
+        }
+    },
+    {
+        "model": "arbeitsplan.stundenplan",
+        "pk": 2,
+        "fields": {
+            "aufgabe": 2,
+            "uhrzeit": 15,
+            "anzahl": 1
+        }
+    },
+    {
+        "model": "arbeitsplan.stundenplan",
+        "pk": 3,
+        "fields": {
+            "aufgabe": 2,
+            "uhrzeit": 16,
+            "anzahl": 1
+        }
+    }
+]

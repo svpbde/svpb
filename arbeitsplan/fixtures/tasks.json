@@ -12,5 +12,19 @@
         },
         "model": "arbeitsplan.aufgabe",
         "pk": 1
+    },
+    {
+        "fields": {
+            "aufgabe": "Adventskaffee",
+            "verantwortlich": 1,
+            "teamleader": null,
+            "gruppe": 1,
+            "anzahl": 1,
+            "stunden": 3,
+            "datum": "2024-12-08",
+            "bemerkung": "Kaffee kochen und Kuchen verkaufen"
+        },
+        "model": "arbeitsplan.aufgabe",
+        "pk": 2
     }
 ]
