@@ -2,10 +2,19 @@
     {
         "fields": {
             "verantwortlich": 1,
-            "gruppe": "IT Team",
-            "bemerkung": "Hier kommen die Aufgabengruppen hin."
+            "gruppe": "IT",
+            "bemerkung": "Administration der Vereins-IT"
         },
         "model": "arbeitsplan.aufgabengruppe",
         "pk": 1
+    },
+    {
+        "fields": {
+            "gruppe": "Bewirtung",
+            "verantwortlich": 1,
+            "bemerkung": "Bewirtung von Mitgliedern und Gästen bei Vereinsveranstaltungen und Regatten"
+        },
+        "model": "arbeitsplan.aufgabengruppe",
+        "pk": 2
     }
 ]
