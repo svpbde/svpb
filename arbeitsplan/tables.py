@@ -576,27 +576,25 @@ class StundenplanTable (django_tables2.Table):
 
 
 class ZuteilungTable(django_tables2.Table):
-    ## verantwortlicher = django_tables2.Column(
-    ##     accessor="aufgabe.verantwortlich.last_name",
-    ##     verbose_name="Verantwortlicher")
-
     verantwortlicher = KontaktColumn(
-        accessor="aufgabe.kontakt",
         verbose_name="Verantwortlicher",
+        accessor="aufgabe.kontakt",
+        # Not orderable as accessor is a Python method and not present in database, see
+        # https://django-tables2.readthedocs.io/en/latest/pages/ordering.html
         orderable=False,
-        )
-
-    datum = django_tables2.Column(accessor="aufgabe.datum",
-                                  verbose_name="Datum")
-
-    studenString = django_tables2.Column(
+    )
+    datum = django_tables2.Column(accessor="aufgabe.datum", verbose_name="Datum")
+    stundenString = django_tables2.Column(
         verbose_name="Zeiten",
-        accessor='stundenString',
-        )
+        accessor="stundenString",
+        # Not orderable as accessor is a Python method and not present in database, see
+        # https://django-tables2.readthedocs.io/en/latest/pages/ordering.html
+        orderable=False,
+    )
 
     class Meta:
         model = models.Zuteilung
-        fields = ("aufgabe", 'verantwortlicher', 'datum')
+        fields = ("aufgabe", "verantwortlicher", "datum")
 
 
 class ZuteilungTableVorstand(django_tables2.Table):
