@@ -15,7 +15,7 @@ ADMINS = [
 MANAGERS = ADMINS
 
 JAHRESSTUNDEN = 12
-JAHRESENDE = True
+JAHRESENDE = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
