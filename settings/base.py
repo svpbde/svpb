@@ -15,7 +15,6 @@ ADMINS = [
 MANAGERS = ADMINS
 
 JAHRESSTUNDEN = 12
-OFFLINE = False
 JAHRESENDE = False
 
 INSTALLED_APPS = [
@@ -85,7 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                # 'svpb.context_processors.global_settings'
+                'svpb.context_processors.global_settings'
             ],
         },
     },

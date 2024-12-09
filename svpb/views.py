@@ -63,11 +63,7 @@ class isVorstandOrTeamleaderMixin(object):
 
 
 class SvpbLogin(FormView):
-    if settings.OFFLINE:
-        template_name = "home.html"
-    else:
-        template_name = "registration/justForm.html"
-
+    template_name = "registration/justForm.html"
     form_class = LoginForm
     success_url = "/"
 
@@ -83,7 +79,7 @@ class SvpbLogin(FormView):
             'Passwort vergessen? <a href="/password_reset/"> Hier zurücksetzen.</a>'
         )
         context["todo_text"] = ""
-
+        context["JAHRESENDE"] = settings.JAHRESENDE
         return context
 
     def get_success_url(self):
