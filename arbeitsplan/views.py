@@ -2020,13 +2020,12 @@ class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
                  'value':
                  "Benachrichtigungen eintragen"}
 
-    intro_text = """Versenden von Benachrichtungen:
-    Wählen Sie die zu benachrichtigenden Zeilen durch die
-    Checkbox in der letzten Spalte aus (default: alle).
-    Sie können pro Zeile einen Kommentar eintippen,
-    der an die jeweilige email angefügt wird.
-    Zusätzlich können Sie (in dem Eingabefeld unterhalb der Tabelle)
-    einen Text eingeben, der an ALLE ausgesendeten emails angefügt wird.
+    intro_text = """Versenden von Benachrichtigungen:
+    Wähle die zu benachrichtigenden Zeilen durch die Checkbox in der Spalte
+    "Senden?" aus (default: alle). Du kannst pro Zeile eine individuelle
+    Anmerkung eintippen, die an die jeweilige E-Mail angefügt wird. Zusätzlich
+    kannst du (in dem Eingabefeld unterhalb der Tabelle) einen ergänzenden
+    Text eingeben, der an ALLE ausgesendeten E-Mails angefügt wird.
     """
 
     def get_context_data(self, **kwargs):
@@ -2159,6 +2158,13 @@ class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
 
     tableClass = ZuteilungEmailTable
     filterform_class = forms.ZuteilungEmailFilter
+
+    intro_text = (
+        FilteredEmailCreateView.intro_text + "<p> Du benötigst diese Funktion"
+        " nur, wenn du der Benachrichtigung Anmerkungen hinzufügen möchtest."
+        " Wenn nicht, musst du nichts weiter tun, die Benachrichtigungen "
+        "werden nachts automatisiert versendet."
+    )
 
     def noetig_filter(self, qs, includeSchonBenachrichtigt):
         if includeSchonBenachrichtigt:

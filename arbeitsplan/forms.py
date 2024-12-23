@@ -92,8 +92,7 @@ class AufgabeForm(forms.ModelForm):
         help_text=(
             "Wenn bereits fest steht, wer diese Aufgabe ausführt, kann hier direkt eine"
             " Zuteilung an das/die Mitglied(er) erstellt werden. Eine separate Meldung "
-            "und Zuteilung ist dann nicht mehr nötig. Löschen entfernt die Zuteilung. "
-            "Über geänderte Zuteilungen wird jedes Mitglied automatisch benachrichtigt."
+            "und Zuteilung ist dann nicht mehr nötig. Löschen entfernt die Zuteilung."
         ),
         required=False,
         # Force data-width to 100% to keep select2 from calculating a
