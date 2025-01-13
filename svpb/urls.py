@@ -1,10 +1,9 @@
 from django.conf import settings
 from django.urls import include, re_path, path
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth import views as auth_views
 
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
 import arbeitsplan.views
@@ -50,8 +49,10 @@ urlpatterns = [
         name="about",
         ),
 
-    # re_path(r'^admin/', include(admin.site.urls)),
-    re_path(r'^admin/', admin.site.urls),
+    # Redirect admin login to our custom login
+    path("svpb-admin/login/", RedirectView.as_view(pattern_name="login")),
+    # Move admin to non-default URL to hide it from bots
+    re_path(r"^svpb-admin/", admin.site.urls),
 
     re_path(r'^login/',
         svpb.views.SvpbLogin.as_view(),
@@ -101,7 +102,7 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
-    ]
+]
 
 if settings.DEBUG:
     # See https://docs.djangoproject.com/en/4.2/howto/static-files/#serving-uploaded-files-in-development
