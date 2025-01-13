@@ -87,7 +87,7 @@ class AufgabengruppeForm(CrispyFormMixin, forms.ModelForm):
 
 class AufgabeForm(forms.ModelForm):
     schnellzuweisung = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
+        queryset=User.objects.filter(is_active=True).all(),
         label="Direkt Zuteilung an ausführende(s) Mitglied(er) erstellen/löschen",
         help_text=(
             "Wenn bereits fest steht, wer diese Aufgabe ausführt, kann hier direkt eine"
