@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models import Sum, F, Count
@@ -1673,16 +1674,17 @@ class CreateLeistungView (CreateView):
 
 class DeleteLeistungView(DeleteView):
     model = models.Leistung
-    success_url = reverse_lazy("homeArbeitsplan")
+    success_url = reverse_lazy("arbeitsplan-leistungListe")
     template_name = "leistung_confirm_delete.html"
 
     def get_object(self):
         obj = super(DeleteLeistungView, self).get_object()
 
-        if (not (self.request.user == obj.melder) or
-            (obj.status == models.Leistung.Status.ACCEPTED) or
-            (obj.status == models.Leistung.Status.REJECTED)):
-            from django.core.exceptions import PermissionDenied
+        if (
+            not (self.request.user == obj.melder)
+            or (obj.status == models.Leistung.Status.ACCEPTED)
+            or (obj.status == models.Leistung.Status.REJECTED)
+        ):
             raise PermissionDenied
 
         return obj
