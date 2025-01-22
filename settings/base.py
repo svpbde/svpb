@@ -90,6 +90,27 @@ TEMPLATES = [
     },
 ]
 
+# Password validation
+# https://docs.djangoproject.com/en/dev/topics/auth/passwords/#password-validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        # Checks the similarity between the password and a set of attributes of the user
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        # Checks whether the password meets a minimum length
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        # Checks whether the password occurs in a list of common passwords
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        # Checks whether the password isn't entirely numeric
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
