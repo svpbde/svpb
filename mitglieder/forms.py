@@ -232,10 +232,9 @@ class AccountOtherEdit(AccountEdit):
     aktiv = forms.BooleanField(
         required=False,
         label="Aktiver Nutzer",
-        help_text="Setzen Sie den Nutzer auf inaktiv, "
-        "um ein neues Passwort verschicken zu können.",
+        help_text="Nur aktive Nutzer können sich einloggen.",
     )
-    boots_app = forms.BooleanField(required=False, label="Zugriff zum Boots App")
+    boots_app = forms.BooleanField(required=False, label="Zugriff auf \"Boote und Kran\"")
 
     def computeLayout(self):
         account_data = super(AccountOtherEdit, self).computeLayout()

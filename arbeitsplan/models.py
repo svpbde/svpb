@@ -226,7 +226,7 @@ class Mitglied(models.Model):
         if not self.user.email:
             r.append("E-Mail")
         if not self.festnetz and not self.mobil:
-            r.append("Telefonummer (Festnetznummer oder Mobil)")
+            r.append("Telefonnummer (Festnetznummer oder Mobil)")
         return ", ".join(r)
 
     class Meta:
