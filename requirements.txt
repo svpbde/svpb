@@ -7,7 +7,9 @@
 alabaster==0.7.13
     # via sphinx
 asgiref==3.7.2
-    # via django
+    # via
+    #   django
+    #   django-axes
 babel==2.13.1
     # via sphinx
 bleach[css]==6.1.0
@@ -23,6 +25,7 @@ django==4.2.17
     #   -r requirements.in
     #   crispy-bootstrap5
     #   django-appconf
+    #   django-axes
     #   django-crispy-forms
     #   django-extensions
     #   django-phonenumber-field
@@ -32,6 +35,8 @@ django==4.2.17
     #   django-tables2
 django-appconf==1.0.5
     # via django-select2
+django-axes[ipware]==7.0.1
+    # via -r requirements.in
 django-crispy-forms==2.0
     # via
     #   -r requirements.in
@@ -40,6 +45,8 @@ django-extensions==3.2.3
     # via -r requirements.in
 django-impersonate==1.9.4
     # via -r requirements.in
+django-ipware==7.0.1
+    # via django-axes
 django-phonenumber-field[phonenumbers]==7.1.0
     # via -r requirements.in
 django-post-office==3.9.1
@@ -76,6 +83,8 @@ psycopg2-binary==2.9.10
     # via -r requirements.in
 pygments==2.16.1
     # via sphinx
+python-ipware==3.0.0
+    # via django-ipware
 requests==2.31.0
     # via sphinx
 six==1.16.0

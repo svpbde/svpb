@@ -26,11 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django_admin_bootstrapped.bootstrap3',
-    # 'django_admin_bootstrapped',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    # Third-party apps
+    'axes',
     'django_tables2',
     'crispy_bootstrap5',
     'crispy_forms',
@@ -49,6 +48,14 @@ INSTALLED_APPS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend.
+    'axes.backends.AxesStandaloneBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,6 +64,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    # It only formats user lockout messages and renders Axes lockout responses
+    # on failed user authentication attempts from login views.
+    # If you do not want Axes to override the authentication response
+    # you can skip installing the middleware and use your own views.
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'svpb.urls'
@@ -217,6 +231,15 @@ MESSAGE_TAGS = {
     messages.DEBUG: "secondary",
     messages.ERROR: "danger",
 }
+
+# django-axes settings
+AXES_COOLOFF_TIME = 24  # Hours until a block is lifted
+AXES_DISABLE_ACCESS_LOG = True  # Don't log successful logins...
+AXES_ENABLE_ACCESS_FAILURE_LOG = True  # ... but log failed logins
+AXES_FAILURE_LIMIT = 16  # Number of failed attempts that cause a block
+AXES_LOCKOUT_PARAMETERS = ["ip_address", "username"]
+AXES_LOCKOUT_TEMPLATE = "axes/login_blocked.html"
+AXES_RESET_ON_SUCCESS = True  # Reset failed attempts counter if login is successful
 
 
 def user_is_vorstand(request):
