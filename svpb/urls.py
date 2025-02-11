@@ -10,6 +10,7 @@ import arbeitsplan.views
 from mitglieder.forms import SVPBPasswordChangeForm
 import mitglieder.views
 import svpb.views
+from svpb.forms import SVPBAuthenticationForm
 
 from .activeTest import active_and_login_required
 
@@ -55,9 +56,14 @@ urlpatterns = [
     # Move admin to non-default URL to hide it from bots
     re_path(r"^svpb-admin/", admin.site.urls),
 
-    re_path(r'^login/',
-        svpb.views.SvpbLogin.as_view(),
-        name="login"),
+    path(
+        'login/',
+        auth_views.LoginView.as_view(
+            authentication_form=SVPBAuthenticationForm,
+            extra_context={"year_end": settings.JAHRESENDE},
+        ),
+        name="login"
+    ),
 
     re_path(r'^logout/', svpb.views.logout_view),
 

@@ -1,24 +1,18 @@
-# -*- coding: utf-8 -*-
+"""Views for the entire svpb app
 
+- Signal receiver to correctly create users
+- Permission checks
+- Logout
 """
-Views for the entire adminstration of SVPB
-- login
-
-"""
-from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.utils.html import format_html
-from django.views.generic import FormView
-from django.conf import settings
 
 from arbeitsplan.models import Mitglied
-from svpb.forms import LoginForm
 
 
 @receiver(post_save, sender=User)
@@ -60,80 +54,6 @@ class isVorstandOrTeamleaderMixin(object):
     )
     def dispatch(self, *args, **kwargs):
         return super(isVorstandOrTeamleaderMixin, self).dispatch(*args, **kwargs)
-
-
-class SvpbLogin(FormView):
-    template_name = "registration/justForm.html"
-    form_class = LoginForm
-    success_url = "/"
-
-    def get_context_data(self, **kwargs):
-        context = super(SvpbLogin, self).get_context_data(**kwargs)
-        if settings.JAHRESENDE:
-            context[
-                "intro_text"
-            ] = "Zur Zeit ist eine Anmeldung nur für Vorstände möglich!"
-        else:
-            context["intro_text"] = ""
-        context["post_text"] = format_html(
-            'Passwort vergessen? <a href="/password_reset/"> Hier zurücksetzen.</a>'
-        )
-        context["todo_text"] = ""
-        context["JAHRESENDE"] = settings.JAHRESENDE
-        return context
-
-    def get_success_url(self):
-        try:
-            return self.request.GET["next"]
-        except:
-            return super(SvpbLogin, self).get_success_url()
-
-    def form_valid(self, form):
-        """form checks the authentication.
-        This is only called if the user can be logged in, but is not
-        necessarily active"""
-
-        user = form.cleaned_data["user"]
-        if user is not None:
-            login(self.request, user)
-
-            if settings.JAHRESENDE and not isVorstand(user):
-                messages.warning(
-                    self.request,
-                    format_html(
-                        "Derzeit ist ein Anmeldung nur für Vorstände möglich."
-                    ),
-                )
-                # make normal users go away
-                logout(self.request)
-                return redirect("/")
-
-            if settings.JAHRESENDE:
-                messages.warning(
-                    self.request,
-                    format_html(
-                        "Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten - Datum prüfen, ggf. direkt Mitglieder einteilen!"
-                    ),
-                )
-
-            if user.is_active:
-                tmp = user.mitglied.profileIncomplete()
-                if tmp:
-                    messages.warning(
-                        self.request,
-                        format_html(
-                            "Deine Profilangaben sind unvollständig.<br>"
-                            "Es fehlt/fehlen: {}.<br>"
-                            'Bitte ergänze <a href="/accounts/edit/">dein Profil.</a>',
-                            tmp,
-                        ),
-                    )
-                return super(SvpbLogin, self).form_valid(form)
-            else:
-                return redirect("/accounts/activate/")
-        else:
-            # This should never happen, end up in form_invalid instead
-            print("do the invalid thing")  # TODO: Log accordingly/throw exception?
 
 
 def logout_view(request):

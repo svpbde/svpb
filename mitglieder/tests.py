@@ -47,14 +47,14 @@ class MitgliederTest(TestCase):
             cl, response = self.login_user(user, self.plainpassword)
             self.assertContains(
                 response,
-                "Derzeit ist ein Anmeldung nur für Vorstände möglich.",
+                "Derzeit ist eine Anmeldung nur für Vorstände möglich.",
             )
         # Test allowed users
         for user in [self.superuser, self.board]:
             cl, response = self.login_user(user, self.plainpassword)
             self.assertNotContains(
                 response,
-                "Derzeit ist ein Anmeldung nur für Vorstände möglich.",
+                "Derzeit ist eine Anmeldung nur für Vorstände möglich.",
             )
 
     def test_wrong_password_fails(self):
@@ -166,7 +166,7 @@ class MitgliederTest(TestCase):
         # Log back in again
         cl2, response = self.login_user(self.superuser)
         # We should end up on home
-        self.assertEqual("/", response.request["PATH_INFO"])
+        self.assertEqual("/home/", response.request["PATH_INFO"])
         # There must be no message on the home page:
         self.assertListEqual([], list(response.context["messages"]))
 
