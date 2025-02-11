@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block branding %}
+Anmeldung
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+  <h4 class="alert-heading">Zugang temporär gesperrt</h4>
+  <p>
+    Du hast mindestens {{ failure_limit }} Mal eine falsche Kombination aus Benutzernamen und Passwort eingegeben.
+    Aus Sicherheitsgründen wurdest du temporär gesperrt.
+    Bitte versuche es nach 24 h erneut.
+    Versuchst du es früher, wird die Zeit zurückgesetzt.
+  </p>
+  <hr>
+  <p class="mb-0">
+    Hast du dich selbst nicht mindestens {{ failure_limit }} Mal vertippt, könnte es sein, dass jemand anders versucht, sich mit deinem Account einzuloggen.
+    Siehst du diese Nachricht häufiger, informiere bitte unseren Geschäftsführer.
+  </p>
+</div>
+{% endblock %}
