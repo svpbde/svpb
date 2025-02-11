@@ -1,26 +1,58 @@
-# -*- coding: utf-8 -*-
-
+from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, HTML
 from django import forms
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.conf import settings
 from django.core.exceptions import ValidationError
-from crispy_bootstrap5.bootstrap5 import FloatingField
+from django.utils.html import format_html
+
+from svpb.views import isVorstand
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(
-        label="Mitgliedsnummer (fünfstellig)",
-        required=True
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Passwort",
-        required=True,
-    )
+class SVPBAuthenticationForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            # This should not occur, as Django's default authentication ModelBackend
+            # prohibits inactive users from logging in. However, rejecting inactive
+            # users is also the default in Django's default AuthenticationForm, so just
+            # replicate it here.
+            raise ValidationError(
+                "Dieser Account ist inaktiv.",
+                code="inactive",
+            )
+        if settings.JAHRESENDE and not isVorstand(user):
+            raise ValidationError(
+                "Derzeit ist eine Anmeldung nur für Vorstände möglich.",
+                code="no_board_member",
+            )
+
+        # Create messages to be displayed after successful login
+        if settings.JAHRESENDE:
+            messages.warning(
+                self.request,
+                format_html(
+                    "Jahresende-Modus! Bitte <b>vor allem die Aufgaben</b> bearbeiten -"
+                    " Datum prüfen, ggf. direkt Mitglieder zuteilen!"
+                ),
+            )
+        missing_fields = user.mitglied.profileIncomplete()
+        if missing_fields:
+            messages.warning(
+                self.request,
+                format_html(
+                    "Deine Profilangaben sind unvollständig.<br>"
+                    "Es fehlt/fehlen: {}.<br>"
+                    'Bitte ergänze <a href="/accounts/edit/">dein Profil.</a>',
+                    missing_fields,
+                ),
+            )
 
     def __init__(self, *args, **kwargs):
+        super(SVPBAuthenticationForm, self).__init__(*args, **kwargs)
+        self.fields["username"].label = "Mitgliedsnummer (fünfstellig)"
         self.helper = FormHelper()
-        super(LoginForm, self).__init__(*args, **kwargs)
         self.helper.form_id = self.__class__.__name__
         self.helper.form_method = "post"
         self.helper.layout = Layout(
@@ -33,30 +65,6 @@ class LoginForm(forms.Form):
                 style="max-width: 330px; padding: 1rem",
             )
         )
-
-    def clean(self):
-        from django.contrib.auth import authenticate
-
-        error = False
-
-        try:
-            username = self.cleaned_data["username"]
-            password = self.cleaned_data["password"]
-
-            user = authenticate(username=username, password=password)
-
-            if user:
-                self.cleaned_data["user"] = user
-            else:
-                error = True
-        except:
-            error = True
-
-        if error:
-            print("raising validation in Login", username)  # TODO: Log exception
-            raise ValidationError("Der Nutzer konnte nicht angemeldet werden.")
-
-        return self.cleaned_data
 
 
 class MitgliederInactiveResetForm(forms.Form):

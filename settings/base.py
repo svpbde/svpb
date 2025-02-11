@@ -155,6 +155,7 @@ PHONENUMBER_DEFAULT_REGION = "DE"
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = '/media/'
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/home/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

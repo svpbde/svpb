@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block branding %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+{% if year_end %}
+  <div class="text-sm-center alert alert-warning">
+    Zurzeit ist eine Anmeldung nur für Vorstände möglich!
+  </div>
+{% endif %}
+
+{% crispy form %}
+
+<p class="text-center">
+  Passwort vergessen? <a href="/password_reset/">Hier zurücksetzen.</a>
+</p>
+{% endblock %}
