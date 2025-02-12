@@ -16,11 +16,6 @@ urlpatterns = [
         active_and_login_required(TemplateView.as_view(template_name="mitgliederHome.html")),
         name="mitgliederHome"),
 
-    # url (r'^accounts/login/', login),
-    re_path(r'^activate/',
-         login_required(mitglieder.views.ActivateView.as_view()),
-         name="activate"),
-
     # to edit my own account:
     re_path(r'^edit/',
         active_and_login_required(mitglieder.views.AccountEdit.as_view()),

@@ -1,17 +1,12 @@
-# -*- coding: utf-8 -*-
-
-
 """Forms related to handling Mitglieder data
 """
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Layout, HTML, Row, Column, Div
+from crispy_bootstrap5.bootstrap5 import FloatingField
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, HTML, Row, Column, Div
-from crispy_bootstrap5.bootstrap5 import FloatingField
-
 from phonenumber_field.formfields import PhoneNumberField
 
 from arbeitsplan import models
@@ -20,65 +15,6 @@ from arbeitsplan.forms import (
     MitgliedsnummerFilterForm,
     NameFilterForm,
 )
-
-
-class ActivateForm(forms.Form):
-    email = forms.EmailField(
-        required=True,
-        help_text="Bitte bestätigen Sie Ihre E-Mail-Adresse.",
-    )
-    portal = forms.BooleanField(
-        required=True,
-        initial=False,
-        label="Nutzung der Webseite",
-        help_text="Stimmen Sie der Nutzung dieser Webseite zu?",
-    )
-    emailNutzung = forms.BooleanField(
-        required=True,
-        initial=False,
-        label="E-Mail-Benachrichtigungen",
-        help_text="Erlauben Sie dem SVPB, Sie per E-Mail zu diesem Arbeitsplan zu benachrichtigen?",
-    )
-    pw1 = forms.CharField(
-        max_length=30,
-        required=True,
-        label="Neues Passwort",
-        widget=forms.PasswordInput(),
-    )
-    pw2 = forms.CharField(
-        max_length=30,
-        required=True,
-        label="Neues Passwort (Wiederholung)",
-        widget=forms.PasswordInput(),
-    )
-
-    def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        super(ActivateForm, self).__init__(*args, **kwargs)
-        self.helper.form_id = self.__class__.__name__
-        self.helper.form_method = "post"
-        self.helper.layout = Layout(
-            FloatingField("email"),
-            "portal",
-            "emailNutzung",
-            HTML("<p>"),
-            FloatingField("pw1"),
-            FloatingField("pw2"),
-            HTML("<p>"),
-        )
-        self.helper.add_input(Submit("apply", "Aktivieren"))
-
-    def clean(self):
-        try:
-            pw1 = self.cleaned_data["pw1"]
-            pw2 = self.cleaned_data["pw2"]
-        except:
-            raise ValidationError("Beide Passwörter müssen angegeben werden")
-
-        if pw1 != pw2:
-            raise ValidationError("Die beiden Passwörter müssen übereinstimmen")
-
-        return self.cleaned_data
 
 
 class MitgliederAddForm(forms.ModelForm):
