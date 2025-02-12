@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-
-"""Views for anything that relates to adminstration of members.
+"""Views for anything that relates to administration of members.
 Login and logout stays in SVPB
 """
 from datetime import date
@@ -12,7 +9,6 @@ import secrets
 from django.contrib.auth.decorators import user_passes_test
 from django.core.management import call_command
 
-# from django.core.urlresolvers import reverse_lazy
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
@@ -37,7 +33,6 @@ from arbeitsplan.views import FilteredListView
 
 from mitglieder.forms import (AccountEdit,
                               AccountOtherEdit,
-                              ActivateForm,
                               MemberFilterForm,
                               MitgliederAddForm,
                               PersonMitgliedsnummer,
@@ -49,55 +44,6 @@ from svpb.views import isVorstandMixin, isVorstand
 
 
 #-------------------------------------------------
-
-class ActivateView(FormView):
-    template_name = "registration/justForm.html"
-    form_class = ActivateForm
-    success_url = "/"
-
-    def get_context_data(self, **kwargs):
-
-        context = super(ActivateView, self).get_context_data(**kwargs)
-        context['title'] = "Aktivieren Sie Ihre SVPB-Konto"
-        context['intro_text'] = format_html("""<b>Willkommen bei der ersten Nutzung Ihres SVPB-Kontos</b>
-        <p>
-        Vor der Nutzung dieser Webseite bitten wir Sie um folgendes:
-        <ul>
-        <li>Bitte überprüfen Sie Ihre E-Mail-Adresse und korrigieren Sie diese
-        gegebenenfalls </li>
-        <li>Bitte stimmen Sie der Nutzung der Webseite zu </li>
-        <li>Bitte stimmen Sie zu, dass der SVPB Ihnen E-Mails
-         im Zusammenhang mit dem
-        Arbeitsplan schicken darf. </li>
-        <li>Bitte vergeben Sie ein neues Passwort! (Die beiden Eingaben
-        müssen übereinstimmen) </li>
-        </ul>
-        Ohne diese Zustimmungn können Sie diese Webseite leider nicht nutzen!
-        """)
-        context['post_text'] = ""
-        context['todo_text'] = ""
-
-        return context
-
-    def get_initial(self):
-        initial = super(ActivateView, self).get_initial()
-        initial['email'] = self.request.user.email
-        return initial
-
-    def form_valid(self, form):
-        from django.utils import timezone
-
-        # set user active, store its email, rememmber date
-        self.request.user.email = form.cleaned_data['email']
-        self.request.user.is_active = True
-        self.request.user.set_password(form.cleaned_data['pw1'])
-
-        self.request.user.mitglied.zustimmungsDatum = timezone.now()
-
-        self.request.user.save()
-        self.request.user.mitglied.save()
-
-        return super(ActivateView, self).form_valid(form)
 
 
 def preparePassword(accountList=None):
@@ -237,6 +183,7 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
 
         return redirect(self.success_url)
 
+
 class AccountEdit(SuccessMessageMixin, FormView):
     template_name = "registration/justForm.html"
     form_class = AccountEdit
@@ -270,7 +217,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         initial.update(self.fillinUser(self.get_user()))
         return initial
 
-    def storeUser (self, form, user):
+    def storeUser(self, form, user):
         user.email = form.cleaned_data['email']
         user.mitglied.strasse = form.cleaned_data['strasse']
         user.mitglied.plz = form.cleaned_data['plz']
@@ -311,6 +258,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
                              )
 
         return super(AccountEdit, self).form_valid(form)
+
 
 class AccountOtherEdit(isVorstandMixin, AccountEdit):
     form_class = AccountOtherEdit
