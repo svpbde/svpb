@@ -109,13 +109,6 @@ class Mitglied(models.Model):
     )
     """Does Mitglied need a message?"""
 
-    zustimmungsDatum = models.DateTimeField(
-        help_text="Wann hat der Nutzer Zustimmung erteilt?",
-        default=datetime.datetime(1900, 1, 1),
-        verbose_name="Datum der Zustimmung",
-    )
-    """At what date did the member agree to the use of this system?"""
-
     geburtsdatum = models.DateField(
         default=datetime.datetime(1900, 1, 1),
         verbose_name="Geburtsdatum",
@@ -147,12 +140,6 @@ class Mitglied(models.Model):
         verbose_name="Mitgliedsstatus",
         default=Status.ADULT,
         choices=Status.choices,
-    )
-
-    erstbenachrichtigt = models.BooleanField(
-        verbose_name="Erstbenachrichtigung",
-        help_text="Wurde die Erstbenachrichtigung mit Password bereits generiert?",
-        default=False,
     )
 
     arbeitslast = models.IntegerField(

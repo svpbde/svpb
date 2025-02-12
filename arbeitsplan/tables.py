@@ -1015,13 +1015,11 @@ class ZuteilungEmailTable(BaseEmailTable):
         model = models.Mitglied
         exclude = ('id',
                    'mitgliedsnummer',
-                   'zustimmungsDatum',
                    'geburtsdatum',
                    'strasse',
                    'plz',
                    'gender',
                    'ort',
-                   'erstbenachrichtigt',
                    'festnetz',
                    'mobil',
                    )
@@ -1063,13 +1061,11 @@ class MeldungsAufforderungsEmailTable(BaseEmailTable):
         model = models.Mitglied
         exclude = ('id',
                    'mitgliedsnummer',
-                   'zustimmungsDatum',
                    'geburtsdatum',
                    'strasse',
                    'plz',
                    'gender',
                    'ort',
-                   'erstbenachrichtigt',
                    'festnetz',
                    'mobil',
                    'zuteilungsbenachrichtigung',

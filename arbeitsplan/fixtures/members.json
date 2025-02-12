@@ -3,8 +3,6 @@
         "fields": {
             "status": "Er",
             "mitgliedsnummer": "00001",
-            "zustimmungsDatum": "1899-12-31T23:07:00Z",
-            "erstbenachrichtigt": false,
             "geburtsdatum": "1900-01-01",
             "gender": "M",
             "ort": "Musterstadt",
@@ -24,8 +22,6 @@
         "fields": {
             "status": "Er",
             "mitgliedsnummer": "00002",
-            "zustimmungsDatum": "1899-12-31T23:07:00Z",
-            "erstbenachrichtigt": false,
             "geburtsdatum": "1900-01-01",
             "gender": "M",
             "ort": "Musterstadt",
@@ -45,8 +41,6 @@
         "fields": {
             "status": "Er",
             "mitgliedsnummer": "00003",
-            "zustimmungsDatum": "1899-12-31T23:07:00Z",
-            "erstbenachrichtigt": false,
             "geburtsdatum": "1900-01-01",
             "gender": "W",
             "ort": "Musterstadt",
@@ -66,8 +60,6 @@
         "fields": {
             "status": "Er",
             "mitgliedsnummer": "00004",
-            "zustimmungsDatum": "1899-12-31T23:07:00Z",
-            "erstbenachrichtigt": false,
             "geburtsdatum": "1900-01-01",
             "gender": "W",
             "ort": "Musterstadt",
