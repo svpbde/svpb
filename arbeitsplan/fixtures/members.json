@@ -12,7 +12,7 @@
             "user": 1,
             "festnetz": "",
             "strasse": "Lange Straße 1",
-            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "zuteilungsbenachrichtigung": "1900-01-01T00:00:00Z",
             "mobil": ""
         },
         "model": "arbeitsplan.mitglied",
@@ -31,7 +31,7 @@
             "user": 2,
             "festnetz": "",
             "strasse": "Lange Straße 2",
-            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "zuteilungsbenachrichtigung": "1900-01-01T00:00:00Z",
             "mobil": ""
         },
         "model": "arbeitsplan.mitglied",
@@ -50,7 +50,7 @@
             "user": 3,
             "festnetz": "",
             "strasse": "Lange Straße 3",
-            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "zuteilungsbenachrichtigung": "1900-01-01T00:00:00Z",
             "mobil": ""
         },
         "model": "arbeitsplan.mitglied",
@@ -69,7 +69,7 @@
             "user": 4,
             "festnetz": "",
             "strasse": "Lange Straße 4",
-            "zuteilungsbenachrichtigung": "1899-12-31T23:07:00Z",
+            "zuteilungsbenachrichtigung": "1900-01-01T00:00:00Z",
             "mobil": ""
         },
         "model": "arbeitsplan.mitglied",
