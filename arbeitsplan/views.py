@@ -13,7 +13,6 @@ from django.db.models import Sum, F, Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.http import urlencode
-from django.utils.timezone import utc
 from django.views.generic import UpdateView, DeleteView, TemplateView
 from django.views.generic import View, ListView, CreateView
 from post_office import mail
@@ -2195,7 +2194,9 @@ class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
     def saveUpdate(self, instance, thisuser):
         """ tell the instance (of Mitglied) that it has been notified"""
 
-        instance.zuteilungsbenachrichtigung = datetime.datetime.utcnow().replace(tzinfo=utc)
+        instance.zuteilungsbenachrichtigung = datetime.datetime.now(
+            tz=datetime.timezone.utc
+        )
         instance.zuteilungBenachrichtigungNoetig = False
 
         instance.save()

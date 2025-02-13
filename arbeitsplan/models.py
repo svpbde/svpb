@@ -21,8 +21,6 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-# Needed for auto_now fields with veto
-from django.utils.timezone import utc
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -94,7 +92,7 @@ class Mitglied(models.Model):
 
     zuteilungsbenachrichtigung = models.DateTimeField(
         help_text="Wann war die letzte Benachrichtigung zu einer Zuteilung?",
-        default=datetime.datetime(1900, 1, 1),
+        default=datetime.datetime(1900, 1, 1, tzinfo=datetime.timezone.utc),
         verbose_name="Letzte Benachrichtigung",
     )
     """Date and time of most recent message to user"""
@@ -110,7 +108,7 @@ class Mitglied(models.Model):
     """Does Mitglied need a message?"""
 
     geburtsdatum = models.DateField(
-        default=datetime.datetime(1900, 1, 1),
+        default=datetime.date(1900, 1, 1),
         verbose_name="Geburtsdatum",
     )
 
