@@ -21,12 +21,18 @@ admin.autodiscover()
 urlpatterns = [
 
     re_path(r'^$',
-        TemplateView.as_view(template_name="main.html"),
+        TemplateView.as_view(
+            template_name="main.html",
+            extra_context={"year_end": settings.JAHRESENDE},
+        ),
         name="main",
         ),
 
     re_path(r'^home/$',
-        TemplateView.as_view(template_name="main.html"),
+        TemplateView.as_view(
+            template_name="main.html",
+            extra_context={"year_end": settings.JAHRESENDE},
+        ),
         name="mainHome",
         ),
 
