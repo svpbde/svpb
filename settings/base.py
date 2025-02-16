@@ -15,6 +15,9 @@ ADMINS = [
 MANAGERS = ADMINS
 
 JAHRESSTUNDEN = 12
+# Hours greater or equal than this constant can be used to encode info (e.g. pensioner,
+# board member, ...) and are excluded from some calculations
+BEGIN_CODED_HOURS_PER_YEAR = 90
 JAHRESENDE = False
 
 INSTALLED_APPS = [

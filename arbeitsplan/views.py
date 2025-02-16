@@ -4,6 +4,7 @@ import os
 import types
 from collections import defaultdict
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
@@ -15,21 +16,14 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.http import urlencode
 from django.views.generic import UpdateView, DeleteView, TemplateView
 from django.views.generic import View, ListView, CreateView
+from django_sendfile import sendfile
 from post_office import mail
 from post_office.models import EmailTemplate
 
 # Arbeitsplan-Importe:
 from . import forms
 from .tables import *  # TODO: change import not to polute name space
-from django.conf import settings
-
-from django_sendfile import sendfile
-
-
 from svpb.views import isTeamlead, isVorstand, isVorstandMixin, isVorstandOrTeamleaderMixin
-#################
-
-
 
 
 def notifyVorstand(meldung, mailcomment):
@@ -2121,12 +2115,29 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
     filterconfig = []
     emailTemplate = "meldungsAufforderung"
 
+    intro_text = (
+        FilteredEmailCreateView.intro_text + "<p> Alle Mitglieder mit einer Arbeitslast"
+        f" von {settings.BEGIN_CODED_HOURS_PER_YEAR} h/Jahr oder mehr werden in dieser "
+        "Ansicht nicht berücksichtigt."
+    )
+
     def getUser(self, instance):
         return instance.user
 
+    def get_data(self):
+        # Exclude inactive users and users with special definition of working hours
+        qs = (
+            self.model.objects
+            .filter(user__is_active=True)
+            .exclude(arbeitslast__gte=settings.BEGIN_CODED_HOURS_PER_YEAR)
+        )
+        # Exclude users with enough assignments
+        qs = [q for q in qs if q.zugeteilteStunden() < q.arbeitslast]
+
+        return qs
+
     def annotate_data(self, qs):
         qs = super(MeldungNoetigEmailView, self).annotate_data(qs)
-        qs = [q for q in qs if q.zugeteilteStunden() < q.arbeitslast]
 
         for q in qs:
             q.sendit = True
