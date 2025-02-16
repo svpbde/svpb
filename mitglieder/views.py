@@ -457,27 +457,6 @@ class MitgliederExcel(View):
             return redirect ("keinVorstand")
 
 
-class PasswordChange(FormView):
-    template_name = "password_change.html"
-    form_class = mitglieder.forms.PasswordChange
-    success_url = reverse_lazy("main")
-
-    def form_valid(self, form):
-        try:
-            u = self.request.user
-            u.set_password(form.cleaned_data['pw1'])
-            u.save()
-            messages.success(self.request,
-                             'Ihr Passwort wurde erfolgreich geändert'
-                             )
-        except Exception as e:
-            messages.error(self.request,
-                           'Ihre Passwortänderung ist fehlgeschlagen: ' +
-                           str(e),
-                           )
-        return super(PasswordChange, self).form_valid(form)
-
-
 class ImpersonateListe(isVorstandMixin, FilteredListView):
     """Show a table with all Mitglieder,
     pick one to impersonate.

@@ -4,11 +4,12 @@
 """Forms related to handling Mitglieder data
 """
 from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, HTML, Row, Column
+from crispy_forms.layout import Submit, Layout, HTML, Row, Column, Div
 from crispy_bootstrap5.bootstrap5 import FloatingField
 
 from phonenumber_field.formfields import PhoneNumberField
@@ -277,38 +278,22 @@ class MemberFilterForm(CrispyFilterMixin, forms.Form):
     __layout = Layout("first_name", "last_name", "member_number", "status", "age")
 
 
-class PasswordChange(forms.Form):
-    pw1 = forms.CharField(
-        max_length=30,
-        required=True,
-        label="Neues Passwort",
-        widget=forms.PasswordInput(),
-    )
-    pw2 = forms.CharField(
-        max_length=30,
-        required=True,
-        label="Neues Passwort (Wiederholung)",
-        widget=forms.PasswordInput(),
-    )
+class SVPBPasswordChangeForm(PasswordChangeForm):
+    """Django's PasswordChangeForm with added crispy form layout."""
 
     def __init__(self, *args, **kwargs):
-        super(PasswordChange, self).__init__(*args, **kwargs)
+        super(SVPBPasswordChangeForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = self.__class__.__name__
         self.helper.form_method = "post"
 
         self.helper.layout = Layout(
-            Row(
-                Column(FloatingField("pw1"), css_class="form-group col-md-6 mb-0"),
-                Column(FloatingField("pw2"), css_class="form-group col-md-6 mb-0"),
-            ),
-        )
-        self.helper.add_input(Submit("apply", "Neues Passwort setzen"))
-
-    def clean(self):
-        if self.cleaned_data["pw1"] != self.cleaned_data["pw2"]:
-            raise ValidationError(
-                "Die beiden Passwörter stimmen nicht überein", code="invalid"
+            Div(
+                FloatingField("old_password"),
+                FloatingField("new_password1"),
+                FloatingField("new_password2"),
+                Submit("apply", "Passwort ändern"),
+                css_class="w-100 m-auto",
+                style="max-width: 530px;",
             )
-        else:
-            return self.cleaned_data
+        )

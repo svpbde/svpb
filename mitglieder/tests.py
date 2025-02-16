@@ -16,6 +16,8 @@ class MitgliederTest(TestCase):
     ]
     # In fixtures, all users should have this password
     plainpassword = "Test"
+    # "Strong" password passing password validation
+    strongpassword = "CZmndjtH3Kyo"
     superuser = "Superuser"
     board = "Vorstand"
     teamleader = "Teamleiter"
@@ -105,7 +107,7 @@ class MitgliederTest(TestCase):
             follow=False,
         )
         self.assertEqual(response.status_code, 302)
-        
+
         token = response.context[0]['token']
         uid = response.context[0]['uid']
         redirect_response = cl2.get(f"/reset/{uid}/{token}/", follow=True)
@@ -117,15 +119,15 @@ class MitgliederTest(TestCase):
         response = cl2.post(
             redirect_url,
             {
-                "new_password1": self.plainpassword,
-                "new_password2": self.plainpassword,
+                "new_password1": self.strongpassword,
+                "new_password2": self.strongpassword,
             },
             follow=True,
         )
         self.assertEqual(response.status_code, 200)
 
         # Try to login with the new password
-        cl3, response = self.login_user(peter.username)
+        cl3, response = self.login_user(peter.username, password=self.strongpassword)
         self.assertNotIn("login", response.request["PATH_INFO"])
 
     def test_profile_incomplete(self):
@@ -173,20 +175,21 @@ class MitgliederTest(TestCase):
         self.assertNotIn("login", response.request["PATH_INFO"])
 
         # Initiate password change
-        response = cl.get("/password/change/")
+        response = cl.get("/password_change/")
         form = response.context["form"]
         data = form.initial
-        data["pw1"] = self.plainpassword + self.plainpassword
-        data["pw2"] = data["pw1"]
+        data["old_password"] = self.plainpassword
+        data["new_password1"] = self.strongpassword
+        data["new_password2"] = data["new_password1"]
 
         # Actually change password
-        response = cl.post("/password/change/", data, follow=True)
+        response = cl.post("/password_change/", data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual("/", response.request["PATH_INFO"])
-        self.assertContains(response, "Ihr Passwort wurde erfolgreich")
+        self.assertEqual("/password_change/done/", response.request["PATH_INFO"])
+        self.assertContains(response, "Dein Passwort wurde erfolgreich")
 
         # Test login with new password
         cl, response = self.login_user(
-            self.superuser, self.plainpassword + self.plainpassword
+            self.superuser, self.strongpassword
         )
         self.assertNotIn("login", response.request["PATH_INFO"])

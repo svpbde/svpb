@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 
 import arbeitsplan.views
+from mitglieder.forms import SVPBPasswordChangeForm
 import mitglieder.views
 import svpb.views
 
@@ -60,11 +61,6 @@ urlpatterns = [
 
     re_path(r'^logout/', svpb.views.logout_view),
 
-    re_path(r'^password/change/$',
-        active_and_login_required(mitglieder.views.PasswordChange.as_view()),
-        name='password_change',
-        ),
-
     # media for manual intergration:
     re_path(r'^manual/',
         active_and_login_required(arbeitsplan.views.MediaChecks.as_view()),
@@ -80,7 +76,18 @@ urlpatterns = [
 
     # django select2, see: https://github.com/codingjoe/django-select2
     re_path(r'^select2/', include('django_select2.urls')),
-    
+
+    # Include specific django auth views for password change
+    path(
+        "password_change/",
+        auth_views.PasswordChangeView.as_view(form_class=SVPBPasswordChangeForm),
+        name="password_change"
+    ),
+    path(
+        "password_change/done/",
+        auth_views.PasswordChangeDoneView.as_view(),
+        name="password_change_done",
+    ),
     # Include specific django auth views for password reset
     path(
         "password_reset/",
