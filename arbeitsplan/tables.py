@@ -1029,56 +1029,61 @@ class ZuteilungEmailTable(BaseEmailTable):
                     'anmerkung', 'sendit',
                     )
 
-class MeldungsAufforderungsEmailTable(BaseEmailTable):
 
+class MeldungsAufforderungsEmailTable(BaseEmailTable):
     user = KontaktColumn(verbose_name="Mitglied")
 
-    numMeldungen = django_tables2.Column(verbose_name="# Meldungen",
-                                         orderable=False,
-                                         empty_values=(),
-                                         )
+    numMeldungen = django_tables2.Column(
+        verbose_name="# Meldungen",
+        orderable=False,
+        empty_values=(),
+    )
 
-    numZuteilungen = django_tables2.Column(verbose_name="# Zuteilungen",
-                                         orderable=False,
-                                         empty_values=(),
-                                         )
-    
-    stundenZuteilungen = django_tables2.Column(verbose_name="Zuteilungen (Stunden)",
-                                         orderable=False,
-                                         empty_values=(),
-                                         )
-    
+    numZuteilungen = django_tables2.Column(
+        verbose_name="# Zuteilungen",
+        orderable=False,
+        empty_values=(),
+    )
+
+    stundenZuteilungen = django_tables2.Column(
+        verbose_name="Zuteilungen (Stunden)",
+        orderable=False,
+        empty_values=(),
+    )
+
     def render_numMeldungen(value, bound_row):
-        return (bound_row._record.gemeldeteAnzahlAufgaben())
-    
+        return bound_row._record.gemeldeteAnzahlAufgaben()
+
     def render_numZuteilungen(value, bound_row):
-        return (bound_row._record.zugeteilteAufgaben())
-    
+        return bound_row._record.zugeteilteAufgaben()
+
     def render_stundenZuteilungen(value, bound_row):
-        return (bound_row._record.zugeteilteStunden())
-    
+        return bound_row._record.zugeteilteStunden()
+
     class Meta:
         model = models.Mitglied
-        exclude = ('id',
-                   'mitgliedsnummer',
-                   'geburtsdatum',
-                   'strasse',
-                   'plz',
-                   'gender',
-                   'ort',
-                   'festnetz',
-                   'mobil',
-                   'zuteilungsbenachrichtigung',
-                   'zuteilungBenachrichtigungNoetig',
-                   )
-        sequence = ('user',
-                    'numMeldungen',
-                    'numZuteilungen',
-                    'stundenZuteilungen',
-                    'anmerkung', 'sendit',
-                    )
+        exclude = (
+            "id",
+            "mitgliedsnummer",
+            "geburtsdatum",
+            "strasse",
+            "plz",
+            "gender",
+            "ort",
+            "festnetz",
+            "mobil",
+            "zuteilungsbenachrichtigung",
+            "zuteilungBenachrichtigungNoetig",
+        )
+        sequence = (
+            "user",
+            "numMeldungen",
+            "numZuteilungen",
+            "stundenZuteilungen",
+            "anmerkung",
+            "sendit",
+        )
 
-        
 
 class ImpersonateTable(django_tables2.Table):
 
