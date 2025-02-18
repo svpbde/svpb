@@ -1,19 +1,38 @@
+# https://github.com/django-crispy-forms/crispy-bootstrap5/releases
 crispy-bootstrap5==2023.10
+# https://docs.djangoproject.com/en/dev/releases/#final-releases
 Django==4.2.17
+# https://github.com/jazzband/django-axes/blob/master/CHANGES.rst
 django-axes[ipware]==7.0.1
+# https://github.com/django-crispy-forms/django-crispy-forms/blob/main/CHANGELOG.md
 django-crispy-forms==2.0
+# https://github.com/django-extensions/django-extensions/releases
 django-extensions==3.2.3
+# https://pypi.org/project/django-impersonate/
 django-impersonate==1.9.4
+# https://github.com/stefanfoulis/django-phonenumber-field/releases
 django-phonenumber-field[phonenumbers]==7.1.0
+# https://github.com/ui/django-post_office/releases
 django-post-office==3.9.1
+# https://github.com/codingjoe/django-select2/releases
 django-select2==8.1.2
+# https://github.com/moggers87/django-sendfile2/blob/main/CHANGELOG.rst
 django-sendfile2==0.7.1
+# https://github.com/jieter/django-tables2/blob/master/CHANGELOG.md
 django-tables2==2.6.0
+# https://fontawesome.com/changelog
 fontawesomefree==6.4.0
+# https://pillow.readthedocs.io/en/stable/releasenotes/index.html
 Pillow==9.5.0
+# https://www.psycopg.org/docs/news.html
 psycopg2-binary==2.9.10
+# https://www.sphinx-doc.org/en/master/changes/index.html#
 Sphinx==6.2.1
+# https://sphinx-rtd-theme.readthedocs.io/en/stable/changelog.html
 sphinx-rtd-theme==1.2.2
+# https://uwsgi-docs.readthedocs.io/en/latest/#release-notes
 uWSGI==2.0.28
+# https://github.com/KokocGroup/xslxcursor
 Xlsxcursor==0.1.8
+# https://xlsxwriter.readthedocs.io/changes.html
 XlsxWriter==3.1.9
