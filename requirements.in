@@ -32,7 +32,7 @@ Sphinx==7.4.7
 # https://sphinx-rtd-theme.readthedocs.io/en/stable/changelog.html
 sphinx-rtd-theme==3.0.2
 # https://uwsgi-docs.readthedocs.io/en/latest/#release-notes
-#uWSGI==2.0.28
+uWSGI==2.0.28
 # https://github.com/KokocGroup/xslxcursor
 Xlsxcursor==0.1.8
 # https://xlsxwriter.readthedocs.io/changes.html
