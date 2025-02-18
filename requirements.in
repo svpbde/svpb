@@ -8,7 +8,7 @@ django-axes[ipware]==7.0.1
 django-crispy-forms==2.3
 # https://github.com/django-extensions/django-extensions/releases
 django-extensions==3.2.3
-# https://pypi.org/project/django-impersonate/
+# https://hg.code.netlandish.com/~petersanchez/django-impersonate/browse/CHANGELOG?rev=tip
 django-impersonate==1.9.4
 # https://github.com/stefanfoulis/django-phonenumber-field/releases
 django-phonenumber-field[phonenumbers]==8.0.0
