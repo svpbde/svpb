@@ -2153,16 +2153,18 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
         return qs
 
     def constructTemplateDict(self, instance):
-        """this view operates on models.User, so instance is a user object.
-        We have to find all zuteilungen for this user and stuff this data into
-        the construct Tempalte Dict for the email to render
-        """
+        """Create template dict with mail context.
 
-        d = {'u': instance.user,
-             'numZuteilungen': instance.zugeteilteAufgaben(),
-             'stundenZuteilungen': instance.zugeteilteStunden(),
-             'numMeldungen': instance.gemeldeteAnzahlAufgaben(),
-            }
+        This view operates on models.Mitglied, so instance is a Mitglied object.
+        See mail template for usage of dict values.
+        """
+        d = {
+            'u': instance.user,
+            'numZuteilungen': instance.zugeteilteAufgaben(),
+            'stundenZuteilungen': instance.zugeteilteStunden(),
+            'numMeldungen': instance.gemeldeteAnzahlAufgaben(),
+            'arbeitslast': instance.arbeitslast,
+        }
 
         return d
 
