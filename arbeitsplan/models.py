@@ -458,9 +458,10 @@ class Zuteilung(models.Model):
     def stunden(self):
         """Compute the hours allocated to this zuteilung.
         Depends on whether a Stundenplan exists for this job.
-        """
 
-        # tmp = self.aufgabe.stundenplan_set.filter(anzahl__gt=0).count()
+        If a Stundenplan exists for this job, but is not allocated yet, the planned job
+        time is reported.
+        """
         tmp = self.stundenzuteilung_set.count()
         if tmp > 0:
             return tmp
