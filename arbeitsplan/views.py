@@ -2131,8 +2131,16 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
             .filter(user__is_active=True)
             .exclude(arbeitslast__gte=settings.BEGIN_CODED_HOURS_PER_YEAR)
         )
-        # Exclude users with enough assignments
-        qs = [q for q in qs if q.zugeteilteStunden() < q.arbeitslast]
+        # Exclude:
+        #   - Members which already worked enough (members can report for arbitrary
+        #     tasks without an assignment existing)
+        #   - Members with enough assignments
+        qs = [
+            q
+            for q in qs
+            if (q.akzeptierteStunden() < q.arbeitslast)
+            and (q.zugeteilteStunden() < q.arbeitslast)
+        ]
 
         return qs
 
