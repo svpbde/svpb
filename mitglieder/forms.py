@@ -1,7 +1,7 @@
 """Forms related to handling Mitglieder data
 """
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, HTML, Row, Column, Div
+from crispy_forms.layout import Submit, Layout, Row, Column, Div
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
@@ -27,7 +27,15 @@ class MitgliederAddForm(forms.ModelForm):
         label="Nachname",
     )
     email = forms.EmailField(label="E-Mail")
-
+    aktiv = forms.BooleanField(
+        required=False,
+        label="Aktiver Nutzer",
+        help_text="Nur aktive Nutzer können sich einloggen.",
+    )
+    boots_app = forms.BooleanField(
+        required=False,
+        label="Zugriff auf \"Boote und Kran\""
+    )
     def __init__(self, *args, **kwargs):
         super(MitgliederAddForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -65,8 +73,11 @@ class MitgliederAddForm(forms.ModelForm):
                     FloatingField("arbeitslast"), css_class="form-group col-md-4 mb-0"
                 ),
             ),
+            Row(
+                Column("boots_app", css_class="form-group col-md-6 mb-0"),
+                Column("aktiv", css_class="form-group col-md-6 mb-0"),
+            ),
         )
-
         self.helper.add_input(Submit("apply", "Mitglied anlegen"))
 
     def clean(self):
@@ -83,18 +94,15 @@ class MitgliederAddForm(forms.ModelForm):
 
         # turn it back, search for such a user:
         mnr = "%05d" % mnrnum
-
         try:
             u = User.objects.get(username=mnr)
             raise ValidationError(
-                "Ein Nutzer mit dieser Mitgliedsnummer existiert bereits! ({} {}) Bitte wählen Sie eine andere Nummer.".format(
-                    u.first_name, u.last_name
-                ),
+                f"Ein Nutzer mit dieser Mitgliedsnummer existiert bereits!\
+                  ({u.first_name} {u.last_name}) Bitte wählen Sie eine andere Nummer.",
                 code="invalid",
             )
         except User.DoesNotExist:
             pass
-
         self.cleaned_data["mitgliedsnummer"] = mnr
 
         return self.cleaned_data

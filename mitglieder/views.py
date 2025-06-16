@@ -147,7 +147,12 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
         m.arbeitlast = form.cleaned_data['arbeitslast']
         m.festnetz = form.cleaned_data['festnetz']
         m.mobil = form.cleaned_data['mobil']
-
+        u.is_active = form.cleaned_data['aktiv']
+        group_boots = Group.objects.get(name="Boote")
+        if (form.cleaned_data['boots_app']):            
+            u.groups.add(group_boots)
+        else:
+            u.groups.remove(group_boots)
         m.save()
         u.save()
 
@@ -225,6 +230,12 @@ class AccountEdit(SuccessMessageMixin, FormView):
         user.mitglied.geburtsdatum = form.cleaned_data['geburtsdatum']
         user.mitglied.festnetz = form.cleaned_data['festnetz']
         user.mitglied.mobil = form.cleaned_data['mobil']
+        user.mitglied.is_active = form.cleaned_data['aktiv']
+        group_boots = Group.objects.get(name="Boote")
+        if (form.cleaned_data['boots_app']):            
+            user.groups.add(group_boots)
+        else:
+            user.groups.remove(group_boots)
 
     def get_user(self):
         return self.request.user
