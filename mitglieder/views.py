@@ -154,7 +154,6 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
             HttpResponseRedirect: Redirect to the success URL.
         """
 
-        #group_boots = Group.objects.get(name="Boote")
         user = User(
             first_name=form.cleaned_data["firstname"],
             last_name=form.cleaned_data["lastname"],
@@ -162,7 +161,6 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
             username=form.cleaned_data["mitgliedsnummer"],
             email=form.cleaned_data["email"],
         )
-
         user.set_password("test")
         user.save()
         member = user.mitglied
@@ -177,12 +175,12 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
         member.arbeitlast = form.cleaned_data["arbeitslast"]
         member.festnetz = form.cleaned_data["festnetz"]
         member.mobil = form.cleaned_data["mobil"]
-        user.is_active = form.cleaned_data["aktiv"]
+        member.user.is_active = form.cleaned_data["aktiv"]
         group_boots = Group.objects.get(name="Boote")
         if form.cleaned_data["boots_app"]:
-            user.groups.add(group_boots)
+            member.user.groups.add(group_boots)
         else:
-            user.groups.remove(group_boots)
+            member.user.groups.remove(group_boots)
         member.save()
         user.save()
         messages.success(
@@ -502,9 +500,9 @@ class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
     ]
 
     intro_text = mark_safe(
-        """Diese Seite zeigt eine Liste aller Mitglieder an. Sie dient vor allem dazu, 
-        einzelne Mitglieder-Konten zu finden und zu editieren. Eine Übersicht 
-        über gemeldete, zugeteilte, erbrachte und akzeptieren Arbeitsstunden findet 
+        """Diese Seite zeigt eine Liste aller Mitglieder an. Sie dient vor allem dazu,
+        einzelne Mitglieder-Konten zu finden und zu editieren. Eine Übersicht
+        über gemeldete, zugeteilte, erbrachte und akzeptieren Arbeitsstunden findet
         sich separat in der <a href="/arbeitsplan/salden/">Saldenübersicht</a>.
         """
     )
@@ -669,7 +667,7 @@ class FilteredMemberList(isVorstandMixin, FilteredListView):
 
     intro_text = """
         Die Spalte Alter gibt an, wie alt das jeweilige Mitglied dieses Jahr wird.
-        
+
         Interessante Ansichten:
         <ul>
             <li><a href="?filter=Filter+anwenden">Alle Mitglieder</a></li>
