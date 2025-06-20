@@ -66,20 +66,19 @@ def preparePassword(accountList=None):
         subprocess.CalledProcessError: If LaTeX compilation fails.
     """
     r = []
-
-    for u in accountList:
+    for user in accountList:
         pw = "".join(
             secrets.choice(string.ascii_letters + string.digits) for i in range(10)
         )
-        u.set_password(pw)
-        u.save()
+        user.set_password(pw)
+        user.save()
         r.append(
             {
-                "user": u,
-                "mitglied": u.mitglied,
+                "user": user,
+                "mitglied": user.mitglied,
                 "password": pw,
-                "status": u.mitglied.get_status_display(),
-                "geburtsdatum": u.mitglied.geburtsdatum.strftime("%d.%m.%Y"),
+                "status": user.mitglied.get_status_display(),
+                "geburtsdatum": user.mitglied.geburtsdatum.strftime("%d.%m.%Y"),
             }
         )
 
@@ -154,6 +153,9 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
         Returns:
             HttpResponseRedirect: Redirect to the success URL.
         """
+
+        #group_boots = Group.objects.get(name="Boote")
+        user = User(
             first_name=form.cleaned_data["firstname"],
             last_name=form.cleaned_data["lastname"],
             is_active=False,
@@ -161,49 +163,43 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
             email=form.cleaned_data["email"],
         )
 
-        u.set_password("test")
-        u.save()
-
-        m = u.mitglied
-        m.user = u
-
-        m.geburtsdatum = form.cleaned_data["geburtsdatum"]
-        m.mitgliedsnummer = form.cleaned_data["mitgliedsnummer"]
-        m.ort = form.cleaned_data["ort"]
-        m.plz = form.cleaned_data["plz"]
-        m.strasse = form.cleaned_data["strasse"]
-        m.gender = form.cleaned_data["gender"]
-        m.status = form.cleaned_data["status"]
-        m.arbeitlast = form.cleaned_data["arbeitslast"]
-        m.festnetz = form.cleaned_data["festnetz"]
-        m.mobil = form.cleaned_data["mobil"]
-        u.is_active = form.cleaned_data["aktiv"]
+        user.set_password("test")
+        user.save()
+        member = user.mitglied
+        member.user = user
+        member.geburtsdatum = form.cleaned_data["geburtsdatum"]
+        member.mitgliedsnummer = form.cleaned_data["mitgliedsnummer"]
+        member.ort = form.cleaned_data["ort"]
+        member.plz = form.cleaned_data["plz"]
+        member.strasse = form.cleaned_data["strasse"]
+        member.gender = form.cleaned_data["gender"]
+        member.status = form.cleaned_data["status"]
+        member.arbeitlast = form.cleaned_data["arbeitslast"]
+        member.festnetz = form.cleaned_data["festnetz"]
+        member.mobil = form.cleaned_data["mobil"]
+        user.is_active = form.cleaned_data["aktiv"]
         group_boots = Group.objects.get(name="Boote")
         if form.cleaned_data["boots_app"]:
-            u.groups.add(group_boots)
+            user.groups.add(group_boots)
         else:
-            u.groups.remove(group_boots)
-        m.save()
-        u.save()
-
+            user.groups.remove(group_boots)
+        member.save()
+        user.save()
         messages.success(
             self.request,
             format_html(
-                "Nutzer {} {} (Nummer: {}, Account: {}) wurde erfolgreich angelegt",
-                u.first_name,
-                u.last_name,
-                m.mitgliedsnummer,
-                u.username,
+                f"Nutzer {user.first_name} {user.last_name} \
+                    (Nummer: {member.mitgliedsnummer}, \
+                    Account: {user.username}) wurde erfolgreich angelegt",
             ),
         )
-
         try:
-            preparePassword([u])
+            preparePassword([user])
             # copy the produced PDF to the SENDFILE_ROOT directory
             messages.success(
                 self.request,
                 format_html(
-                    "Das Anschreiben mit Password kann "
+                    "Das Anschreiben mit dem Passwort kann "
                     '<a href="{}">hier</a>'
                     " heruntergeladen werden.",
                     "letters.pdf",
@@ -213,12 +209,10 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
             print("Fehler beim Passwort: ", e) #TODO: Log exception
             messages.error(
                 self.request,
-                "Das Password für den Nutzer konnte nicht gesetzt werden "
-                "oder das Anschreiben nicht erzeugt werden. Bitten Sie das "
-                "neue Mitglied, sich über die Webseite selbst ein Password zu "
-                "generieren.",
+                "Das Passwort für den Nutzer konnte nicht gesetzt werden "
+                "oder das Anschreiben nicht erzeugt werden. Bitte das neue Mitglied, "
+                "sich über die Webseite selbst ein Passwort zu generieren.",
             )
-
         return redirect(self.success_url)
 
 
@@ -357,8 +351,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
 
             user.save()
             user.mitglied.save()
-
-            # inform the relevant Vorstand in charge of memberhsip
+            # Inform the relevant Vorstand in charge of memberhsip
             mail.send(
                 settings.EMAIL_NOTIFICATION_BOARD,
                 template="updatedProfile",
@@ -369,14 +362,11 @@ class AccountEdit(SuccessMessageMixin, FormView):
                 },
                 priority="now",
             )
-
             messages.success(
                 self.request,
                 format_html(
-                    "Das Profil {} {} ({}) wurde erfolgreich aktualisiert.",
-                    user.first_name,
-                    user.last_name,
-                    user.mitglied.mitgliedsnummer,
+                    f"Das Profil {user.first_name} {user.last_name} \
+                    ({user.mitglied.mitgliedsnummer}) wurde erfolgreich aktualisiert.",
                 ),
             )
         else:
@@ -547,7 +537,7 @@ class AccountInactiveReset(FormView):
 
             try:
                 preparePassword(userQs)
-                # copy the produced PDF to the SENDFILE_ROOT directory
+                # Copy the produced PDF to the SENDFILE_ROOT directory
                 messages.success(
                     self.request,
                     format_html(
@@ -599,7 +589,7 @@ class MitgliederExcel(View):
             HttpResponseRedirect: Redirects to 'keinVorstand' if unauthorized.
         """
         if isVorstand(request.user):
-            # Call the command to prepare the excel file.
+            # Generate the Excel file using a management command.
             filename = "mitglieder.xlsx"
             basepath = settings.SENDFILE_ROOT
             # Repeated name, TODO: Move this command and mitgliedExcel.py into settings
@@ -683,11 +673,21 @@ class FilteredMemberList(isVorstandMixin, FilteredListView):
         Interessante Ansichten:
         <ul>
             <li><a href="?filter=Filter+anwenden">Alle Mitglieder</a></li>
-            <li><a href="?age=65&filter=Filter+anwenden ">Mitglieder ab 65 (Arbeitsdienst-befreit)</a></li>
-            <li><a href="?status=Ss&filter=Filter+anwenden">Schüler/Studenten/...</a></li>
-            <li><a href="?status=Ju&age=20&filter=Filter+anwenden">Jugendliche ab 20 (müssen Erwachsene werden)</a></li>
-            <li><a href="?status=Ki&age=20&filter=Filter+anwende">Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
-            <li><a href="?status=Kf&age=20&filter=Filter+anwende">Beitragsfreie Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
+            <li><a href="?age=65&filter=Filter+anwenden ">
+                Mitglieder ab 65 (Arbeitsdienst-befreit)
+            </a></li>
+            <li><a href="?status=Ss&filter=Filter+anwenden">
+                Schüler/Studenten/...
+            </a></li>
+            <li><a href="?status=Ju&age=20&filter=Filter+anwenden">
+                Jugendliche ab 20 (müssen Erwachsene werden)
+            </a></li>
+            <li><a href="?status=Ki&age=20&filter=Filter+anwende">
+                Kinder in Familie ab 20 (müssen Erwachsene werden)
+            </a></li>
+            <li><a href="?status=Kf&age=20&filter=Filter+anwende">
+                Beitragsfreie Kinder in Familie ab 20 (müssen Erwachsene werden)
+            </a></li>
         </ul>
     """
 
