@@ -89,7 +89,7 @@ def preparePassword(accountList=None):
     f = codecs.open("letters.tex", "w", "utf-8")
     f.write(rendered)
     f.close()
-
+    # TODO: use better file names, protect against race conditions
     subprocess.call(["xelatex", "-interaction=batchmode", "letters.tex"])
     # Move this file into a directory where only Vorstand has access!
     # remove an older letter first; ignore errors here
@@ -210,7 +210,7 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
                 ),
             )
         except Exception as e:
-            print("Fehler bei password: ", e)
+            print("Fehler beim Passwort: ", e) #TODO: Log exception
             messages.error(
                 self.request,
                 "Das Password für den Nutzer konnte nicht gesetzt werden "
@@ -558,7 +558,7 @@ class AccountInactiveReset(FormView):
                     ),
                 )
             except Exception as e:
-                print("Fehler bei password: ", e)
+                print("Fehler bei password: ", e) # TODO: Log exception
                 messages.error(
                     self.request,
                     "Ein Password konnte nicht gesetzt werden "
@@ -602,9 +602,8 @@ class MitgliederExcel(View):
             # Call the command to prepare the excel file.
             filename = "mitglieder.xlsx"
             basepath = settings.SENDFILE_ROOT
-
+            # Repeated name, TODO: Move this command and mitgliedExcel.py into settings
             call_command("mitgliedExcel")
-
             return sendfile(request, os.path.join(basepath, filename))
         else:
             return redirect("keinVorstand")
