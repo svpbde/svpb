@@ -28,11 +28,13 @@ class MitgliederAddForm(forms.ModelForm):
     )
     email = forms.EmailField(label="E-Mail")
     aktiv = forms.BooleanField(
+        initial=True,
         required=False,
         label="Aktiver Nutzer",
         help_text="Nur aktive Nutzer können sich einloggen.",
     )
     boots_app = forms.BooleanField(
+        initial=True,
         required=False,
         label="Zugriff auf \"Boote und Kran\""
     )
@@ -178,7 +180,10 @@ class AccountOtherEdit(AccountEdit):
         label="Aktiver Nutzer",
         help_text="Nur aktive Nutzer können sich einloggen.",
     )
-    boots_app = forms.BooleanField(required=False, label="Zugriff auf \"Boote und Kran\"")
+    boots_app = forms.BooleanField(
+        required=False,
+        label="Zugriff auf \"Boote und Kran\""
+    )
 
     def computeLayout(self):
         account_data = super(AccountOtherEdit, self).computeLayout()
