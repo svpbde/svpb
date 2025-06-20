@@ -1,8 +1,8 @@
 """Forms related to handling Mitglieder data
 """
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column, Div
 from crispy_bootstrap5.bootstrap5 import FloatingField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Div, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
@@ -18,6 +18,24 @@ from arbeitsplan.forms import (
 
 
 class MitgliederAddForm(forms.ModelForm):
+    """
+    Form for adding a new member (Mitglied).
+
+    Collects personal, contact, and administrative data and ensures that
+    the member number is unique by checking against existing user accounts.
+
+    Fields:
+        - firstname, lastname, email
+        - geburtsdatum (date of birth), gender
+        - strasse (street), ort (city), plz (postal code)
+        - festnetz (landline), mobil (mobile)
+        - mitgliedsnummer (member number), status, arbeitslast (workload)
+        - boots_app (boat system access), aktiv (active user)
+
+    Methods:
+        - __init__: Sets up the crispy form layout.
+        - clean: Validates and normalizes the member number.
+    """
     firstname = forms.CharField(
         max_length=20,
         label="Vorname",
@@ -39,6 +57,9 @@ class MitgliederAddForm(forms.ModelForm):
         label="Zugriff auf \"Boote und Kran\""
     )
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the form and applies a custom layout using crispy-forms.
+        """
         super(MitgliederAddForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -83,9 +104,19 @@ class MitgliederAddForm(forms.ModelForm):
         self.helper.add_input(Submit("apply", "Mitglied anlegen"))
 
     def clean(self):
-        # try to see if we already have such a user with that mitgliedsnummer:
-        # first, strip it off to make sure we did not get messy data
+        """
+        Validates the 'mitgliedsnummer' field.
 
+        Ensures the input is a number and checks that no existing user
+        already uses the given member number. Formats the number as a
+        5-digit string (with leading zeros if needed).
+
+        Returns:
+            dict: The cleaned form data.
+
+        Raises:
+            ValidationError: If the input is not a number or already in use.
+        """
         try:
             mnrnum = int(self.cleaned_data["mitgliedsnummer"])
         except:
@@ -126,6 +157,19 @@ class MitgliederAddForm(forms.ModelForm):
 
 
 class AccountEdit(forms.Form):
+    """
+    Form for editing a member's own account information.
+
+    Fields:
+        - email, geburtsdatum (date of birth)
+        - strasse (street), ort (city), plz (postal code)
+        - festnetz (landline), mobil (mobile)
+
+    Methods:
+        - computeLayout: Returns the crispy layout structure.
+        - __init__: Applies the layout and crispy form helper.
+    """
+
     email = forms.EmailField(required=True)
     strasse = forms.CharField(required=False)
     ort = forms.CharField(required=False)
@@ -135,6 +179,12 @@ class AccountEdit(forms.Form):
     mobil = PhoneNumberField(required=False)
 
     def computeLayout(self):
+        """
+        Constructs and returns the crispy-forms layout for this form.
+
+        Returns:
+            Layout: The crispy layout instance.
+        """
         return Layout(
             Row(
                 Column(FloatingField("email"), css_class="form-group col-md-8 mb-0"),
@@ -164,6 +214,18 @@ class AccountEdit(forms.Form):
 
 
 class AccountOtherEdit(AccountEdit):
+    """
+    Extended version of AccountEdit for administrators editing other members.
+
+    Additional Fields:
+        - vorname (first name), nachname (last name)
+        - arbeitslast (workload hours), status
+        - boots_app (boat access), aktiv (active user)
+
+    Methods:
+        - computeLayout: Adds the extended fields to the layout.
+    """
+
     vorname = forms.CharField(label="Vorname")
     nachname = forms.CharField(label="Nachname")
     arbeitslast = forms.IntegerField(
@@ -186,6 +248,12 @@ class AccountOtherEdit(AccountEdit):
     )
 
     def computeLayout(self):
+        """
+        Constructs and returns the crispy-forms layout for this form.
+
+        Returns:
+            Layout: The crispy layout instance.
+        """
         account_data = super(AccountOtherEdit, self).computeLayout()
         return Layout(
             Row(
@@ -207,10 +275,28 @@ class AccountOtherEdit(AccountEdit):
 
 
 class PersonMitgliedsnummer(NameFilterForm, MitgliedsnummerFilterForm):
+    """
+    Filter form combining name and member number fields.
+
+    Used to search for members by name and/or member number.
+    """
     pass
 
 
 class MemberFilterForm(CrispyFilterMixin, forms.Form):
+    """
+    Filter form for searching members in a list view.
+
+    Fields:
+        - first_name, last_name
+        - member_number
+        - status (membership status)
+        - age (minimum age)
+
+    Attributes:
+        __layout (Layout): The predefined crispy layout.
+    """
+
     first_name = forms.CharField(label="Vorname", max_length=20, required=False)
     last_name = forms.CharField(label="Nachname", max_length=20, required=False)
     member_number = forms.CharField(
@@ -227,7 +313,13 @@ class MemberFilterForm(CrispyFilterMixin, forms.Form):
 
 
 class SVPBPasswordChangeForm(PasswordChangeForm):
-    """Django's PasswordChangeForm with added crispy form layout."""
+    """
+    Custom password change form using Django's built-in PasswordChangeForm
+    with crispy-forms integration for a better UI.
+
+    Methods:
+        - __init__: Sets up the form layout and submit button.
+    """
 
     def __init__(self, *args, **kwargs):
         super(SVPBPasswordChangeForm, self).__init__(*args, **kwargs)
