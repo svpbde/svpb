@@ -30,7 +30,7 @@ class MitgliederAddForm(forms.ModelForm):
         - strasse (street), ort (city), plz (postal code)
         - festnetz (landline), mobil (mobile)
         - mitgliedsnummer (member number), status, arbeitslast (workload)
-        - boots_app (boat system access), aktiv (active user)
+        - boats_app (boat system access), aktiv (active user)
 
     Methods:
         - __init__: Sets up the crispy form layout.
@@ -51,7 +51,7 @@ class MitgliederAddForm(forms.ModelForm):
         label="Aktiver Nutzer",
         help_text="Nur aktive Nutzer können sich einloggen.",
     )
-    boots_app = forms.BooleanField(
+    boats_app = forms.BooleanField(
         initial=True,
         required=False,
         label="Zugriff auf \"Boote und Kran\""
@@ -97,7 +97,7 @@ class MitgliederAddForm(forms.ModelForm):
                 ),
             ),
             Row(
-                Column("boots_app", css_class="form-group col-md-6 mb-0"),
+                Column("boats_app", css_class="form-group col-md-6 mb-0"),
                 Column("aktiv", css_class="form-group col-md-6 mb-0"),
             ),
         )
@@ -220,7 +220,7 @@ class AccountOtherEdit(AccountEdit):
     Additional Fields:
         - vorname (first name), nachname (last name)
         - arbeitslast (workload hours), status
-        - boots_app (boat access), aktiv (active user)
+        - boats_app (boat access), aktiv (active user)
 
     Methods:
         - computeLayout: Adds the extended fields to the layout.
@@ -242,7 +242,7 @@ class AccountOtherEdit(AccountEdit):
         label="Aktiver Nutzer",
         help_text="Nur aktive Nutzer können sich einloggen.",
     )
-    boots_app = forms.BooleanField(
+    boats_app = forms.BooleanField(
         required=False,
         label="Zugriff auf \"Boote und Kran\""
     )
@@ -268,7 +268,7 @@ class AccountOtherEdit(AccountEdit):
                 ),
             ),
             Row(
-                Column("boots_app", css_class="form-group col-md-6 mb-0"),
+                Column("boats_app", css_class="form-group col-md-6 mb-0"),
                 Column("aktiv", css_class="form-group col-md-6 mb-0"),
             ),
         )

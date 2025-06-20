@@ -176,11 +176,11 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
         member.festnetz = form.cleaned_data["festnetz"]
         member.mobil = form.cleaned_data["mobil"]
         member.user.is_active = form.cleaned_data["aktiv"]
-        group_boots = Group.objects.get(name="Boote")
-        if form.cleaned_data["boots_app"]:
-            member.user.groups.add(group_boots)
+        group_boats = Group.objects.get(name="Boote")
+        if form.cleaned_data["boats_app"]:
+            member.user.groups.add(group_boats)
         else:
-            member.user.groups.remove(group_boots)
+            member.user.groups.remove(group_boats)
         member.save()
         user.save()
         messages.success(
@@ -418,7 +418,7 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
         initial["arbeitslast"] = user.mitglied.arbeitslast
         initial["status"] = user.mitglied.status
         initial["aktiv"] = user.is_active
-        initial["boots_app"] = user.groups.filter(name="Boote").exists()
+        initial["boats_app"] = user.groups.filter(name="Boote").exists()
         return initial
 
     def save_changes(self, form, user):
@@ -435,11 +435,11 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
         user.is_active = form.cleaned_data["aktiv"]
         user.mitglied.arbeitslast = form.cleaned_data["arbeitslast"]
         user.mitglied.status = form.cleaned_data["status"]
-        group_boots = Group.objects.get(name="Boote")
-        if form.cleaned_data["boots_app"]:
-            user.groups.add(group_boots)
+        group_boats = Group.objects.get(name="Boote")
+        if form.cleaned_data["boats_app"]:
+            user.groups.add(group_boats)
         else:
-            user.groups.remove(group_boots)
+            user.groups.remove(group_boats)
 
     def get_user(self):
         """
