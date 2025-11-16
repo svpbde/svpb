@@ -1941,13 +1941,13 @@ class Salden(isVorstandMixin, FilteredListView):
             '--': lambda u: True,
             'OK': lambda u: u['AK'][0] >= u['user'].mitglied.arbeitslast,
             'CH': lambda u: ((u['AK'][0] < u['user'].mitglied.arbeitslast) and
-                             ((u['AK'][0] or 0) +
-                              (u['OF'][0] or 0) +
+                             (u['AK'][0] +
+                              u['OF'][0] +
                               u['future'] + u['nodate'] >=
                              u['user'].mitglied.arbeitslast)
                              ),
-            'PR': lambda u: ((u['AK'][0] or 0) +
-                             (u['OF'][0] or 0) +
+            'PR': lambda u: (u['AK'][0] +
+                             u['OF'][0] +
                              u['future'] + u['nodate'] <
                              u['user'].mitglied.arbeitslast),
             }[filterchoice](userdata)
@@ -1973,6 +1973,8 @@ class Salden(isVorstandMixin, FilteredListView):
                         'status': s.value,
                         'filter': 'Filter anwenden'})
                 else:
+                    # Set zeit to 0 to allow comparisons (fails if zeit is None)
+                    zeit = 0
                     linktarget = None
 
                 tmp[s.value] = (zeit, linktarget)
