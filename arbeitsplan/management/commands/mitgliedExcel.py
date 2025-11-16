@@ -104,31 +104,24 @@ class Command(BaseCommand):
         cursor("Ehemalige Mitglieder, die inaktiv in der Datenbank sind")
         cursor.cr()
 
-        cursor("Ohne Meldung")
-        cursor("Keine Meldung abgegeben")
+        cursor("Keine Arbeitsdienst-Erfassung")
+        cursor("Rentner, Vorstand, Personen mit festen Aufgaben")
         cursor(
-            "Nicht unbedingt ein Problem; z.B. für Mitglieder, die direkt eingeteilt "
-            "wurden"
+            "Werden in nachfolgenden Tabellen nicht berücksichtigt. Können freiwillig "
+            "trotzdem erfassen."
         )
         cursor.cr()
 
-        cursor("Ohne Zuteilung")
-        cursor("Keine Aufgabe wurde zugeteilt")
+        cursor("Zuteilungen unzureichend")
+        cursor("Zugeteilte Stunden reichen nicht, um Arbeitslast zu erfüllen")
         cursor(
-            "Bedenklich (selbst Schnellzuweisung erstellt Zuteilung). "
-            "Sollte zugeteilt werden!"
+            "Bedenklich (selbst Schnellzuteilung erstellt Zuteilung). "
+            "Sollten weitere Meldungen abgeben bzw. zugeteilt werden!"
         )
-        cursor.cr()
-
-        cursor("Weder Meldung, noch Zuteilung")
-        cursor("Weder Meldung abgeben, noch Zuteilung erfolgt.")
-        cursor("Sehr bedenklich. Braucht Rücksprache, falls Arbeitslast.")
         cursor.cr()
 
         cursor("Leistungen unzureichend")
-        cursor(
-            "Arbeitslast größer als die akzeptierten geleisteten Stunden"
-        )
+        cursor("Arbeitslast größer als die akzeptierten geleisteten Stunden")
         cursor(
             "Am Jahresende sind das die Mitglieder, von denen Geld abgebucht werden "
             "muss."
@@ -166,33 +159,25 @@ class Command(BaseCommand):
 
         self.createSheet(
             workbook,
-            "Ohne Meldung",
-            [
-                m
-                for m in ap_models.Mitglied.objects.filter(user__is_active=True)
-                if m.gemeldeteAnzahlAufgaben() == 0
-            ],
-            ap_models.Mitglied,
+            "Keine Arbeitsdienst-Erfassung",
+            ap_models.Mitglied.objects.filter(
+                user__is_active=True,
+                arbeitslast__gte=settings.BEGIN_CODED_HOURS_PER_YEAR,
+            ),
         )
 
         self.createSheet(
             workbook,
-            "Ohne Zuteilung",
+            "Zuteilungen unzureichend",
             [
                 m
-                for m in ap_models.Mitglied.objects.filter(user__is_active=True)
-                if m.zugeteilteAufgaben() == 0
-            ],
-            ap_models.Mitglied,
-        )
-
-        self.createSheet(
-            workbook,
-            "Weder Meldung, noch Zuteilung",
-            [
-                m
-                for m in ap_models.Mitglied.objects.filter(user__is_active=True)
-                if (m.gemeldeteAnzahlAufgaben() == 0 and m.zugeteilteAufgaben() == 0)
+                for m in ap_models.Mitglied.objects.filter(
+                    user__is_active=True
+                ).exclude(arbeitslast__gte=settings.BEGIN_CODED_HOURS_PER_YEAR)
+                if (
+                    m.arbeitslast > m.akzeptierteStunden()
+                    and m.arbeitslast > m.zugeteilteStunden()
+                )
             ],
             ap_models.Mitglied,
         )
@@ -202,7 +187,9 @@ class Command(BaseCommand):
             "Leistungen unzureichend",
             [
                 m
-                for m in ap_models.Mitglied.objects.filter(user__is_active=True)
+                for m in ap_models.Mitglied.objects.filter(
+                    user__is_active=True
+                ).exclude(arbeitslast__gte=settings.BEGIN_CODED_HOURS_PER_YEAR)
                 if (m.arbeitslast > m.akzeptierteStunden())
             ],
             ap_models.Mitglied,
