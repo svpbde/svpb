@@ -97,52 +97,37 @@ class Command(BaseCommand):
         cursor.cr()
         cursor.cr()
         cursor("Alle Mitglieder")
-        cursor("Kein Filter")
-        cursor.cr()
-        cursor("Aktive Mitglieder")
-        cursor("Mitglieder, die sich mind. 1x angemeldet haben")
+        cursor("Alle aktiven Mitglieder")
         cursor.cr()
 
-        cursor("Inaktive Mitglieder")
-        cursor("Mitglieder, die sich noch nicht angemeldet haben")
+        cursor("Ehemalige Mitglieder")
+        cursor("Ehemalige Mitglieder, die inaktiv in der Datenbank sind")
         cursor.cr()
 
-        cursor("Aktive, ohne Meldung")
-        cursor("Angemeldet, aber keine Meldung abgegeben")
+        cursor("Ohne Meldung")
+        cursor("Keine Meldung abgegeben")
         cursor(
             "Nicht unbedingt ein Problem; z.B. für Mitglieder, die direkt eingeteilt "
             "wurden"
         )
         cursor.cr()
 
-        cursor("Aktive, ohne Zuteilung")
-        cursor("Angmeldet, aber keine Aufgabe wurde zugeteilt")
+        cursor("Ohne Zuteilung")
+        cursor("Keine Aufgabe wurde zugeteilt")
         cursor(
-            "Bedenklich (selbst Schnellzuweisung erstellt Zuweisung). "
+            "Bedenklich (selbst Schnellzuweisung erstellt Zuteilung). "
             "Sollte zugeteilt werden!"
         )
         cursor.cr()
 
-        cursor("Aktive, weder Meldung,Zuteilung")
-        cursor("Angemeldet, aber weder Meldung abgeben noch Zuteilung erfolgt.")
+        cursor("Weder Meldung, noch Zuteilung")
+        cursor("Weder Meldung abgeben, noch Zuteilung erfolgt.")
         cursor("Sehr bedenklich. Braucht Rücksprache, falls Arbeitslast.")
         cursor.cr()
 
-        cursor("Rücksprache")
+        cursor("Leistungen unzureichend")
         cursor(
-            "Mitglieder mit Arbeitslast (egal ob aktiv oder nicht), ohne Meldung, "
-            "ohne Zuteilung."
-        )
-        cursor(
-            "Problemfälle! Die müssen was tun, haben keine Aufgabe. "
-            "Brauchen Rücksprache und Ermunterung!"
-        )
-        cursor.cr()
-
-        cursor("Abkassieren")
-        cursor(
-            "Mitglieder, deren Arbeitslast größer ist als die akzeptierten geleisteten "
-            "Stunden"
+            "Arbeitslast größer als die akzeptierten geleisteten Stunden"
         )
         cursor(
             "Am Jahresende sind das die Mitglieder, von denen Geld abgebucht werden "
@@ -167,23 +152,21 @@ class Command(BaseCommand):
         self.uebersichtsblatt(workbook)
 
         # Add sheets with actual content
-        self.createSheet(workbook, "Alle Mitglieder", ap_models.Mitglied.objects.all())
-
         self.createSheet(
             workbook,
-            "Aktive Mitglieder",
+            "Alle Mitglieder",
             ap_models.Mitglied.objects.filter(user__is_active=True),
         )
 
         self.createSheet(
             workbook,
-            "Inaktive Mitglieder",
+            "Ehemalige Mitglieder",
             ap_models.Mitglied.objects.filter(user__is_active=False),
         )
 
         self.createSheet(
             workbook,
-            "Aktive, ohne Meldung",
+            "Ohne Meldung",
             [
                 m
                 for m in ap_models.Mitglied.objects.filter(user__is_active=True)
@@ -194,7 +177,7 @@ class Command(BaseCommand):
 
         self.createSheet(
             workbook,
-            "Aktive, ohne Zuteilung",
+            "Ohne Zuteilung",
             [
                 m
                 for m in ap_models.Mitglied.objects.filter(user__is_active=True)
@@ -205,7 +188,7 @@ class Command(BaseCommand):
 
         self.createSheet(
             workbook,
-            "Aktive, weder Meldung,Zuteilung",
+            "Weder Meldung, noch Zuteilung",
             [
                 m
                 for m in ap_models.Mitglied.objects.filter(user__is_active=True)
@@ -216,25 +199,10 @@ class Command(BaseCommand):
 
         self.createSheet(
             workbook,
-            "Rücksprache",
+            "Leistungen unzureichend",
             [
                 m
-                for m in ap_models.Mitglied.objects.all()
-                if (
-                    m.gemeldeteAnzahlAufgaben() == 0
-                    and m.zugeteilteAufgaben() == 0
-                    and m.arbeitslast > 0
-                )
-            ],
-            ap_models.Mitglied,
-        )
-
-        self.createSheet(
-            workbook,
-            "Abkassieren",
-            [
-                m
-                for m in ap_models.Mitglied.objects.all()
+                for m in ap_models.Mitglied.objects.filter(user__is_active=True)
                 if (m.arbeitslast > m.akzeptierteStunden())
             ],
             ap_models.Mitglied,
