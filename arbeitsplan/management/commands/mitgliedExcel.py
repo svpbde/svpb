@@ -132,6 +132,13 @@ class Command(BaseCommand):
         # Add date as string to circumvent dealing with excel's cell formating
         cursor(timezone.make_naive(timezone.now()).strftime("%d.%m.%Y %H:%M"))
         cursor.cr()
+        cursor.cr()
+        cursor("Hinweis für LibreOffice-Nutzer")
+        cursor(
+            'Wenn die letzte Spalte "Noch zu leistende Stunden" nur "0" anzeigt, bitte '
+            'die Formeln "neu berechnen" (über Menü oder Tastenkombination '
+            'Shift+Strg+F9).'
+        )
 
     def handle(self, *args, **options):
         # set the locale right, to get the dates represented correctly
