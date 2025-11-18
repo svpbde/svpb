@@ -477,19 +477,19 @@ class AccountInactiveReset(FormView):
                 messages.success(
                     self.request,
                     format_html(
-                        "Das Anschreiben mit Password kann "
+                        "Das Anschreiben mit dem Passwort kann "
                         '<a href="{}">hier</a>'
                         " heruntergeladen werden.",
-                        "accounts/letters.pdf",
+                        "letters.pdf",
                     ),
                 )
             except Exception as e:
-                print("Fehler bei password: ", e) # TODO: Log exception
+                print("Fehler beim Passwort: ", e) # TODO: Log exception
                 messages.error(
                     self.request,
-                    "Ein Password konnte nicht gesetzt werden "
-                    "oder das Anschreiben nicht erzeugt werden. "
-                    "Bitte benachrichtigen Sie den Administrator.",
+                    "Das Passwort für den Nutzer konnte nicht gesetzt werden oder das "
+                    "Anschreiben nicht erzeugt werden. Bitte das neue Mitglied, "
+                    "sich über die Webseite selbst ein Passwort zu generieren.",
                 )
 
         return redirect(self.success_url)
