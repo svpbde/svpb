@@ -45,8 +45,7 @@ from svpb.views import isVorstand, isVorstandMixin
 
 
 def preparePassword(accountList=None):
-    """
-    Generate random passwords for given user accounts and create a PDF letter for each.
+    """Generate a random password and create a PDF letter for given user accounts.
 
     For each user in the account list, this function:
     - Generates a random 10-character password.
@@ -101,23 +100,7 @@ def preparePassword(accountList=None):
 
 
 class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
-    """
-    View for creating a new Mitglied (member) along with their associated User account.
-
-    This view handles:
-    - Creating and saving a new `User` object with inactive status by default.
-    - Populating and saving the associated `Mitglied` object with additional details.
-    - Assigning or removing the user from the 'Boote' group based on form input.
-    - Generating a password and welcome letter PDF via `preparePassword`.
-    - Displaying success or error messages to the admin user.
-
-    Attributes:
-        model (Model): The model backing the form (Mitglied).
-        title (str): The page title.
-        template_name (str): Template used for rendering the form.
-        form_class (Form): The form class to use for member input.
-        success_url (str): URL to redirect to after successful form submission.
-    """
+    """View for creating a new member along with their associated User account."""
 
     model = Mitglied
     title = "Mitglied hinzufügen"
@@ -126,8 +109,7 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
     success_url = "/accounts"
 
     def get_context_data(self, **kwargs):
-        """
-        Extend the template context with a title.
+        """Extend the template context with a title.
 
         Args:
             **kwargs: Additional context arguments.
@@ -140,10 +122,9 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        """
-        Handle the form submission for creating a new member and associated user.
+        """Handle the form submission for creating a new member and associated user.
 
-        This method validates the form, creates a new inactive `User`, sets up
+        This method validates the form, creates a new active `User`, sets up
         `Mitglied` data, assigns permissions, and generates the welcome PDF with a
         random password.
 
@@ -215,19 +196,8 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
 
 
 class AccountEdit(SuccessMessageMixin, FormView):
-    """
-    View that allows an authenticated user to edit their own account information.
+    """View that allows an authenticated user to edit their own account information."""
 
-    This class-based view presents a form for the logged-in user to update their
-    account details (such as name, email, or profile information) and processes
-    the form submission to save changes.
-
-    Attributes:
-        form_class (Form): The form class used to render and validate the update form.
-        template_name (str): Template used to render the form view.
-        success_url (str): URL to redirect to after a successful update.
-        post_text (str): Additional text to be included in the form context.
-    """
     template_name = "registration/justForm.html"
     form_class = AccountEdit
     success_url = "/"
@@ -236,8 +206,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
     )
 
     def get_context_data(self, **kwargs):
-        """
-        Provides additional context for rendering the account edit form.
+        """Provides additional context for rendering the account edit form.
 
         This method adds custom context variables to the view’s context dictionary
         before rendering the template. It includes a title and a custom `post_text`
@@ -257,8 +226,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         return context
 
     def fetch_initial_data(self, user):
-        """
-        Prepares the initial data for the account editing form.
+        """Prepares the initial data for the account editing form.
 
         This method retrieves the current user's account details (email, address,
         phone numbers, etc.) and prepares them as initial values for the form
@@ -283,8 +251,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         return initial
 
     def get_initial(self):
-        """
-        Overrides the `get_initial` method to provide initial data for the form.
+        """Overrides the `get_initial` method to provide initial data for the form.
 
         This method ensures that the form is populated with the user's current
         account information when the page is first loaded. It combines the default
@@ -298,8 +265,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         return initial
 
     def save_changes(self, form, user):
-        """
-        Saves the changes made in the account editing form to the user's data.
+        """Saves the changes made in the account editing form to the user's data.
 
         This method updates the user’s account information with the validated
         data from the form.
@@ -317,8 +283,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         user.mitglied.mobil = form.cleaned_data["mobil"]
 
     def get_user(self):
-        """
-        Retrieves the currently authenticated user.
+        """Retrieves the currently authenticated user.
 
         This method returns the `User` object for the currently logged-in user.
 
@@ -328,8 +293,7 @@ class AccountEdit(SuccessMessageMixin, FormView):
         return self.request.user
 
     def form_valid(self, form):
-        """
-        Handles a valid form submission and updates the user's account data.
+        """Handles a valid form submission and updates the user's account data.
 
         If there are changes in the form, this method stores the updated user data,
         saves the changes to the database, sends a notification email to the relevant
@@ -373,23 +337,12 @@ class AccountEdit(SuccessMessageMixin, FormView):
 
 
 class AccountOtherEdit(isVorstandMixin, AccountEdit):
-    """
-    View for editing the account details of another user, used by board members.
-
-    Inherits from:
-        - isVorstandMixin: Ensures only board members have access.
-        - AccountEdit: Base class providing generic account editing functionality.
-
-    Attributes:
-        form_class (Form): The form class used for editing.
-        post_text (str): Optional text displayed after form submission.
-    """
+    """View for editing the account details of another user, used by board members."""
     form_class = AccountOtherEdit
     post_text = ""
 
     def get_context_data(self, **kwargs):
-        """
-        Add custom context variables to the template context.
+        """Add custom context variables to the template context.
 
         Returns:
             dict: Context data including a custom title for the view.
@@ -399,8 +352,7 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
         return context
 
     def fetch_initial_data(self, user):
-        """
-        Prepare initial data for the form based on the given user.
+        """Prepare initial data for the form based on the given user.
 
         This method retrieves the current user's account details (email, address,
         phone numbers, etc.) and prepares them as initial values for the form
@@ -422,8 +374,7 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
         return initial
 
     def save_changes(self, form, user):
-        """
-        Save changes to the user and related models based on submitted form data.
+        """Save changes to the user and related models based on submitted form data.
 
         Args:
             form (Form): The validated form containing updated data.
@@ -442,8 +393,7 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
             user.groups.remove(group_boats)
 
     def get_user(self):
-        """
-        Retrieve the user object based on the 'id' URL parameter.
+        """Retrieve the user object based on the 'id' URL parameter.
 
         Returns:
             User: The user instance corresponding to the provided ID.
@@ -457,15 +407,10 @@ class AccountOtherEdit(isVorstandMixin, AccountEdit):
 
 
 class AccountLetters(isVorstandMixin, View):
-    """
-    View that allows board members (Vorstand) to download the letters.pdf file.
-
-    Access to the file is restricted via the isVorstandMixin.
-    """
+    """View that allows board members (Vorstand) to download the letters.pdf file."""
 
     def get(self, request):
-        """
-        Serve the letters.pdf file to the authorized user.
+        """Serve the letters.pdf file to the authorized user.
 
         Args:
             request (HttpRequest): The HTTP GET request.
@@ -477,11 +422,7 @@ class AccountLetters(isVorstandMixin, View):
 
 
 class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
-    """
-    View for board members to filter and manage the list of member accounts.
-
-    Includes filtering by name or member number, and displays results in a table.
-    """
+    """View for board members to filter and manage the list of member accounts."""
 
     model = User
     template_name = "mitglieder_tff.html"
@@ -509,20 +450,17 @@ class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
 
 
 class AccountInactiveReset(FormView):
-    """
-    View to generate new passwords and create a PDF letter for inactive user accounts.
-
-    The generated PDF can be downloaded afterward by authorized users.
-    """
+    """View to generate new passwords and create a letter for active user accounts."""
 
     template_name = "inactive_reset.html"
     form_class = MitgliederInactiveResetForm
     success_url = "accounts/"
 
     def form_valid(self, form):
-        """
-        Handle valid form submission. If triggered via POST, create new passwords
-        for all inactive users and generate a PDF document.
+        """Handle valid form submission.
+
+        Function to handle valid form submission. If triggered via POST, create new
+        passwords for all active users and generate a PDF document.
 
         Args:
             form (Form): The submitted and validated form.
@@ -558,11 +496,7 @@ class AccountInactiveReset(FormView):
 
 
 class AccountDelete(SuccessMessageMixin, isVorstandMixin, DeleteView):
-    """
-    View for deleting a member account, restricted to board members.
-
-    Displays a confirmation page and provides a success message on completion.
-    """
+    """View for deleting a member account, restricted to board members."""
 
     model = User
     success_url = reverse_lazy("accountList")
@@ -571,16 +505,11 @@ class AccountDelete(SuccessMessageMixin, isVorstandMixin, DeleteView):
 
 
 class MitgliederExcel(View):
-    """
-    View to generate and return an Excel file listing all members.
-
-    Only accessible to users with Vorstand privileges.
-    """
+    """View to generate and return an Excel file listing all members."""
 
     @method_decorator(user_passes_test(isVorstand, login_url="/keinVorstand/"))
     def get(self, request):
-        """
-        Handle GET request to generate and return the Excel file.
+        """Handle GET request to generate and return the Excel file.
 
         Returns:
             HttpResponse: Excel file download if authorized.
@@ -598,12 +527,7 @@ class MitgliederExcel(View):
 
 
 class ImpersonateListe(isVorstandMixin, FilteredListView):
-    """
-    Display a list of active members to select one for impersonation.
-
-    Only non-staff, non-superuser members are shown. Requires a table column that links
-    to an impersonation URL (e.g., impersonate/<user-id>).
-    """
+    """Display a list of active members to select one for impersonation."""
 
     title = "Darzustellenden Nutzer auswählen"
     tableClass = ImpersonateTable
@@ -616,19 +540,18 @@ class ImpersonateListe(isVorstandMixin, FilteredListView):
         ("last_name", "last_name__icontains"),
     ]
 
-    intro_text = """Sie können die Identität eines
-    anderen Nutzers annehmen,
-    beispielsweise um Meldungen oder Leistungen für diesen einzutragen.
-    <p>
-    Bitte gehen Sie verantwortlich mit dieser Möglichkeit um!
-    <p>
-    Beachten Sie: Diese Funktion funktioniert nicht bei Mitgliedern
-    mit Sonderstatus (z.B. Adminstratoren dieser Webseite).
+    intro_text = """
+        Sie können die Identität eines anderen Nutzers annehmen,
+        beispielsweise um Meldungen oder Leistungen für diesen einzutragen.
+        <p>
+        Bitte gehen Sie verantwortlich mit dieser Möglichkeit um!
+        <p>
+        Beachten Sie: Diese Funktion funktioniert nicht bei Mitgliedern
+        mit Sonderstatus (z.B. Adminstratoren dieser Webseite).
     """
 
     def get_data(self):
-        """
-        Return queryset of users eligible for impersonation.
+        """Return queryset of users eligible for impersonation.
 
         Filters out inactive users, staff members, superusers, and the current user.
 
@@ -644,11 +567,7 @@ class ImpersonateListe(isVorstandMixin, FilteredListView):
 
 
 class FilteredMemberList(isVorstandMixin, FilteredListView):
-    """
-    Display a filterable list of all active members with useful preset queries.
-
-    This view shows additional information such as member status and calculated age.
-    """
+    """Display a filterable list of all active members with useful preset queries."""
 
     title = "Mitglieder filtern"
     tableClass = FilteredMemberTable
@@ -690,10 +609,10 @@ class FilteredMemberList(isVorstandMixin, FilteredListView):
     """
 
     def get_data(self):
-        """
-        Return a queryset of active users annotated with their age.
+        """Return a queryset of active users annotated with their age.
 
-        Age is calculated based on the current year and the user's birth year.
+        Provide a queryset of current users with age annotations. Age is calculated
+        based on the current year and the user's birth year.
 
         Returns:
             QuerySet: Filtered and annotated list of User objects.
