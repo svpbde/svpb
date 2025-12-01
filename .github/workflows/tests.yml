@@ -18,7 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set up german locale
         run: |
-          sudo apt install language-pack-de-base texlive texlive-latex-extra texlive-xetex
+          sudo apt-get update
+          sudo apt-get install language-pack-de-base texlive texlive-latex-extra texlive-xetex
           sudo locale-gen
       - name: Set up Python
         uses: actions/setup-python@v4

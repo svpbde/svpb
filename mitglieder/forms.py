@@ -1,8 +1,8 @@
 """Forms related to handling Mitglieder data
 """
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, HTML, Row, Column, Div
 from crispy_bootstrap5.bootstrap5 import FloatingField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Div, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
@@ -18,6 +18,8 @@ from arbeitsplan.forms import (
 
 
 class MitgliederAddForm(forms.ModelForm):
+    """Form for adding a new member (Mitglied)."""
+
     firstname = forms.CharField(
         max_length=20,
         label="Vorname",
@@ -27,8 +29,20 @@ class MitgliederAddForm(forms.ModelForm):
         label="Nachname",
     )
     email = forms.EmailField(label="E-Mail")
-
+    aktiv = forms.BooleanField(
+        initial=True,
+        required=False,
+        label="Aktiver Nutzer",
+        help_text="Nur aktive Nutzer können sich einloggen.",
+    )
+    boats_app = forms.BooleanField(
+        initial=True,
+        required=False,
+        label="Zugriff auf \"Boote und Kran\""
+    )
     def __init__(self, *args, **kwargs):
+        """Initializes the form and applies a custom layout using crispy-forms."""
+
         super(MitgliederAddForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -65,14 +79,26 @@ class MitgliederAddForm(forms.ModelForm):
                     FloatingField("arbeitslast"), css_class="form-group col-md-4 mb-0"
                 ),
             ),
+            Row(
+                Column("boats_app", css_class="form-group col-md-6 mb-0"),
+                Column("aktiv", css_class="form-group col-md-6 mb-0"),
+            ),
         )
-
         self.helper.add_input(Submit("apply", "Mitglied anlegen"))
 
     def clean(self):
-        # try to see if we already have such a user with that mitgliedsnummer:
-        # first, strip it off to make sure we did not get messy data
+        """Validates the 'mitgliedsnummer' field.
 
+        Ensures the input is a number and checks that no existing user
+        already uses the given member number. Formats the number as a
+        5-digit string (with leading zeros if needed).
+
+        Returns:
+            dict: The cleaned form data.
+
+        Raises:
+            ValidationError: If the input is not a number or already in use.
+        """
         try:
             mnrnum = int(self.cleaned_data["mitgliedsnummer"])
         except:
@@ -83,18 +109,15 @@ class MitgliederAddForm(forms.ModelForm):
 
         # turn it back, search for such a user:
         mnr = "%05d" % mnrnum
-
         try:
             u = User.objects.get(username=mnr)
             raise ValidationError(
-                "Ein Nutzer mit dieser Mitgliedsnummer existiert bereits! ({} {}) Bitte wählen Sie eine andere Nummer.".format(
-                    u.first_name, u.last_name
-                ),
+                f"Ein Nutzer mit dieser Mitgliedsnummer existiert bereits!\
+                  ({u.first_name} {u.last_name}) Bitte wählen Sie eine andere Nummer.",
                 code="invalid",
             )
         except User.DoesNotExist:
             pass
-
         self.cleaned_data["mitgliedsnummer"] = mnr
 
         return self.cleaned_data
@@ -116,6 +139,8 @@ class MitgliederAddForm(forms.ModelForm):
 
 
 class AccountEdit(forms.Form):
+    """Form for editing a member's own account information."""
+
     email = forms.EmailField(required=True)
     strasse = forms.CharField(required=False)
     ort = forms.CharField(required=False)
@@ -125,6 +150,11 @@ class AccountEdit(forms.Form):
     mobil = PhoneNumberField(required=False)
 
     def computeLayout(self):
+        """Constructs and returns the crispy-forms layout for this form.
+
+        Returns:
+            Layout: The crispy layout instance.
+        """
         return Layout(
             Row(
                 Column(FloatingField("email"), css_class="form-group col-md-8 mb-0"),
@@ -154,6 +184,8 @@ class AccountEdit(forms.Form):
 
 
 class AccountOtherEdit(AccountEdit):
+    """Extended version of AccountEdit for administrators editing other members."""
+
     vorname = forms.CharField(label="Vorname")
     nachname = forms.CharField(label="Nachname")
     arbeitslast = forms.IntegerField(
@@ -170,9 +202,17 @@ class AccountOtherEdit(AccountEdit):
         label="Aktiver Nutzer",
         help_text="Nur aktive Nutzer können sich einloggen.",
     )
-    boots_app = forms.BooleanField(required=False, label="Zugriff auf \"Boote und Kran\"")
+    boats_app = forms.BooleanField(
+        required=False,
+        label="Zugriff auf \"Boote und Kran\""
+    )
 
     def computeLayout(self):
+        """Constructs and returns the crispy-forms layout for this form.
+
+        Returns:
+            Layout: The crispy layout instance.
+        """
         account_data = super(AccountOtherEdit, self).computeLayout()
         return Layout(
             Row(
@@ -187,17 +227,20 @@ class AccountOtherEdit(AccountEdit):
                 ),
             ),
             Row(
-                Column("boots_app", css_class="form-group col-md-6 mb-0"),
+                Column("boats_app", css_class="form-group col-md-6 mb-0"),
                 Column("aktiv", css_class="form-group col-md-6 mb-0"),
             ),
         )
 
 
 class PersonMitgliedsnummer(NameFilterForm, MitgliedsnummerFilterForm):
+    """Filter form combining name and member number fields."""
     pass
 
 
 class MemberFilterForm(CrispyFilterMixin, forms.Form):
+    """Filter form for searching members in a list view."""
+
     first_name = forms.CharField(label="Vorname", max_length=20, required=False)
     last_name = forms.CharField(label="Nachname", max_length=20, required=False)
     member_number = forms.CharField(
@@ -214,7 +257,7 @@ class MemberFilterForm(CrispyFilterMixin, forms.Form):
 
 
 class SVPBPasswordChangeForm(PasswordChangeForm):
-    """Django's PasswordChangeForm with added crispy form layout."""
+    """Custom password change form using Django's built-in PasswordChangeForm."""
 
     def __init__(self, *args, **kwargs):
         super(SVPBPasswordChangeForm, self).__init__(*args, **kwargs)

@@ -1,111 +1,107 @@
 """Views for anything that relates to administration of members.
 Login and logout stays in SVPB
 """
-from datetime import date
+
+import codecs
 import os
-import string
 import secrets
+import shutil
+import string
+import subprocess
+from datetime import date
 
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import Group, User
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.management import call_command
-
+from django.db.models import F
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.safestring import mark_safe
-from django.views.generic import View, FormView, CreateView, DeleteView
 from django.utils.html import format_html
-from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import F
-from django.shortcuts import redirect, get_object_or_404
-
-from django.contrib.auth.models import User, Group
-
+from django.utils.safestring import mark_safe
+from django.views.generic import CreateView, DeleteView, FormView, View
+from django_sendfile import sendfile
+from jinja2 import Template
 from post_office import mail
 from post_office.models import EmailTemplate
-from django_sendfile import sendfile
 
-import mitglieder.forms
 from arbeitsplan import forms
-from arbeitsplan.tables import ImpersonateTable
-from mitglieder.tables import MitgliederTable, FilteredMemberTable
-from arbeitsplan.views import FilteredListView
-
-from mitglieder.forms import (AccountEdit,
-                              AccountOtherEdit,
-                              MemberFilterForm,
-                              MitgliederAddForm,
-                              PersonMitgliedsnummer,
-                              )
 from arbeitsplan.models import Mitglied
+from arbeitsplan.tables import ImpersonateTable
+from arbeitsplan.views import FilteredListView
+from mitglieder.forms import (
+    AccountEdit,
+    AccountOtherEdit,
+    MemberFilterForm,
+    MitgliederAddForm,
+    PersonMitgliedsnummer,
+)
+from mitglieder.tables import FilteredMemberTable, MitgliederTable
 from svpb.forms import MitgliederInactiveResetForm
-from django.conf import settings
-from svpb.views import isVorstandMixin, isVorstand
-
-
-#-------------------------------------------------
+from svpb.views import isVorstand, isVorstandMixin
 
 
 def preparePassword(accountList=None):
-    """For the given accounts, prepare the passwords and the PDFs for the letters
+    """Generate a random password and create a PDF letter for given user accounts.
 
-    Arguments:
-    - `accountList`: List of User objects
+    For each user in the account list, this function:
+    - Generates a random 10-character password.
+    - Sets and saves the password to the user.
+    - Prepares data for rendering a LaTeX template.
+    - Compiles the LaTeX file into a PDF using `xelatex`.
+    - Moves the resulting PDF to a protected directory for Vorstand access.
+
+    Args:
+        accountList (list[User]): A list of Django User objects to process.
+
     Returns:
-    - List of tuples: (user object, PDF file)
+        list[dict]: List of dictionaries with user and password data used for rendering.
+
+    Raises:
+        EmailTemplate.DoesNotExist: If the "newUserLaTeX" template is not found.
+        subprocess.CalledProcessError: If LaTeX compilation fails.
     """
-
-    from jinja2 import Template
-    import codecs, subprocess
-
     r = []
-
-    for u in accountList:
-        pw = ''.join(
+    for user in accountList:
+        pw = "".join(
             secrets.choice(string.ascii_letters + string.digits) for i in range(10)
         )
+        user.set_password(pw)
+        user.save()
+        r.append(
+            {
+                "user": user,
+                "mitglied": user.mitglied,
+                "password": pw,
+                "status": user.mitglied.get_status_display(),
+                "geburtsdatum": user.mitglied.geburtsdatum.strftime("%d.%m.%Y"),
+            }
+        )
 
-        u.set_password(pw)
-        u.save()
-
-        r.append({'user': u,
-                  'mitglied': u.mitglied,
-                  'password': pw,
-                  'status': u.mitglied.get_status_display(),
-                  'geburtsdatum': u.mitglied.geburtsdatum.strftime('%d.%m.%Y'),
-                  })
-
-    # generate the PDF
-    # assume the template is in templates
-
-    templateText = EmailTemplate.objects.get(name='newUserLaTeX')
-
+    # Generate the PDF. Assume the template is in templates and process this via latex.
+    templateText = EmailTemplate.objects.get(name="newUserLaTeX")
     rendered = Template(templateText.content).render(dicts=r)
-
-    # and now process this via latex:
-    f = codecs.open('letters.tex', 'w', 'utf-8')
+    f = codecs.open("letters.tex", "w", "utf-8")
     f.write(rendered)
     f.close()
-
     # TODO: use better file names, protect against race conditions
-
-    retval = subprocess.call (["xelatex",
-                                '-interaction=batchmode',
-                                "letters.tex"])
-
-    # move this file into a directory where only Vorstand has access!
+    subprocess.call(["xelatex", "-interaction=batchmode", "letters.tex"])
+    # Move this file into a directory where only Vorstand has access!
     # remove an older letter first; ignore errors here
-    import shutil, os
     try:
-        os.remove(os.path.join(settings.SENDFILE_ROOT, 'letters.pdf'))
+        os.remove(os.path.join(settings.SENDFILE_ROOT, "letters.pdf"))
     except:
         pass
-
     shutil.move("letters.pdf", settings.SENDFILE_ROOT)
-
     return r
 
+
 class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
+    """View for creating a new member along with their associated User account."""
+
     model = Mitglied
     title = "Mitglied hinzufügen"
     template_name = "mitglied_form.html"
@@ -113,336 +109,466 @@ class AccountAdd(SuccessMessageMixin, isVorstandMixin, CreateView):
     success_url = "/accounts"
 
     def get_context_data(self, **kwargs):
+        """Extend the template context with a title.
+
+        Args:
+            **kwargs: Additional context arguments.
+
+        Returns:
+            dict: Context data for rendering the template.
+        """
         context = super(AccountAdd, self).get_context_data(**kwargs)
-
-        context['title'] = self.title
-
+        context["title"] = self.title
         return context
 
     def form_valid(self, form):
-        # create User and Mitglied based on cleaned data
+        """Handle the form submission for creating a new member and associated user.
 
-        # first, make some sanity checks to provide warnings
-        u = User(first_name=form.cleaned_data['firstname'],
-                 last_name=form.cleaned_data['lastname'],
-                 is_active=False,
-                 username=form.cleaned_data['mitgliedsnummer'],
-                 email=form.cleaned_data['email'],
-                 )
+        This method validates the form, creates a new active `User`, sets up
+        `Mitglied` data, assigns permissions, and generates the welcome PDF with a
+        random password.
 
-        u.set_password('test')
-        u.save()
+        Args:
+            form (Form): The validated form instance.
 
-        m = u.mitglied
+        Returns:
+            HttpResponseRedirect: Redirect to the success URL.
+        """
 
-        m.user = u
-
-        m.geburtsdatum = form.cleaned_data['geburtsdatum']
-        m.mitgliedsnummer = form.cleaned_data['mitgliedsnummer']
-        m.ort = form.cleaned_data['ort']
-        m.plz = form.cleaned_data['plz']
-        m.strasse = form.cleaned_data['strasse']
-        m.gender = form.cleaned_data['gender']
-        m.status = form.cleaned_data['status']
-        m.arbeitlast = form.cleaned_data['arbeitslast']
-        m.festnetz = form.cleaned_data['festnetz']
-        m.mobil = form.cleaned_data['mobil']
-
-        m.save()
-        u.save()
-
-        messages.success(self.request,
-                         format_html(
-                             "Nutzer {} {} (Nummer: {}, Account: {}) "
-                             "wurde erfolgreich angelegt",
-                             u.first_name,
-                             u.last_name, m.mitgliedsnummer,
-                             u.username
-                             ))
-
+        user = User(
+            first_name=form.cleaned_data["firstname"],
+            last_name=form.cleaned_data["lastname"],
+            is_active=False,
+            username=form.cleaned_data["mitgliedsnummer"],
+            email=form.cleaned_data["email"],
+        )
+        user.set_password("test")
+        user.save()
+        member = user.mitglied
+        member.user = user
+        member.geburtsdatum = form.cleaned_data["geburtsdatum"]
+        member.mitgliedsnummer = form.cleaned_data["mitgliedsnummer"]
+        member.ort = form.cleaned_data["ort"]
+        member.plz = form.cleaned_data["plz"]
+        member.strasse = form.cleaned_data["strasse"]
+        member.gender = form.cleaned_data["gender"]
+        member.status = form.cleaned_data["status"]
+        member.arbeitlast = form.cleaned_data["arbeitslast"]
+        member.festnetz = form.cleaned_data["festnetz"]
+        member.mobil = form.cleaned_data["mobil"]
+        member.user.is_active = form.cleaned_data["aktiv"]
+        group_boats = Group.objects.get(name="Boote")
+        if form.cleaned_data["boats_app"]:
+            member.user.groups.add(group_boats)
+        else:
+            member.user.groups.remove(group_boats)
+        member.save()
+        user.save()
+        messages.success(
+            self.request,
+            format_html(
+                f"Nutzer {user.first_name} {user.last_name} \
+                    (Nummer: {member.mitgliedsnummer}, \
+                    Account: {user.username}) wurde erfolgreich angelegt",
+            ),
+        )
         try:
-            r = preparePassword([u])
-
+            preparePassword([user])
             # copy the produced PDF to the SENDFILE_ROOT directory
-
-            messages.success(self.request,
-                             format_html(
-                                 'Das Anschreiben mit Password kann '
-                                 '<a href="{}">hier</a>'
-                                 ' heruntergeladen werden.',
-                                 'letters.pdf'
-                                 ))
-
+            messages.success(
+                self.request,
+                format_html(
+                    "Das Anschreiben mit dem Passwort kann "
+                    '<a href="{}">hier</a>'
+                    " heruntergeladen werden.",
+                    "letters.pdf",
+                ),
+            )
         except Exception as e:
-            print("Fehler bei password: ", e)  # TODO: Log exception
-            messages.error(self.request,
-                           "Das Password für den Nutzer konnte nicht gesetzt werden "
-                           "oder das Anschreiben nicht erzeugt werden. Bitten Sie das "
-                           "neue Mitglied, sich über die Webseite selbst ein Password zu "
-                           "generieren.")
-
+            print("Fehler beim Passwort: ", e) #TODO: Log exception
+            messages.error(
+                self.request,
+                "Das Passwort für den Nutzer konnte nicht gesetzt werden "
+                "oder das Anschreiben nicht erzeugt werden. Bitte das neue Mitglied, "
+                "sich über die Webseite selbst ein Passwort zu generieren.",
+            )
         return redirect(self.success_url)
 
 
 class AccountEdit(SuccessMessageMixin, FormView):
+    """View that allows an authenticated user to edit their own account information."""
+
     template_name = "registration/justForm.html"
     form_class = AccountEdit
     success_url = "/"
-    post_text = format_html("""
-    <p>
-    Passwort ändern? <a href="/password/change"> Hier klicken.</a>
-    <p>
-    """)
+    post_text = format_html(
+        """<p>Passwort ändern? <a href="/password/change"> Hier klicken.</a><p>"""
+    )
 
     def get_context_data(self, **kwargs):
+        """Provides additional context for rendering the account edit form.
+
+        This method adds custom context variables to the view’s context dictionary
+        before rendering the template. It includes a title and a custom `post_text`
+        for the page.
+
+        Args:
+            **kwargs: Additional keyword arguments passed to the context.
+
+        Returns:
+            dict: A dictionary of context data to render the view, including the
+                  "title" and "post_text".
+        """
         context = super(AccountEdit, self).get_context_data(**kwargs)
-        context['title'] = "Meine Profildaten editieren"
-        context['post_text'] = self.post_text
+        context["title"] = "Meine Profildaten editieren"
+        context["post_text"] = self.post_text
+
         return context
 
-    def fillinUser(self, user):
+    def fetch_initial_data(self, user):
+        """Prepares the initial data for the account editing form.
+
+        This method retrieves the current user's account details (email, address,
+        phone numbers, etc.) and prepares them as initial values for the form
+        fields.
+
+        Args:
+            user (User): The authenticated user whose details are being edited.
+
+        Returns:
+            dict: A dictionary of initial values for the form fields, such as email,
+                  address, birthdate, etc.
+        """
         initial = {}
-        initial['email'] = user.email
-        initial['strasse'] = user.mitglied.strasse
-        initial['plz'] = user.mitglied.plz
-        initial['ort'] = user.mitglied.ort
-        initial['geburtsdatum'] = user.mitglied.geburtsdatum
-        initial['festnetz'] = user.mitglied.festnetz
-        initial['mobil'] = user.mitglied.mobil
+        initial["email"] = user.email
+        initial["strasse"] = user.mitglied.strasse
+        initial["plz"] = user.mitglied.plz
+        initial["ort"] = user.mitglied.ort
+        initial["geburtsdatum"] = user.mitglied.geburtsdatum
+        initial["festnetz"] = user.mitglied.festnetz
+        initial["mobil"] = user.mitglied.mobil
 
         return initial
 
     def get_initial(self):
+        """Overrides the `get_initial` method to provide initial data for the form.
+
+        This method ensures that the form is populated with the user's current
+        account information when the page is first loaded. It combines the default
+        initial data with custom initial values obtained from `fetch_initial_data`.
+
+        Returns:
+            dict: A dictionary of initial values to be pre-filled in the form.
+        """
         initial = super(AccountEdit, self).get_initial()
-        initial.update(self.fillinUser(self.get_user()))
+        initial.update(self.fetch_initial_data(self.get_user()))
         return initial
 
-    def storeUser(self, form, user):
-        user.email = form.cleaned_data['email']
-        user.mitglied.strasse = form.cleaned_data['strasse']
-        user.mitglied.plz = form.cleaned_data['plz']
-        user.mitglied.ort = form.cleaned_data['ort']
-        user.mitglied.geburtsdatum = form.cleaned_data['geburtsdatum']
-        user.mitglied.festnetz = form.cleaned_data['festnetz']
-        user.mitglied.mobil = form.cleaned_data['mobil']
+    def save_changes(self, form, user):
+        """Saves the changes made in the account editing form to the user's data.
+
+        This method updates the user’s account information with the validated
+        data from the form.
+
+        Args:
+            form (Form): The validated form containing the updated account data.
+            user (User): The user whose account information is being updated.
+        """
+        user.email = form.cleaned_data["email"]
+        user.mitglied.strasse = form.cleaned_data["strasse"]
+        user.mitglied.plz = form.cleaned_data["plz"]
+        user.mitglied.ort = form.cleaned_data["ort"]
+        user.mitglied.geburtsdatum = form.cleaned_data["geburtsdatum"]
+        user.mitglied.festnetz = form.cleaned_data["festnetz"]
+        user.mitglied.mobil = form.cleaned_data["mobil"]
 
     def get_user(self):
+        """Retrieves the currently authenticated user.
+
+        This method returns the `User` object for the currently logged-in user.
+
+        Returns:
+            User: The authenticated user (the one who is editing their account).
+        """
         return self.request.user
 
     def form_valid(self, form):
+        """Handles a valid form submission and updates the user's account data.
 
+        If there are changes in the form, this method stores the updated user data,
+        saves the changes to the database, sends a notification email to the relevant
+        board, and shows a success message. If no changes were made, it shows a message
+        indicating that no updates were applied.
+
+        Args:
+            form (Form): The form containing the user’s updated account information.
+
+        Returns:
+            HttpResponseRedirect: Redirects to the success URL after the form is
+                                  successfully submitted.
+        """
         if form.has_changed():
             user = self.get_user()
-            self.storeUser(form, user)
+            self.save_changes(form, user)
 
             user.save()
             user.mitglied.save()
-
-            # inform the relevant Vorstand in charge of memberhsip
-            mail.send(settings.EMAIL_NOTIFICATION_BOARD,
-                      template="updatedProfile",
-                      context={'user': user,
-                               'mitglied': user.mitglied,
-                               'changed': form.changed_data},
-                      priority='now',
-                      )
-
-            messages.success(self.request,
-                             format_html(
-                                 "Das Profil {} {} ({}) wurde erfolgreich aktualisiert.",
-                                 user.first_name, user.last_name,
-                                 user.mitglied.mitgliedsnummer))
+            # Inform the relevant Vorstand in charge of memberhsip
+            mail.send(
+                settings.EMAIL_NOTIFICATION_BOARD,
+                template="updatedProfile",
+                context={
+                    "user": user,
+                    "mitglied": user.mitglied,
+                    "changed": form.changed_data,
+                },
+                priority="now",
+            )
+            messages.success(
+                self.request,
+                format_html(
+                    f"Das Profil {user.first_name} {user.last_name} \
+                    ({user.mitglied.mitgliedsnummer}) wurde erfolgreich aktualisiert.",
+                ),
+            )
         else:
-            messages.success(self.request,
-                             "Keine Änderungen vorgenommen."
-                             )
-
+            messages.success(self.request, "Keine Änderungen vorgenommen.")
         return super(AccountEdit, self).form_valid(form)
 
 
 class AccountOtherEdit(isVorstandMixin, AccountEdit):
+    """View for editing the account details of another user, used by board members."""
     form_class = AccountOtherEdit
     post_text = ""
 
     def get_context_data(self, **kwargs):
+        """Add custom context variables to the template context.
+
+        Returns:
+            dict: Context data including a custom title for the view.
+        """
         context = super(AccountOtherEdit, self).get_context_data(**kwargs)
-        context['title'] = "Bearbeite das SVPB-Konto eines Mitgliedes"
+        context["title"] = "Bearbeite das SVPB-Konto eines Mitgliedes"
         return context
 
-    def fillinUser(self, user):      
-        
-        initial = super(AccountOtherEdit, self).fillinUser(user)
-        initial['vorname'] = user.first_name
-        initial['nachname'] = user.last_name
-        initial['arbeitslast'] = user.mitglied.arbeitslast
-        initial['status'] = user.mitglied.status
-        initial['aktiv'] = user.is_active
-        initial['boots_app'] = user.groups.filter(name='Boote').exists()
+    def fetch_initial_data(self, user):
+        """Prepare initial data for the form based on the given user.
 
+        This method retrieves the current user's account details (email, address,
+        phone numbers, etc.) and prepares them as initial values for the form
+        fields.
+
+        Args:
+            user (User): The user whose data is being edited.
+
+        Returns:
+            dict: A dictionary of initial values for the form fields.
+        """
+        initial = super(AccountOtherEdit, self).fetch_initial_data(user)
+        initial["vorname"] = user.first_name
+        initial["nachname"] = user.last_name
+        initial["arbeitslast"] = user.mitglied.arbeitslast
+        initial["status"] = user.mitglied.status
+        initial["aktiv"] = user.is_active
+        initial["boats_app"] = user.groups.filter(name="Boote").exists()
         return initial
 
-    def storeUser(self, form, user):
-        super(AccountOtherEdit, self).storeUser(form, user)
-        user.first_name = form.cleaned_data['vorname']
-        user.last_name = form.cleaned_data['nachname']
-        user.is_active = form.cleaned_data['aktiv']
-        user.mitglied.arbeitslast = form.cleaned_data['arbeitslast']
-        user.mitglied.status = form.cleaned_data['status']
+    def save_changes(self, form, user):
+        """Save changes to the user and related models based on submitted form data.
 
-        # assign BOOTE group
-        group_boots = Group.objects.get(name="Boote")
-        if (form.cleaned_data['boots_app']):            
-            user.groups.add(group_boots)
+        Args:
+            form (Form): The validated form containing updated data.
+            user (User): The user object to update.
+        """
+        super(AccountOtherEdit, self).save_changes(form, user)
+        user.first_name = form.cleaned_data["vorname"]
+        user.last_name = form.cleaned_data["nachname"]
+        user.is_active = form.cleaned_data["aktiv"]
+        user.mitglied.arbeitslast = form.cleaned_data["arbeitslast"]
+        user.mitglied.status = form.cleaned_data["status"]
+        group_boats = Group.objects.get(name="Boote")
+        if form.cleaned_data["boats_app"]:
+            user.groups.add(group_boats)
         else:
-            user.groups.remove(group_boots)
-        
+            user.groups.remove(group_boats)
 
     def get_user(self):
-        userid = self.kwargs['id']
+        """Retrieve the user object based on the 'id' URL parameter.
+
+        Returns:
+            User: The user instance corresponding to the provided ID.
+
+        Raises:
+            Http404: If no user with the given ID exists.
+        """
+        userid = self.kwargs["id"]
         user = get_object_or_404(User, pk=int(userid))
         return user
 
 
 class AccountLetters(isVorstandMixin, View):
-    """Check whether this user is allowed to download a letters.pdf file
-    """
+    """View that allows board members (Vorstand) to download the letters.pdf file."""
 
     def get(self, request):
-        return sendfile(request,
-                        os.path.join(settings.SENDFILE_ROOT,
-                                "letters.pdf"))
+        """Serve the letters.pdf file to the authorized user.
+
+        Args:
+            request (HttpRequest): The HTTP GET request.
+
+        Returns:
+            HttpResponse: The file response for letters.pdf.
+        """
+        return sendfile(request, os.path.join(settings.SENDFILE_ROOT, "letters.pdf"))
 
 
 class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
+    """View for board members to filter and manage the list of member accounts."""
+
     model = User
     template_name = "mitglieder_tff.html"
-
     title = "Mitglieder bearbeiten"
 
-    # filterform_class = forms.NameFilterForm
     filterform_class = PersonMitgliedsnummer
     filtertile = "Mitglieder nach Vor- oder Nachnamen filtern"
 
     tabletitle = "Alle Mitglieder"
     tableClass = MitgliederTable
 
-    filterconfig = [('first_name', 'first_name__icontains'),
-                    ('last_name', 'last_name__icontains'),
-                    ('mitgliedsnummer', 'mitglied__mitgliedsnummer__icontains'),
-                    ]
+    filterconfig = [
+        ("first_name", "first_name__icontains"),
+        ("last_name", "last_name__icontains"),
+        ("mitgliedsnummer", "mitglied__mitgliedsnummer__icontains"),
+    ]
 
-    intro_text = mark_safe("""Diese Seite zeigt eine Liste aller Mitglieder an.
-    Sie dient vor allem dazu, einzelne Mitglieder-Konten zu finden und zu editieren.
-    Eine Übersicht über gemeldete, zugeteilte, erbrachte und akzeptieren
-    Arbeitsstunden findet sich separat in der <a href="/arbeitsplan/salden/">Saldenübersicht</a>.
-    """)
+    intro_text = mark_safe(
+        """Diese Seite zeigt eine Liste aller Mitglieder an. Sie dient vor allem dazu,
+        einzelne Mitglieder-Konten zu finden und zu editieren. Eine Übersicht
+        über gemeldete, zugeteilte, erbrachte und akzeptieren Arbeitsstunden findet
+        sich separat in der <a href="/arbeitsplan/salden/">Saldenübersicht</a>.
+        """
+    )
 
 
 class AccountInactiveReset(FormView):
-    """Für allen nicht-aktiven Accounts neue Passwörter erzeugen und PDF anlegen.
-    """
+    """View to generate new passwords and create a letter for active user accounts."""
 
     template_name = "inactive_reset.html"
     form_class = MitgliederInactiveResetForm
     success_url = "accounts/"
 
     def form_valid(self, form):
+        """Handle valid form submission.
 
-        if 'reset' in self.request.POST:
+        Function to handle valid form submission. If triggered via POST, create new
+        passwords for all active users and generate a PDF document.
+
+        Args:
+            form (Form): The submitted and validated form.
+
+        Returns:
+            HttpResponseRedirect: Redirect to the success URL after processing.
+        """
+        if "reset" in self.request.POST:
             userQs = User.objects.filter(is_active=False)
 
             try:
-                r = preparePassword(userQs)
-
-                # copy the produced PDF to the SENDFILE_ROOT directory
-
-                messages.success(self.request,
-                                 format_html(
-                                     'Das Anschreiben mit Password kann '
-                                     '<a href="{}">hier</a>'
-                                     ' heruntergeladen werden.',
-                                     'accounts/letters.pdf'
-                                     ))
-
+                preparePassword(userQs)
+                # Copy the produced PDF to the SENDFILE_ROOT directory
+                messages.success(
+                    self.request,
+                    format_html(
+                        "Das Anschreiben mit dem Passwort kann "
+                        '<a href="{}">hier</a>'
+                        " heruntergeladen werden.",
+                        "letters.pdf",
+                    ),
+                )
             except Exception as e:
-                print("Fehler bei password: ", e)  # TODO: Log exception
-                messages.error(self.request,
-                               "Ein Password konnte nicht gesetzt werden "
-                               "oder das Anschreiben nicht erzeugt werden. "
-                               "Bitte benachrichtigen Sie den Administrator.")
+                print("Fehler beim Passwort: ", e) # TODO: Log exception
+                messages.error(
+                    self.request,
+                    "Das Passwort für den Nutzer konnte nicht gesetzt werden oder das "
+                    "Anschreiben nicht erzeugt werden. Bitte das neue Mitglied, "
+                    "sich über die Webseite selbst ein Passwort zu generieren.",
+                )
 
         return redirect(self.success_url)
 
 
 class AccountDelete(SuccessMessageMixin, isVorstandMixin, DeleteView):
+    """View for deleting a member account, restricted to board members."""
+
     model = User
     success_url = reverse_lazy("accountList")
-    # success_url = "/accounts/list"
     template_name = "user_confirm_delete.html"
-    # success_message = "%(first_name) %(last_name) wurde gelöscht!"
     success_message = "Mitglied wurde gelöscht!"
 
 
 class MitgliederExcel(View):
-    """For Vorstand, send back an Excel file with all
-    the Mitlgieders in various filtering combinations"""
+    """View to generate and return an Excel file listing all members."""
 
     @method_decorator(user_passes_test(isVorstand, login_url="/keinVorstand/"))
     def get(self, request):
+        """Handle GET request to generate and return the Excel file.
 
+        Returns:
+            HttpResponse: Excel file download if authorized.
+            HttpResponseRedirect: Redirects to 'keinVorstand' if unauthorized.
+        """
         if isVorstand(request.user):
-            # call the command to prepare the excel file
-
-            # repeated name; TODO: move this from here and mitgliedExcel.py into settings
+            # Generate the Excel file using a management command.
             filename = "mitglieder.xlsx"
             basepath = settings.SENDFILE_ROOT
-
-            call_command('mitgliedExcel')
-
-            return sendfile(request,
-                            os.path.join(basepath, filename))
+            # Repeated name, TODO: Move this command and mitgliedExcel.py into settings
+            call_command("mitgliedExcel")
+            return sendfile(request, os.path.join(basepath, filename))
         else:
-            return redirect ("keinVorstand")
+            return redirect("keinVorstand")
 
 
 class ImpersonateListe(isVorstandMixin, FilteredListView):
-    """Show a table with all Mitglieder,
-    pick one to impersonate.
-    Needs a suitable linked Column to point
-    to impersonate/user-id
-    """
+    """Display a list of active members to select one for impersonation."""
+
     title = "Darzustellenden Nutzer auswählen"
     tableClass = ImpersonateTable
     tabletitle = "Mitglieder"
     model = User
 
     filterform_class = forms.NameFilterForm
-    filterconfig = [('first_name', 'first_name__icontains'),
-                    ('last_name', 'last_name__icontains'),
-                    ]
+    filterconfig = [
+        ("first_name", "first_name__icontains"),
+        ("last_name", "last_name__icontains"),
+    ]
 
-
-    intro_text = """Sie können die Identität eines
-    anderen Nutzers annehmen,
-    beispielsweise um Meldungen oder Leistungen für diesen einzutragen.
-    <p>
-    Bitte gehen Sie verantwortlich mit dieser Möglichkeit um!
-    <p>
-    Beachten Sie: Diese Funktion funktioniert nicht bei Mitgliedern
-    mit Sonderstatus (z.B. Adminstratoren dieser Webseite).
+    intro_text = """
+        Sie können die Identität eines anderen Nutzers annehmen,
+        beispielsweise um Meldungen oder Leistungen für diesen einzutragen.
+        <p>
+        Bitte gehen Sie verantwortlich mit dieser Möglichkeit um!
+        <p>
+        Beachten Sie: Diese Funktion funktioniert nicht bei Mitgliedern
+        mit Sonderstatus (z.B. Adminstratoren dieser Webseite).
     """
 
     def get_data(self):
-        return (self.model.objects
-                .filter(is_active=True)
-                .filter(is_staff=False)
-                .filter(is_superuser=False)
-                .exclude(id=self.request.user.id))
+        """Return queryset of users eligible for impersonation.
+
+        Filters out inactive users, staff members, superusers, and the current user.
+
+        Returns:
+            QuerySet: Filtered list of User objects.
+        """
+        return (
+            self.model.objects.filter(is_active=True)
+            .filter(is_staff=False)
+            .filter(is_superuser=False)
+            .exclude(id=self.request.user.id)
+        )
 
 
 class FilteredMemberList(isVorstandMixin, FilteredListView):
-    """Show a table with all members and several filter options.
-    """
+    """Display a filterable list of all active members with useful preset queries."""
+
     title = "Mitglieder filtern"
     tableClass = FilteredMemberTable
     model = User
@@ -450,28 +576,47 @@ class FilteredMemberList(isVorstandMixin, FilteredListView):
     template_name = "mitglieder_tff.html"
 
     filterform_class = MemberFilterForm
-    filterconfig = [('first_name', 'first_name__icontains'),
-                    ('last_name', 'last_name__icontains'),
-                    ('member_number', 'mitglied__mitgliedsnummer__icontains'),
-                    ('status', 'mitglied__status'),
-                    ('age', 'age__gte')
-                    ]
+    filterconfig = [
+        ("first_name", "first_name__icontains"),
+        ("last_name", "last_name__icontains"),
+        ("member_number", "mitglied__mitgliedsnummer__icontains"),
+        ("status", "mitglied__status"),
+        ("age", "age__gte"),
+    ]
 
-    intro_text = ("""Die Spalte Alter gibt an, wie alt das jeweilige Mitglied dieses Jahr wird.
+    intro_text = """
+        Die Spalte Alter gibt an, wie alt das jeweilige Mitglied dieses Jahr wird.
 
-    Interessante Ansichten:
-    <ul>
-        <li><a href="?filter=Filter+anwenden">Alle Mitglieder</a></li>
-        <li><a href="?age=65&filter=Filter+anwenden ">Mitglieder ab 65 (Arbeitsdienst-befreit)</a></li>
-        <li><a href="?status=Ss&filter=Filter+anwenden">Schüler/Studenten/...</a></li>
-        <li><a href="?status=Ju&age=20&filter=Filter+anwenden">Jugendliche ab 20 (müssen Erwachsene werden)</a></li>
-        <li><a href="?status=Ki&age=20&filter=Filter+anwende">Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
-        <li><a href="?status=Kf&age=20&filter=Filter+anwende">Beitragsfreie Kinder in Familie ab 20 (müssen Erwachsene werden)</a></li>
-    </ul>
-    """)
+        Interessante Ansichten:
+        <ul>
+            <li><a href="?filter=Filter+anwenden">Alle Mitglieder</a></li>
+            <li><a href="?age=65&filter=Filter+anwenden ">
+                Mitglieder ab 65 (Arbeitsdienst-befreit)
+            </a></li>
+            <li><a href="?status=Ss&filter=Filter+anwenden">
+                Schüler/Studenten/...
+            </a></li>
+            <li><a href="?status=Ju&age=20&filter=Filter+anwenden">
+                Jugendliche ab 20 (müssen Erwachsene werden)
+            </a></li>
+            <li><a href="?status=Ki&age=20&filter=Filter+anwende">
+                Kinder in Familie ab 20 (müssen Erwachsene werden)
+            </a></li>
+            <li><a href="?status=Kf&age=20&filter=Filter+anwende">
+                Beitragsfreie Kinder in Familie ab 20 (müssen Erwachsene werden)
+            </a></li>
+        </ul>
+    """
 
     def get_data(self):
-        return (self.model.objects
-                .filter(is_active=True)
-                .annotate(age=date.today().year -
-                          F('mitglied__geburtsdatum__year')))
+        """Return a queryset of active users annotated with their age.
+
+        Provide a queryset of current users with age annotations. Age is calculated
+        based on the current year and the user's birth year.
+
+        Returns:
+            QuerySet: Filtered and annotated list of User objects.
+        """
+        return self.model.objects.filter(is_active=True).annotate(
+            age=date.today().year - F("mitglied__geburtsdatum__year")
+        )
