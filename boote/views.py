@@ -78,7 +78,7 @@ def booking_today_public(request):
     for boat in Boat.objects.filter(club_boat=True):
         bookings.append([boat, boat.getDetailedBookingsToday])
 
-    context = {"bookings": bookings, "date": datetime.now()}
+    context = {"bookings": bookings, "date": datetime.now().strftime("%A, %d. %b"), "time": datetime.now().strftime("%H:%M")}
 
     return render(request, "boote/booking_today_public.html", context)
 

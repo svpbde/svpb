@@ -2,7 +2,7 @@
 
 <head>
 
-<title>Vereinsboote</title>
+<title>Vereinsboota </title>
 
 <style>
 
@@ -216,6 +216,7 @@ body,table {
 			<h2>Reservierungen</h2>
 			<h1>Conger</h1>
 			<h2>Stand: {{date}} </h2>
+			<h2>Uhrzeit: {{time}} </h2>
 		</div>
 	</div>
 <TABLE class='boatslist'>
@@ -261,14 +262,14 @@ body,table {
 {% if request.GET.tab == "2" %}
 <!-- MARINER 19 -->
 <DIV id="tab_2" class="tab">
-  <div class="boat_summary">
-                <img src='https://www.svpb.de/fileadmin/_processed_/csm_2df2e6d8-4e7a-4612-b60e-79629591e695_b1dd30e04d.jpg'/>
-                <div>
-  			<h2>Reservierungen</h2>
-                        <h1>Mariner 19</h1>
+    <div class="boat_summary">
+        <img src="{% static 'boote/mariner19.jpg' %}"/>
+        <div>
+            <h2>Reservierungen</h2>
+            <h1>Mariner 19</h1>
   			<h2>Stand: {{date}}</h2>
-                </div>
         </div>
+    </div>
 <TABLE class='boatslist'>
  <thead>
         <tr>
@@ -313,12 +314,12 @@ body,table {
 <!-- OTHER -->
 <DIV id="tab_3" class="tab">
         <div class="boat_summary">
-                <img src='https://www.svpb.de/fileadmin/_processed_/csm_IMG_0265_1e0b8dc0e8.jpg'/>
-                <div>
-                        <h2>Reservierungen</h2>
-                        <h1>Andere Boote</h1>
- 			<h2>Stand: {{date}} </h2>
-		</div>
+            <img src="{% static 'boote/other.jpg' %}"/>
+            <div>
+                <h2>Reservierungen</h2>
+                <h1>Andere Boote</h1>
+ 			    <h2>Stand: {{date}} </h2>
+		    </div>
         </div>
 <TABLE class='boatslist'>
  <thead>
@@ -364,7 +365,7 @@ body,table {
 <!-- BOOTSKRAN -->
 <DIV id="tab_4" class="tab">
 	<div class="boat_summary">
-        <img src='https://www.svpb.de/fileadmin/_processed_/csm_IMG_0265_1e0b8dc0e8.jpg'/>
+        <img src="{% static 'boote/kran.jpg' %}"/>
         <div>
 			<h2>Reservierungen</h2>
             <h1>Bootskran</h1>
@@ -372,7 +373,7 @@ body,table {
 		</div>
     </div>
     <TABLE class='boatslist'>
-    <thead>
+        <thead>
             <tr>
                 <th>Boot</th>
                 <th class="date" colspan="2">08:00</th>
