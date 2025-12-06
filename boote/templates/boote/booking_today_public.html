@@ -9,7 +9,12 @@
   
   function initialize(){
 	console.log('Init');
-	setInterval(switchTab, 10000)
+	setInterval(switchTab, 10000);
+
+    console.log('Select slider step');
+    const s = document.getElementById("slider");
+    const stepDiv = s.children[{{tab}}];
+    stepDiv.classList.add("selected");
   }
 
   function switchTab() {
@@ -59,6 +64,13 @@
             {% endif %}
 		</div>
         <div>
+            <div id="slider">
+                <div>Conger</div>
+                <div class="selected">Mariner 19</div>
+                <div>Andere Boote</div>
+                <div>Bootskran</div>
+            </div>
+
 			<h1>{{title}}</h1>
 			<h2>{{date}} </h2>
             <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">

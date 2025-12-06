@@ -178,3 +178,19 @@ span.current_time {
     font-size: xx-large;
     font-weight: 600;
 }
+
+#slider {
+    display: flex;
+}
+
+#slider > div {
+    color: gray;
+    margin: 1px;
+    width: 100px;
+    border: 1px solid #aaa;
+}
+
+#slider > div.selected {
+    color: white;
+    background-color: #346990;
+}
