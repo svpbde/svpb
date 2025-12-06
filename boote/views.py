@@ -95,6 +95,15 @@ def booking_today_public(request):
     ]
 
 
+    # Title
+    tab_title = {
+        '1': 'Conger',
+        '2': 'Mariner 19',
+        '3': 'Andere Boote',
+        '4': 'Bootskran'
+    }
+    title = tab_title.get(tab)
+
     # IMAGES
     tab_images = {
         '1': 'boote/conger.jpg',
@@ -109,6 +118,7 @@ def booking_today_public(request):
         "date": datetime.now().strftime("%A, %d. %b"),
         "time": datetime.now().strftime("%H:%M"),
         "tab": tab,
+        "title": title,
         "selected_image": selected_image,
         "filtered_bookings": filtered_bookings
     }
