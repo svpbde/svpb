@@ -13,7 +13,7 @@
 
     console.log('Select slider step');
     const s = document.getElementById("slider");
-    const stepDiv = s.children[{{tab}}];
+    const stepDiv = s.children[{{tab}}-1];
     stepDiv.classList.add("selected");
   }
 
@@ -58,33 +58,37 @@
 <!-- COMMON -->
 <DIV id="tab_{{tab}}" class="tab">
 	<div class="boat_summary">
-        <div class="img_container">
+        <DIV class="img_container">
             {% if selected_image %}
             <img src="{% static selected_image %}" alt="Boat image" class="boat_img"/>
             {% endif %}
-		</div>
-        <div>
+		</DIV>
+        <DIV class="right_panel">
             <div id="slider">
-                <div>Conger</div>
-                <div class="selected">Mariner 19</div>
-                <div>Andere Boote</div>
-                <div>Bootskran</div>
+                    <div>Conger</div>
+                    <div>Mariner 19</div>
+                    <div>Andere Boote</div>
+                    <div>Bootskran</div>
             </div>
 
-			<h1>{{title}}</h1>
-			<h2>{{date}} </h2>
-            <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
-                <div style="background: #5CB85C;width:30px;height:30px;margin-right: 5px;;"></div>
-                <span style="width:50px;text-align: left;">Frei</span>
+            <div>
+            
+
+                <h1>{{title}}</h1>
+                <h2>{{date}} </h2>
+                <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
+                    <div style="background: #5CB85C;width:30px;height:30px;margin-right: 5px;;"></div>
+                    <span style="width:50px;text-align: left;">Frei</span>
+                </div>
+                <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
+                    <div style="background: #F0AD4E;width:30px;height:30px;margin-right: 5px;;"></div>
+                    <span style="width:50px;text-align: left;">Reserviert</span>
+                </div>
             </div>
-            <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
-                <div style="background: #F0AD4E;width:30px;height:30px;margin-right: 5px;;"></div>
-                <span style="width:50px;text-align: left;">Reserviert</span>
+            <div>
+                <span class="current_time">{{time}}</span>
             </div>
-		</div>
-        <div>
-			<span class="current_time">{{time}}</span>
-        </div>
+        </DIV>
 	</div>
 
     <TABLE class='boatslist'>

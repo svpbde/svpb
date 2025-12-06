@@ -1,3 +1,8 @@
+.right_panel {
+    display: flex;
+    flex-direction: row;
+}
+
 .boatslist {
     border-collapse: separate;
     border: 1px solid #38678f;
