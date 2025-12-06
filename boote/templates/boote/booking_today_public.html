@@ -71,21 +71,33 @@
                     <div>Bootskran</div>
             </div>
 
-            <div>
+            <div class="boat_panel_content">
                 <div>
                     <h1>{{title}}</h1>
-                    <h2>{{date}} </h2>
-                    <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
-                        <div style="background: #5CB85C;width:30px;height:30px;margin-right: 5px;;"></div>
-                        <span style="width:50px;text-align: left;">Frei</span>
-                    </div>
-                    <div style="display: flex;align-items: center;justify-content: center;margin: 3px;">
-                        <div style="background: #F0AD4E;width:30px;height:30px;margin-right: 5px;;"></div>
-                        <span style="width:50px;text-align: left;">Reserviert</span>
+                    <h2>Reservierungen</h2>
+                    <div id="legend">
+                        <div >
+                            <div style="background: #5CB85C;"></div>
+                            <span>Frei</span>
+                        </div>
+                        <div>
+                            <div style="background: #E4FF2E;"></div>
+                            <span>Privat</span>
+                        </div>
+                        <div >
+                            <div style="background: #FF5151;"></div>
+                            <span >Regata</span>
+                        </div>
+                        <div >
+                            <div style="background: #54f3ff;"></div>
+                            <span >Ausbildung</span>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <span class="current_time">{{time}}</span>
+                    <span>{{weekday}}</span>                    
+                    <span>{{date}}</span>                    
+                    <span id="current_time">{{time}}</span>                    
                 </div>
             </div>
         </DIV>

@@ -115,7 +115,8 @@ def booking_today_public(request):
 
     context = {
         "bookings": bookings, 
-        "date": datetime.now().strftime("%A, %d. %b"),
+        "weekday": datetime.now().strftime("%A"),
+        "date": datetime.now().strftime("%d. %b"),
         "time": datetime.now().strftime("%H:%M"),
         "tab": tab,
         "title": title,
