@@ -1,156 +1,180 @@
-
-.boatslist {  
-  border-collapse: separate;
-  border: 1px solid #38678f;  
-  background: white;
-  width: 100%;
-  /*height: 95%;*/  
+.boatslist {
+    border-collapse: separate;
+    border: 1px solid #38678f;
+    background: white;
+    width: 100%;
+    /*height: 95%;*/
 }
 
 .boatslist th {
-  background: steelblue;  
-  padding: 2px;  
-  text-shadow: 0 1px 0 #38678f;
-  color: white;
-  border: 1px solid black;
-  box-shadow: inset 0px 1px 2px #568ebd;
-  transition: all 0.2s;
+    background: steelblue;
+    padding: 2px;
+    text-shadow: 0 1px 0 #38678f;
+    color: white;
+    border: 1px solid black;
+    box-shadow: inset 0px 1px 2px #568ebd;
+    transition: all 0.2s;
 }
 
 .boatslist th.date:nth-of-type(2n) {
-	background: #33678f;
+    background: #33678f;
 }
 
-.boatslist th.date{
-  background: #537E8C; 
-  text-align: left;   
+.boatslist th.date {
+    background: #537E8C;
+    text-align: left;
 }
 
 .boatslist tr {
-  border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 
 .boatslist tr:last-child {
-  border-bottom: 0px;
+    border-bottom: 0px;
 }
 
-.boatslist td {  
-  padding: 1px;
-  transition: all 0.2s;
-  text-align: center;
-  width: 4%;
-  height: 30px;
-  border-right: 1px solid black;
+.boatslist td {
+    padding: 1px;
+    transition: all 0.2s;
+    text-align: center;
+    width: 4%;
+    height: 30px;
+    border-right: 1px solid black;
 }
 
 td.firstcol {
-	background: #568ebd;
+    background: #568ebd;
 }
 
 .boatslist td:nth-of-type(2n) {
-	border-right: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
-	
+
 
 .boatslist td:first-child {
-  width: 200px;  
+    width: 200px;
 }
 
 
 .boatslist td:last-child {
-  border-right: 0px;  
+    border-right: 0px;
 }
 
 .boatslist td.selected {
-  background: #d7e4ef;  
+    background: #d7e4ef;
 }
 
 .boatslist td.booked0 {
-  background: #5CB85C;  
+    background: #5CB85C;
 }
 
 .boatslist td.booked1 {
-  background: #F0AD4E; 
+    background: #F0AD4E;
 }
 
 .boatslist td {
-  height: 30px;
-  width: 30px;
+    height: 30px;
+    width: 30px;
 }
 
 .boatslist td.PRV {
-  background: #E4FF2E;  
-  font-size: 60%;
+    background: #E4FF2E;
+    font-size: 60%;
 }
 
 .boatslist td.REG {
-  background: #FF5151;
-  font-size: 60%;
+    background: #FF5151;
+    font-size: 60%;
 }
 
 .boatslist td.REP {
-  background: var(--bs-warning-bg-subtle);
-  font-size: 60%;
+    background: var(--bs-warning-bg-subtle);
+    font-size: 60%;
 }
 
 .boatslist td.AUS {
-  background: #54f3ff;
-  font-size: 60%;
+    background: #54f3ff;
+    font-size: 60%;
 }
 
 span.tinyfont {
- font-size: 90%;
+    font-size: 90%;
 }
 
-.boatslist td input {  
-  background: none;
-  outline: none;
-  border: 0;
-  display: table-cell;
-  height: 100%;
+.boatslist td input {
+    background: none;
+    outline: none;
+    border: 0;
+    display: table-cell;
+    height: 100%;
 }
 
 .boatslist td input:focus {
-  box-shadow: 0 1px 0 steelblue;
-  color: steelblue;
+    box-shadow: 0 1px 0 steelblue;
+    color: steelblue;
 }
+
 ::-moz-selection {
-  background: steelblue;
-  color: white;
+    background: steelblue;
+    color: white;
 }
+
 ::selection {
-  background: steelblue;
-  color: white;
+    background: steelblue;
+    color: white;
 }
+
 .boatslist .heavyTable {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  animation: float 5s infinite;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: float 5s infinite;
 }
 
 
-body,table {
-}
+body,
+table {}
 
 
 .boat_summary {
-	height: 33%;
-        display: flex;
-	align-items: center;
-	margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    justify-content: space-between;
 }
 
-.boat_summary  h1 {
- 	font-size: xx-large;
-	margin-left: 20px;
-	color: #4e4e4e;
+.boat_summary h1 {
+    font-size: xx-large;
+    color: #4e4e4e;
 }
 
-.boat_summary  h2 {
-        font-size: large;
-        margin-left: 20px;
-        color: gray;
+.boat_summary h2 {
+    font-size: large;
+    color: gray;
 }
 
 .tab {
-	position: absolute;
+    position: absolute;
+}
+
+.img_container {
+    width: 300px;
+    height: 255px;
+}
+
+.boat_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Fills container, crops if needed */
+    display: block;
+    /* Removes bottom gap */
+}
+
+
+.boat_summary div:nth-child(2) {
+    text-align: center;
+}
+
+span.current_time {
+    font-size: xx-large;
+    font-weight: 600;
 }
