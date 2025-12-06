@@ -81,7 +81,12 @@ def booking_today_public(request):
     tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
 
     # BOATS
-    boat_types = {'1': 'Conger'}  # Map tabs to boat types
+    boat_types = {
+        '1': 'Conger',
+        '2': 'Mariner 19',
+        '4': 'Bootskran'
+    }  # Map tabs to boat types
+#3. if boat.type.name != "Mariner 19" and  boat.type.name != "Conger" and  boat.type.name != "Bootskran" 
     target_type = boat_types.get(tab)
 
     filtered_bookings = [
