@@ -78,7 +78,22 @@ def booking_today_public(request):
     for boat in Boat.objects.filter(club_boat=True):
         bookings.append([boat, boat.getDetailedBookingsToday])
 
-    context = {"bookings": bookings, "date": datetime.now().strftime("%A, %d. %b"), "time": datetime.now().strftime("%H:%M")}
+    tab_images = {
+        '1': 'boote/conger.jpg',
+        '2': 'boote/mariner19.jpg',
+        '3': 'boote/other.jpg',
+        '4': 'boote/kran.jpg'
+    }
+    tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
+    selected_image = tab_images.get(tab)
+
+    context = {
+        "bookings": bookings, 
+        "date": datetime.now().strftime("%A, %d. %b"),
+        "time": datetime.now().strftime("%H:%M"),
+        "tab": tab,
+        'selected_image': selected_image
+    }
 
     return render(request, "boote/booking_today_public.html", context)
 

@@ -47,6 +47,58 @@
 </head>
 <body>
 
+<!-- CONGER -->
+<DIV id="tab_{{tab}}" class="tab">
+	<div class="boat_summary">
+        {% if selected_image %}
+            <img src="{% static selected_image %}" alt="Tab image"/>
+        {% endif %}
+		<div>
+			<h2>Reservierungen</h2>
+			<h1>Conger</h1>
+			<h2>Stand: {{date}} </h2>
+			<h2>Uhrzeit: {{time}} </h2>
+		</div>
+	</div>
+<TABLE class='boatslist'>
+ <thead>
+        <tr>
+            <th>Boot</th>
+            <th class="date" colspan="2">08:00</th>
+            <th class="date" colspan="2">09:00</th>
+            <th class="date" colspan="2">10:00</th>
+            <th class="date" colspan="2">11:00</th>
+            <th class="date" colspan="2">12:00</th>
+            <th class="date" colspan="2">13:00</th>
+            <th class="date" colspan="2">14:00</th>
+            <th class="date" colspan="2">15:00</th>
+            <th class="date" colspan="2">16:00</th>
+            <th class="date" colspan="2">17:00</th>
+            <th class="date" colspan="2">18:00</th>
+            <th class="date" colspan="2">19:00</th>
+            <th class="date" colspan="2">20:00</th>
+            <th class="date" colspan="2">21:00</th>
+         </tr>
+ </thead>
+
+{% for boat, overviewday in bookings %}
+ {% if boat.type.name == "Conger" %}
+ <TR>
+    <TD class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
+     {% for userid, usertag, type in overviewday %}
+    	{% if userid %}
+      	<TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
+      	{% else %}
+      	<TD class='booked0'>&nbsp</TD>
+      	{% endif %}
+    {% endfor %}
+  </TR>
+{% endif %}
+  {% endfor %}
+</TABLE>
+</DIV>
+
+
 {% if request.GET.tab == "1" or not request.GET.tab %}
 <!-- CONGER -->
 <DIV id="tab_1" class="tab">
