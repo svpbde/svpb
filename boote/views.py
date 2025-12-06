@@ -80,19 +80,27 @@ def booking_today_public(request):
   
     tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
 
-    # BOATS
+   # BOATS
     boat_types = {
         '1': 'Conger',
         '2': 'Mariner 19',
         '4': 'Bootskran'
     }  # Map tabs to boat types
-#3. if boat.type.name != "Mariner 19" and  boat.type.name != "Conger" and  boat.type.name != "Bootskran" 
+
+    tab = request.GET.get('tab', '1')  # Assuming tab comes from request
     target_type = boat_types.get(tab)
 
-    filtered_bookings = [
-        (boat, overviewday) for boat, overviewday in bookings
-        if target_type is None or boat.type.name == target_type
-    ]
+    if tab == '3':  # Option 3: show all boats EXCEPT the specific types
+        specific_types = set(boat_types.values())
+        filtered_bookings = [
+            (boat, overviewday) for boat, overviewday in bookings
+            if boat.type.name not in specific_types
+        ]
+    else:
+        filtered_bookings = [
+            (boat, overviewday) for boat, overviewday in bookings
+            if target_type is None or boat.type.name == target_type
+        ]
 
 
     # Title
