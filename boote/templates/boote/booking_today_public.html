@@ -14,11 +14,11 @@
 
   function switchTab() {
         var nextTab = 1;
-	var currentTab = 1;
+	    var currentTab = 1;
 
-	{% if request.GET.tab %}
-	  currentTab = {{request.GET.tab}};
-	{% endif %}
+	    {% if request.GET.tab %}
+	    currentTab = {{request.GET.tab}};
+	    {% endif %}
 
         if (currentTab) {
 		nextTab = currentTab+1;
@@ -47,7 +47,7 @@
 </head>
 <body>
 
-<!-- CONGER -->
+<!-- COMMON -->
 <DIV id="tab_{{tab}}" class="tab">
 	<div class="boat_summary">
         {% if selected_image %}
@@ -81,24 +81,29 @@
          </tr>
  </thead>
 
-{% for boat, overviewday in bookings %}
- {% if boat.type.name == "Conger" %}
- <TR>
-    <TD class="firstcol"> <b>{{ boat.name }}</b><br>{{ boat.type.name }}</span> </TD>
-     {% for userid, usertag, type in overviewday %}
-    	{% if userid %}
-      	<TD class='{{ type }}'><i class="fa-solid fa-lock"><br><span class="tinyfont">{{ type }}</span></TD>
-      	{% else %}
-      	<TD class='booked0'>&nbsp</TD>
-      	{% endif %}
+{% for boat, overviewday in filtered_bookings %}
+<TR>
+    <TD class="firstcol"> 
+        <b>{{ boat.name }}</b><br>{{ boat.type.name }}
+    </TD>
+    {% for userid, usertag, type in overviewday %}
+        {% if userid %}
+            <TD class='{{ type }}'>
+                <i class="fa-solid fa-lock"><br>
+                <span class="tinyfont">{{ type }}</span>
+            </TD>
+        {% else %}
+            <TD class='booked0'>&nbsp;</TD>
+        {% endif %}
     {% endfor %}
-  </TR>
-{% endif %}
-  {% endfor %}
+</TR>
+{% empty %}
+    <TR><TD>No bookings found for this tab.</TD></TR>
+{% endfor %}
 </TABLE>
 </DIV>
 
-
+<hr>
 {% if request.GET.tab == "1" or not request.GET.tab %}
 <!-- CONGER -->
 <DIV id="tab_1" class="tab">

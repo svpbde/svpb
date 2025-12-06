@@ -77,14 +77,26 @@ def booking_today_public(request):
     bookings = []
     for boat in Boat.objects.filter(club_boat=True):
         bookings.append([boat, boat.getDetailedBookingsToday])
+  
+    tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
 
+    # BOATS
+    boat_types = {'1': 'Conger'}  # Map tabs to boat types
+    target_type = boat_types.get(tab)
+
+    filtered_bookings = [
+        (boat, overviewday) for boat, overviewday in bookings
+        if target_type is None or boat.type.name == target_type
+    ]
+
+
+    # IMAGES
     tab_images = {
         '1': 'boote/conger.jpg',
         '2': 'boote/mariner19.jpg',
         '3': 'boote/other.jpg',
         '4': 'boote/kran.jpg'
     }
-    tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
     selected_image = tab_images.get(tab)
 
     context = {
@@ -92,7 +104,8 @@ def booking_today_public(request):
         "date": datetime.now().strftime("%A, %d. %b"),
         "time": datetime.now().strftime("%H:%M"),
         "tab": tab,
-        'selected_image': selected_image
+        "selected_image": selected_image,
+        "filtered_bookings": filtered_bookings
     }
 
     return render(request, "boote/booking_today_public.html", context)
