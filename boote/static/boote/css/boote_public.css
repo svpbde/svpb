@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 255px;
+    justify-content: space-between;
 }
 
 .boatslist {
@@ -142,7 +144,7 @@ table {}
 
 .boat_summary {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 5px;
     justify-content: space-between;
 }
@@ -208,6 +210,11 @@ table {}
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 178px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 21px;
 }
 
 .boat_panel_content>div:nth-child(2)>span {
@@ -231,6 +238,7 @@ table {}
     width: 100%;
     justify-content: flex-start;
     align-items: center;
+    margin-left: 20px;
 }
 
 #legend>div {
