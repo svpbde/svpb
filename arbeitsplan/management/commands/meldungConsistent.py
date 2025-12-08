@@ -1,35 +1,35 @@
+"""Check consistency of Meldungen.
+
+There should be at most one Meldung per Aufgabe, per User.
 """
-Define a command that should be run from a crontab.
-This one should check consistency of Meldungen:
-at most one Meldung per Aufgabe, per User. 
-"""
 
-from django.core.management.base import BaseCommand, CommandError
-from django.core.management import call_command
-from django.utils import translation
-from django.conf import settings
-
-from django.core.mail import send_mail
-
-import arbeitsplan.models as models
-
+from collections import defaultdict
 import datetime
 import pprint
 
-from collections import defaultdict
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.management.base import BaseCommand
+from django.utils import translation
+
+import arbeitsplan.models as models
+
 
 class Command(BaseCommand):
-    """Go through all Users and Aufgaben.
-    Check whether at most one Meldung exist.
+    """Check consistency of Meldungen.
+
+    Go through all Users and Aufgaben. Check whether at most one Meldung exist.
     """
+
     help = "Check Meldung consistency, send out warning emails"
 
     def handle(self, *args, **options):
-        # set the locale right, to get the dates represented correctly
+        # Set the locale right, to get the dates represented correctly
         translation.activate(settings.LANGUAGE_CODE)
 
-        self.stdout.write('meldungConsistent: Checking on ' +
-                          str(datetime.date.today()))
+        self.stdout.write(
+            "meldungConsistent: Checking on " + str(datetime.date.today())
+        )
 
         inconsistent_users = defaultdict(list)
 
@@ -49,9 +49,11 @@ class Command(BaseCommand):
             subject = "SVPB: Meldungen all good"
             body = "rechoice"
 
-        send_mail(subject,
-                  body,
-                  settings.DEFAULT_FROM_EMAIL,
-                  ['d.dimka89@gmail.com'],
-                  fail_silently=False)
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            ["d.dimka89@gmail.com"],
+            fail_silently=False,
+        )
         translation.deactivate()
