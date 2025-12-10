@@ -1,0 +1,21 @@
+Lieber Vorstand,
+{% if new_members_and_old_hours %}
+für folgende neue Mitglieder, die nach der Jahresmitte beigetreten sind, wurden die Arbeitsstunden automatisch auf das Jahressoll gesetzt:
+{% for new_member, old_hours in new_members_and_old_hours %}
+- {{ new_member }}, Arbeitslast vorher: {{ old_hours }} h, Account erstellt: {{ new_member.user.date_joined }}{% endfor %}
+
+Ist das nicht korrekt, bitte die entsprechenden Mitglieder direkt über die Webseite editieren.
+{% else %}
+für alle Mitglieder, die nach der Jahresmitte beigetreten sind, sind die Arbeitsstunden bereits auf das Jahressoll gesetzt (oder es gibt keine Neumitglieder). Daher ist keine automatische Anpassung mehr notwendig.
+{% endif %}
+{% if unusual_members %}
+Folgende Mitglieder haben eine ungewöhnliche Zahl an Arbeitsstunden:
+{% for unusual_member in unusual_members %}
+- {{ unusual_member }}, Arbeitslast: {{ unusual_member.arbeitslast }} h, Account erstellt: {{ unusual_member.user.date_joined }}{% endfor %}
+
+Bitte passe diese ggf. über die Webseite an.
+{% endif %}
+Beste Grüße
+mein.svpb.de
+
+P.S.: Dies ist eine automatisch generierte E-Mail. Bei Fragen wende dich bitte direkt an einen Administrator.
