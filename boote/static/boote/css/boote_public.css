@@ -96,7 +96,7 @@ td.firstcol {
 }
 
 .boatslist td.REP {
-    background: var(--bs-warning-bg-subtle);
+    background: #ffc107;
     font-size: 60%;
 }
 
