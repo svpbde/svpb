@@ -2058,7 +2058,7 @@ class FilteredEmailCreateView (isVorstandMixin, FilteredListView):
         return redirect(request.get_full_path())
 
 
-class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
+class MeldungNoetigEmailView(FilteredEmailCreateView):
     """Display a list of all users where not enough Zuteilungen have happened so far.
     """
 
@@ -2125,7 +2125,7 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
         return d
 
 
-class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
+class ZuteilungEmailView(FilteredEmailCreateView):
     """Display a list of all users where the zuteilung has changed since last
     notification. Send them out.
     """
