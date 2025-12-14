@@ -174,7 +174,7 @@ class AufgabenUpdateTests(TestCase):
         self.task = Aufgabe.objects.get(aufgabe="Feuchtfröhliche Bugfixsuche")
         self.user = User.objects.get(username="Superuser")
         self.worker = User.objects.get(username="Mitglied")
-        self.worker_2 = User.objects.get(username="Teamleiter")
+        self.worker_2 = User.objects.get(username="Auch-Mitglied")
         self.post_data = {
             # Note missing key "schnellzuweisung" (missing = empty)
             "aufgabe": "Feuchtfröhliche Bugfixsuche",

@@ -20,9 +20,9 @@ class MitgliederTest(TestCase):
     strongpassword = "CZmndjtH3Kyo"
     superuser = "Superuser"
     board = "Vorstand"
-    teamleader = "Teamleiter"
     member = "Mitglied"
-    users = [superuser, board, teamleader, member]
+    member_2 = "Auch-Mitglied"
+    users = [superuser, board, member, member_2]
 
     def login_user(self, user, password=None):
         cl = Client()
@@ -43,7 +43,7 @@ class MitgliederTest(TestCase):
     @override_settings(JAHRESENDE=True)
     def test_login_works_year_end(self):
         # Test blocked users
-        for user in [self.member, self.teamleader]:
+        for user in [self.member, self.member_2]:
             cl, response = self.login_user(user, self.plainpassword)
             self.assertContains(
                 response,

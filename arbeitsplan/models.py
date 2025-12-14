@@ -268,16 +268,6 @@ class Aufgabe(models.Model):
         on_delete=models.PROTECT,
         help_text="Verantwortliches Vorstandsmitglied",
     )
-    teamleader = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,  # ok not to have a teamleader
-        related_name="teamleader_set",
-        help_text="Ein optionaler Teamleader für "
-        "die Aufgabe (nicht notwendig Vorstand)",
-        verbose_name="Team-Leader",
-        blank=True,
-        null=True,
-    )
 
     gruppe = models.ForeignKey(Aufgabengruppe, on_delete=models.PROTECT)
 
@@ -300,12 +290,6 @@ class Aufgabe(models.Model):
     )
 
     bemerkung = models.TextField(blank=True)
-
-    def kontakt(self):
-        if self.teamleader:
-            return self.teamleader
-        else:
-            return self.verantwortlich
 
     def numMeldungen(self):
         """How many Meldungen of status better than NEVER

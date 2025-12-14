@@ -52,7 +52,7 @@ class Command(BaseCommand):
         kontaktKontext = defaultdict(list)
 
         for z in zuteilungTomorrow:
-            kontakt = z.aufgabe.kontakt()
+            kontakt = z.aufgabe.verantwortlich
             context = {'datum': z.aufgabe.datum,
                        'u': z.ausfuehrer,
                        'aufgabe': z.aufgabe,

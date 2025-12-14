@@ -1,7 +1,6 @@
 [
     {
         "fields": {
-            "teamleader": 4,
             "gruppe": 1,
             "aufgabe": "Feuchtfröhliche Bugfixsuche",
             "verantwortlich": 1,
@@ -17,7 +16,6 @@
         "fields": {
             "aufgabe": "Adventskaffee",
             "verantwortlich": 1,
-            "teamleader": null,
             "gruppe": 1,
             "anzahl": 1,
             "stunden": 3,

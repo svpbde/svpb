@@ -40,7 +40,7 @@ class Command(BaseCommand):
                             )
 
         print(offeneLeistungen)
-        kontakte = {l.aufgabe.kontakt() for l in offeneLeistungen}
+        kontakte = {l.aufgabe.verantwortlich for l in offeneLeistungen}
 
         print(kontakte)
         
