@@ -46,7 +46,7 @@ class SimpleTest(TestCase):
 
         # and with some qualifiers:
         response = cl.get(
-            "/arbeitsplan/leistungenBearbeiten/z=me/?last_name=&first_name=&aufgabengruppe=3&von=&bis=&status=OF&status=RU&filter=Filter+anwenden"
+            "/arbeitsplan/leistungenBearbeiten/z=me/?last_name=&first_name=&aufgabengruppe=2&von=&bis=&status=OF&status=RU&filter=Filter+anwenden"
         )
         self.assertEqual(response.status_code, 200)
 
