@@ -96,10 +96,6 @@ Arbeitsdienst | mein.svpb.de
         <li><a class="dropdown-item" href="/arbeitsplan/salden/">Saldenübersicht</a></li>
             {% endif %}
         {% endfor %}
-        {% if user.teamleader_set.count > 0 %}
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="/arbeitsplan/leistungenBearbeiten/z=team/">Bearbeiten (für Team)</a></li>
-        {% endif %}
     </ul>
 </li>
 

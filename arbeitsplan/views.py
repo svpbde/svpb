@@ -23,7 +23,7 @@ from post_office.models import EmailTemplate
 # Arbeitsplan-Importe:
 from . import forms
 from .tables import *  # TODO: change import not to polute name space
-from svpb.views import isTeamlead, isVorstand, isVorstandMixin, isVorstandOrTeamleaderMixin
+from svpb.views import isVorstand, isVorstandMixin
 
 
 def notifyVorstand(meldung, mailcomment):
@@ -578,21 +578,6 @@ class AufgabengruppeUpdate(isVorstandMixin, SimpleUpdateView):
         return super(AufgabengruppeUpdate, self).form_valid(form)
 
 
-class ListAufgabenTeamleader(FilteredListView):
-    title = "Aufgaben, für die ich Team-Leiter bin"
-    tabletitle = 'Aufgabenliste'
-    model = models.Aufgabe
-    tableClass = AufgabenTableTeamlead
-
-    intro_text = """
-    Diese Tabelle zeigt alle Aufgaben an, für die Sie Team-Leiter sind.
-    """
-
-    def get_data(self):
-        qs = self.request.user.teamleader_set.all()
-        return qs
-
-
 ########################################################################################
 #########   MELDUNG
 ########################################################################################
@@ -794,7 +779,7 @@ class CreateMeldungenView (MeldungEdit):
     Aufgaben aus der Vergangenheit werden nicht angezeigt!
     Wenn Sie sich im Laufe des Jahres für Aufgaben ohne Datum
     eintragen wollen, sprechen Sie dies bitte mit dem zuständigen
-    Vorstand/Teamleiter ab.
+    Vorstand ab.
     <p>
     Sie können die Aufgabenliste eingrenzen, in dem Sie nach
     Aufgabengruppen filtern (--- entfernt den Filter).
@@ -1375,11 +1360,6 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
     </ul>
     """
 
-    discuss_text = """
-    <li> Teamleader Stundenplanzuteilungen erlauben? Oder auch
-    allgemein Zuteilung von Mitgliedern? </li>
-    """
-
     def get_filtered_table(self, qs):
         table = self.tableClassFactory(qs, self.show_stundenplan)
         django_tables2.RequestConfig(self.request, paginate=False).configure(table)
@@ -1719,10 +1699,10 @@ class ListLeistungView (FilteredListView):
         return qsLeistungen
 
 
-class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
+class LeistungBearbeitenView(isVorstandMixin, FilteredListView):
     """A view to show a table of non-accepted/rejected Leistungen.
 
-    Only accessible to Vorstand or teamleaders. Allows to accept, reject, or enquiry
+    Only accessible to Vorstand. Allows to accept, reject, or enquiry
     Leistungen.
     """
 
@@ -1750,8 +1730,7 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
     def get_data(self):
         """Get data according to user permissions.
 
-        Vorstand can choose to see all or just some. Teamleaders are restricted to those
-        tasks where they are indeed the teamleader.
+        Vorstand can choose to see all or just some.
         """
         if isVorstand(self.request.user):
             zustaendig = self.kwargs["zustaendig"]
@@ -1762,30 +1741,14 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
                 )
             else:
                 mainqs = models.Leistung.objects.all()
-        elif isTeamlead(self.request.user):
-            leadingTheseTasks = self.request.user.teamleader_set.all()
-
-            mainqs = models.Leistung.objects.filter(aufgabe__in=leadingTheseTasks)
         else:
             return None
 
         return mainqs
 
     def post(self, request, zustaendig, *args, **kwargs):
-        """Save changes to the database.
-
-        Need to carefully check permissions:
-        - vorstand may do everything
-        - teamleaders only for those tasks they lead.
-        They only see those tasks in regular operation, but
-        hackers might try to inject weird stuff here.
-        """
-        if isVorstand(request.user):
-            permission_check_required = False
-        elif isTeamlead(request.user):
-            permission_check_required = True
-            leadingTheseTasks = self.request.user.teamleader_set.all()
-        else:
+        """Save changes to the database."""
+        if not isVorstand(request.user):
             messages.error(request, "Du darfst diese Funktion nicht benutzen!")
 
             redirect("homeArbeitsplan")
@@ -1807,14 +1770,6 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
         # Check if values were updated and save them to the database
         for num, options in data.items():
             leistung = models.Leistung.objects.get(id=int(num))
-            if permission_check_required:
-                if leistung.aufgabe not in leadingTheseTasks:
-                    messages.error(
-                        request,
-                        "Sie dürfen Leistungsmeldungen für diese Aufgabe nicht "
-                        "bearbeiten!",
-                    )
-                    continue
 
             save_it = False
             if leistung.bemerkungVorstand != options["bemerkungVorstand"]:
@@ -1846,7 +1801,6 @@ class LeistungBearbeitenView(isVorstandOrTeamleaderMixin, FilteredListView):
                         "bemerkungVorstand": leistung.bemerkungVorstand,
                         "status": leistung.get_status_display(),
                         "vorstand": leistung.aufgabe.verantwortlich,
-                        "teamleader": leistung.aufgabe.teamleader,
                     }
                     mail.send(
                         [leistung.melder.email], template="leistungEmail", context=d,
@@ -2011,7 +1965,7 @@ class ListEmailTemplate(isVorstandMixin, ListView):
     model = EmailTemplate
     template_name = "listEmail.html"
 
-class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
+class FilteredEmailCreateView (isVorstandMixin, FilteredListView):
 
     tableform = {'name': "eintragen",
                  'value':
@@ -2104,7 +2058,7 @@ class FilteredEmailCreateView (isVorstandOrTeamleaderMixin, FilteredListView):
         return redirect(request.get_full_path())
 
 
-class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
+class MeldungNoetigEmailView(FilteredEmailCreateView):
     """Display a list of all users where not enough Zuteilungen have happened so far.
     """
 
@@ -2171,7 +2125,7 @@ class MeldungNoetigEmailView(isVorstandMixin, FilteredEmailCreateView):
         return d
 
 
-class ZuteilungEmailView(isVorstandMixin, FilteredEmailCreateView):
+class ZuteilungEmailView(FilteredEmailCreateView):
     """Display a list of all users where the zuteilung has changed since last
     notification. Send them out.
     """
@@ -2257,7 +2211,7 @@ class MediaChecks(View):
     def get(self, request):
         """Figure out:
         active user with raw access: Entwickler
-        vorstand, teamleader, ordinary member
+        vorstand, ordinary member
         """
 
         basepath = settings.SENDFILE_ROOT
@@ -2266,8 +2220,6 @@ class MediaChecks(View):
             filename = "SVPB-entwickler.pdf"
         elif isVorstand(request.user):
             filename = "SVPB-vorstand.pdf"
-        elif isTeamlead(request.user):
-            filename = "SVPB-teamleader.pdf"
         else:
             filename = "SVPB.pdf"
 

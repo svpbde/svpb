@@ -109,7 +109,6 @@ class AufgabeForm(forms.ModelForm):
             "gruppe",
             "anzahl",
             "stunden",
-            "teamleader",
             "datum",
             "bemerkung",
         )
@@ -118,12 +117,6 @@ class AufgabeForm(forms.ModelForm):
             # fixed width (which would break responsiveness), see
             # https://select2.org/appearance#container-width
             "verantwortlich": Select2Widget({"data-width": "100%"}),
-            "teamleader": Select2Widget(
-                {
-                    "data-width": "100%",
-                    "data-allow-clear": "true",
-                }
-            ),
         }
 
     def __init__(self, request, *args, **kwargs):
@@ -140,11 +133,10 @@ class AufgabeForm(forms.ModelForm):
             'gruppe',
             'anzahl',
             'stunden',
-            'teamleader',
             Field('datum', css_class="datepicker"),
             'bemerkung',
             'schnellzuweisung',
-            )
+        )
 
     def clean(self):
 

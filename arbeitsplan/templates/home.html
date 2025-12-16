@@ -116,34 +116,6 @@ Dir stehen folgende Funktionen zur Verfügung:
 	</div>
 </div>
 
-{% if user.teamleader_set.count > 0 %}
-
-<hr>
-<h2> Teamleiter-Funktionen </h2>
-<p>
-<div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
-	<div class="col d-flex align-items-start">
-		<div
-			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-people-group fa-fw fa-lg" width="1em" height="1em"></i>
-		</div>
-		<div>
-			<a href="{% url 'arbeitsplan-aufgabenTeamleader' %}">Aufgaben anzeigen</a>
-			<p>Für welche Aufgaben bin ich Teamleiter?</p>
-		</div>
-	</div>
-	<div class="col d-flex align-items-start">
-		<div
-			class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-			<i class="bi fa-solid fa-check fa-fw fa-lg" width="1em" height="1em"></i>
-		</div>
-		<div>
-			<a href="/arbeitsplan/leistungenBearbeiten/z=team/">Leistungsmeldungen anzeigen</a>
-			<p>Vorliegende Leistungsmeldungen für mein Team bearbeiten.</p>
-		</div>
-	</div>
-</div>
-{% endif %}
 
 {% for g in user.groups.all %}
 {% if g.name == "Vorstand" %}

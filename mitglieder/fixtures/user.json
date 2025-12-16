@@ -63,9 +63,9 @@
     },
     {
         "fields": {
-            "username": "Teamleiter",
-            "first_name": "Tea",
-            "last_name": "Teamleiter",
+            "username": "Auch-Mitglied",
+            "first_name": "Aurelia",
+            "last_name": "Auch-Mitglied",
             "is_active": true,
             "is_superuser": false,
             "is_staff": false,
@@ -75,7 +75,7 @@
             ],
             "user_permissions": [],
             "password": "pbkdf2_sha256$260000$eN0UXvcU4Q95MugbgpVWrp$HAJcqFwIPhXzEAiu64uYqnTt/5Ix+uSBnR0oycgARdM=",
-            "email": "teamleiter@example.com",
+            "email": "auch-mitglied@example.com",
             "date_joined": "2013-12-25T10:30:36Z"
         },
         "model": "auth.user",

@@ -41,11 +41,6 @@ urlpatterns = [
         name="arbeitsplan-aufgaben",
     ),
     re_path(
-        r"^aufgabenTeamleader/$",
-        active_and_login_required(arbeitsplan.views.ListAufgabenTeamleader.as_view()),
-        name="arbeitsplan-aufgabenTeamleader",
-    ),
-    re_path(
         r"^aufgabenVorstand/$",
         active_and_login_required(arbeitsplan.views.ListAufgabenVorstandView.as_view()),
         name="arbeitsplan-aufgabenVorstand",

@@ -34,26 +34,10 @@ def isVorstand(user):
     return user.groups.filter(name="Vorstand")
 
 
-def isTeamlead(user):
-    return user.teamleader_set.count() > 0
-
-
-def isVorstandOrTeamleader(user):
-    return isVorstand(user) or isTeamlead(user)
-
-
 class isVorstandMixin(object):
     @method_decorator(user_passes_test(isVorstand, login_url="/keinVorstand/"))
     def dispatch(self, *args, **kwargs):
         return super(isVorstandMixin, self).dispatch(*args, **kwargs)
-
-
-class isVorstandOrTeamleaderMixin(object):
-    @method_decorator(
-        user_passes_test(isVorstandOrTeamleader, login_url="/keinVorstand/")
-    )
-    def dispatch(self, *args, **kwargs):
-        return super(isVorstandOrTeamleaderMixin, self).dispatch(*args, **kwargs)
 
 
 def logout_view(request):

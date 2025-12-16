@@ -116,7 +116,6 @@ class AufgabenCreateTests(TestCase):
                 "gruppe": "1",
                 "anzahl": "1",
                 "stunden": "1",
-                "teamleader": "",
                 "datum": "",
                 "bemerkung": "",
                 "schnellzuweisung": str(self.worker.id),
@@ -175,7 +174,7 @@ class AufgabenUpdateTests(TestCase):
         self.task = Aufgabe.objects.get(aufgabe="Feuchtfröhliche Bugfixsuche")
         self.user = User.objects.get(username="Superuser")
         self.worker = User.objects.get(username="Mitglied")
-        self.worker_2 = User.objects.get(username="Teamleiter")
+        self.worker_2 = User.objects.get(username="Auch-Mitglied")
         self.post_data = {
             # Note missing key "schnellzuweisung" (missing = empty)
             "aufgabe": "Feuchtfröhliche Bugfixsuche",
@@ -183,7 +182,6 @@ class AufgabenUpdateTests(TestCase):
             "gruppe": "1",
             "anzahl": "1",
             "stunden": "12",
-            "teamleader": "4",
             "datum": "",
             "bemerkung": "Dies ist eine ganzjährige Testaufgabe.",
             "uhrzeit_8": "0",
