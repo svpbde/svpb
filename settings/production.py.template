@@ -34,10 +34,8 @@ EMAIL_HOST_PASSWORD = 'EmailPasswordPlaceholder'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-# Use the standard django SMTP backend for production
-# Note that in addition to the standard django backend, post_office is used for
-# mass mailings (is explicitly imported where needed).
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Use django-post-office email backend for production
+EMAIL_BACKEND = 'post_office.EmailBackend'
 
 # Mail addresses to send notifications to
 EMAIL_NOTIFICATION_BOARD = ['mail@svpb.de', ]

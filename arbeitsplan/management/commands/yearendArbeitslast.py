@@ -3,9 +3,10 @@
 import datetime
 
 from django.conf import settings
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from post_office import mail
 
 import arbeitsplan.models as models
 
@@ -53,8 +54,6 @@ class Command(BaseCommand):
 
         # Prepare and send mail
         subject = "Arbeitsstunden neuer Mitglieder auf Jahressoll angepasst"
-        to_mail = settings.EMAIL_NOTIFICATION_BOARD
-        from_mail = settings.DEFAULT_FROM_EMAIL
 
         body = render_to_string(
             "commands/yearend_arbeitslast_email.txt",
@@ -65,4 +64,12 @@ class Command(BaseCommand):
             },
         )
 
-        send_mail(subject, body, from_mail, to_mail, fail_silently=False)
+        mail.send(
+            recipients=settings.EMAIL_NOTIFICATION_BOARD,
+            sender=settings.DEFAULT_FROM_EMAIL,
+            subject=subject,
+            message=body,
+        )
+
+        # Send out all queued mails
+        call_command("send_queued_mail")
