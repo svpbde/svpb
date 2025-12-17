@@ -8,9 +8,10 @@ import datetime
 import pprint
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils import translation
+from post_office import mail
 
 import arbeitsplan.models as models
 
@@ -49,11 +50,14 @@ class Command(BaseCommand):
             subject = "SVPB: Meldungen all good"
             body = "rechoice"
 
-        send_mail(
-            subject,
-            body,
-            settings.DEFAULT_FROM_EMAIL,
-            ["d.dimka89@gmail.com"],
-            fail_silently=False,
+        mail.send(
+            recipients=["d.dimka89@gmail.com"],
+            sender=settings.DEFAULT_FROM_EMAIL,
+            subject=subject,
+            message=body,
         )
+
+        # Send out all queued mails
+        call_command("send_queued_mail")
+
         translation.deactivate()
