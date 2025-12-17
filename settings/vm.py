@@ -40,7 +40,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Mail addresses to send notifications to
 EMAIL_NOTIFICATION_BOARD = ['vorstand@example.com', ]
-EMAIL_NOTIFICATION_BOATS = ['boote@example.com', ]
 
 # XSendfile interface
 # This requires nginx as webserver
