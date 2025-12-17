@@ -1,0 +1,13 @@
+Lieber Bootspate,
+
+{{ issue.reported_by.first_name }} {{ issue.reported_by.last_name }} hat folgende Schadensmeldung erfasst:
+
+Boot: {{ issue.boat.name }}, https://mein.svpb.de/boote/boot/{{ issue.boat.pk }}
+Datum: {{ issue.reported_date }}
+Beschreibung: {{ issue.reported_descr }}
+Link zu den Schadensmeldungen: https://mein.svpb.de/boote/boot_issues/{{ issue.boat.pk }}
+
+Dies ist eine automatisch generierte E-Mail, bitte nicht darauf antworten.
+
+Beste Grüße
+mein.svpb.de

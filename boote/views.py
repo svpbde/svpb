@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
+from post_office import mail
 
 from .forms import (
     NewReservationForm,
@@ -407,14 +410,32 @@ def boot_issues(request, boot_pk):
             # process the data in form.cleaned_data as required
             res_reported_descr = form.cleaned_data["res_reported_descr"]
 
-            b = BoatIssue(
+            issue = BoatIssue(
                 boat=boot,
                 status=1,
                 reported_descr=res_reported_descr,
                 reported_by=user,
                 reported_date=datetime.now(),
             )
-            b.save()
+            issue.save()
+
+            # Send mail
+            payload = render_to_string(
+                "boote/email_issue.txt",
+                context={"issue": issue},
+            )
+
+            mail.send(
+                recipients=boot.owner.email,
+                sender=settings.DEFAULT_FROM_EMAIL,
+                cc=issue.reported_by.email,
+                subject=f"[SVPB] Schadensmeldung - {issue.boat.name}",
+                message=payload,
+            )
+
+            issue.notified = True
+            issue.save()
+
             # redirect to a new URL:
             return redirect("boot-issues", boot.pk)
 

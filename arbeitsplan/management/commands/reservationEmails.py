@@ -52,40 +52,6 @@ class Command(BaseCommand):
             except:
                 print("Unexpected error ")
 
-        # EMAIL ISSUES
-        t = loader.get_template("boote/email_issue.html")
-        # Get records
-        for issue in models.BoatIssue.objects.filter(notified=False):
-            try:
-                c = Context({"issue": issue})
-                payload = t.render(c)
-                recipients = settings.EMAIL_NOTIFICATION_BOATS + [
-                    issue.reported_by.email
-                ]
-                sbj = (
-                    "[SVPB] Schadensmeldung - "
-                    + issue.boat.type.name
-                    + ' "'
-                    + issue.boat.name
-                    + '"'
-                )
-                self.stdout.write("From: " + settings.DEFAULT_FROM_EMAIL)
-                self.stdout.write(f"To: {recipients}")
-                self.stdout.write("Subject: " + sbj)
-                self.stdout.write("Content:\n\r" + payload)
-
-                mail.send(
-                    recipients,
-                    settings.DEFAULT_FROM_EMAIL,
-                    subject=sbj,
-                    html_message=payload,
-                )
-
-                issue.notified = True
-                issue.save()
-            except:
-                print("Unexpected error ")
-
         call_command("send_queued_mail")
 
         translation.deactivate()
