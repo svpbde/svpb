@@ -13,7 +13,7 @@ import arbeitsplan.models as models
 
 
 class Command(BaseCommand):
-    """Notify on upcoming jobs in leaddays days.
+    """Notify about upcoming jobs in leaddays days.
 
     Grab all users which have a job starting in leaddays days.
     Send out emails to them.
