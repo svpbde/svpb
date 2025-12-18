@@ -39,6 +39,8 @@ EMAIL_BACKEND = 'post_office.EmailBackend'
 
 # Mail addresses to send notifications to
 EMAIL_NOTIFICATION_BOARD = ['mail@svpb.de', ]
+# See https://docs.djangoproject.com/en/4.2/ref/settings/#std-setting-ADMINS
+ADMINS = []  # Enter admin mail addresses here
 
 # XSendfile interface
 # This requires nginx as webserver
