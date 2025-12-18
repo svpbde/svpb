@@ -520,7 +520,7 @@ class MitgliederExcel(View):
             filename = "mitglieder.xlsx"
             basepath = settings.SENDFILE_ROOT
             # Repeated name, TODO: Move this command and mitgliedExcel.py into settings
-            call_command("mitgliedExcel")
+            call_command("create_member_excel")
             return sendfile(request, os.path.join(basepath, filename))
         else:
             return redirect("keinVorstand")
