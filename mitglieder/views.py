@@ -517,10 +517,10 @@ class MitgliederExcel(View):
         """
         if isVorstand(request.user):
             # Generate the Excel file using a management command.
-            filename = "mitglieder.xlsx"
-            basepath = settings.SENDFILE_ROOT
-            # Repeated name, TODO: Move this command and mitgliedExcel.py into settings
             call_command("create_member_excel")
+
+            filename = settings.FILENAME_MEMBER_EXCEL
+            basepath = settings.SENDFILE_ROOT
             return sendfile(request, os.path.join(basepath, filename))
         else:
             return redirect("keinVorstand")
