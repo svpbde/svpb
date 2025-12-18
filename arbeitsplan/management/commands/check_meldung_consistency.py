@@ -3,9 +3,7 @@
 There should be at most one Meldung per Aufgabe, per User.
 """
 
-from collections import defaultdict
 import datetime
-import pprint
 
 from django.conf import settings
 from django.core.management import call_command
@@ -29,35 +27,38 @@ class Command(BaseCommand):
         translation.activate(settings.LANGUAGE_CODE)
 
         self.stdout.write(
-            "meldungConsistent: Checking on " + str(datetime.date.today())
+            "check_meldung_consistency: Checking on " + str(datetime.date.today())
         )
 
-        inconsistent_users = defaultdict(list)
+        inconsistent_meldungen = []
 
         for u in models.User.objects.all():
             for a in models.Aufgabe.objects.all():
                 mqs = models.Meldung.objects.filter(melder=u, aufgabe=a)
                 c = mqs.count()
                 if c > 1:
-                    inconsistent_users[u].append(a)
+                    inconsistent_meldungen.append(mqs)
 
-        print(inconsistent_users)
+        if inconsistent_meldungen:
+            message = "Folgende Meldungen liegen mehrfach vor:\r\n"
+            message += "primary keys, Melder, Aufgabe\r\n"
+            for entry in inconsistent_meldungen:
+                message += (
+                    f"{[meldung.pk for meldung in entry]}, {entry[0].melder}, "
+                    f"{entry[0].aufgabe}\r\n"
+                )
+            print(message)
 
-        if inconsistent_users:
-            subject = "SVPB: PROBLEM with Meldungenkonsistenz"
-            body = pprint.pformat(inconsistent_users)
-        else:
-            subject = "SVPB: Meldungen all good"
-            body = "rechoice"
+            subject = "[SVPB] Meldungen inkonsistent"
 
-        mail.send(
-            recipients=["d.dimka89@gmail.com"],
-            sender=settings.DEFAULT_FROM_EMAIL,
-            subject=subject,
-            message=body,
-        )
+            mail.send(
+                recipients=[mail for _, mail in settings.ADMINS],
+                sender=settings.DEFAULT_FROM_EMAIL,
+                subject=subject,
+                message=message,
+            )
 
-        # Send out all queued mails
-        call_command("send_queued_mail")
+            # Send out all queued mails
+            call_command("send_queued_mail")
 
         translation.deactivate()
