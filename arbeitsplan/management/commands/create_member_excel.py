@@ -146,7 +146,7 @@ class Command(BaseCommand):
 
         # Create new file
         workbook = xlsxwriter.Workbook(
-            os.path.join(settings.SENDFILE_ROOT, "mitglieder.xlsx")
+            os.path.join(settings.SENDFILE_ROOT, settings.FILENAME_MEMBER_EXCEL)
         )
         # Add overview sheet
         self.uebersichtsblatt(workbook)

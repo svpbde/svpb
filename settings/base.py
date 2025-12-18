@@ -20,6 +20,8 @@ JAHRESSTUNDEN = 12
 BEGIN_CODED_HOURS_PER_YEAR = 90
 JAHRESENDE = False
 
+FILENAME_MEMBER_EXCEL = "mitglieder.xlsx"
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
