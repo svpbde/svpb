@@ -29,6 +29,7 @@ DATABASES = {
 EMAIL_HOST = 'EmailHostPlaceholder'
 EMAIL_PORT = 465
 DEFAULT_FROM_EMAIL = 'mein@svpb.de'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_HOST_USER = 'EmailUserPlaceholder'
 EMAIL_HOST_PASSWORD = 'EmailPasswordPlaceholder'
 EMAIL_USE_TLS = False
