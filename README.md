@@ -25,7 +25,7 @@ There are settings for three different environments:
    * There's a vagrant file to automatically provision a VM with ansible.
    Head over to [svpb-ansible](https://github.com/svpbde/svpb-ansible).
    * Execute `load_fixtures.sh` in `scripts` to populate the database with some test data.
-   There are four users - "Vorstand", "Teamleiter", "Mitglied" and "Superuser", each with password "Test".
+   There are four users - "Vorstand", "Mitglied", "Auch-Mitglied" and "Superuser", each with password "Test".
 3. **Production**:
    * Install the production server according to the playbook in [svpb-ansible](https://github.com/svpbde/svpb-ansible).
    * Copy `settings/production.py.template` to `settings/production.py` and fill in the credentials.
