@@ -156,7 +156,7 @@ class NewReservationForm(forms.Form):
         # initialize DATES
         DATES = []
         d = datetime.now()
-        for i in range(1, 7):
+        for i in range(1, 14):
             d = d + timedelta(days=1)
             DATES.append([d.strftime("%Y-%m-%d"), d.strftime("%A (%d. %b)")])
         self.fields["res_date"] = forms.ChoiceField(
