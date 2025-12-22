@@ -19,7 +19,7 @@ from .models import Boat, Booking, BoatIssue
 def booking_today(request):
     bookings = []
     for boat in Boat.objects.filter(club_boat=True, active=True):
-        bookings.append([boat, boat.getDetailedBookingsToday])
+        bookings.append([boat, boat.get_detailed_bookings(num_days=1)[0]])
 
     context = {
         "bookings": bookings,
@@ -61,7 +61,7 @@ def booking_training_public(request):
 def booking_today_public(request):
     bookings = []
     for boat in Boat.objects.filter(club_boat=True):
-        bookings.append([boat, boat.getDetailedBookingsToday])
+        bookings.append([boat, boat.get_detailed_bookings(num_days=1)[0]])
 
     # BOATS
     boat_types = {
@@ -197,10 +197,11 @@ def booking_boot(request, boot_pk):
     boot = Boat.objects.get(pk=boot_pk)
     user = request.user
 
-    bookings = Boat.getDetailedBookings7Days(boot)
+    num_days = 7
+    bookings = boot.get_detailed_bookings(num_days)
     overview = []
     d = datetime.now()
-    for i in range(0, 7):
+    for i in range(0, num_days):
         overview.append([d.strftime("%A"), d.strftime("%d. %b"), bookings[i]])
         d = d + timedelta(days=1)
 

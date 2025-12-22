@@ -111,10 +111,10 @@ Verfügbarkeit "{{ boot.name }}" in den kommenden 7 Tagen
   	<TR>
 		<TD style="font-size: 80%"> <b>{{ weekday }}</b> <br>({{ date }})</TD>
    		{% for userid, usertag, type in overviewday %}
-			{% if userid == 0 %}
-			<TD class='booked0' id='cell_{{ rowno }}_{{ forloop.counter }}'>&nbsp</TD>
+			{% if userid %}
+      		<TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa-solid fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>
       		{% else %}
-      		<TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa-solid fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>				
+			<TD class='booked0' id='cell_{{ rowno }}_{{ forloop.counter }}'>&nbsp</TD>
       		{% endif %}
     	{% endfor %}
 	  </TR>
