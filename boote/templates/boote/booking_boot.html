@@ -12,12 +12,12 @@ Reservierungen: {{ boot.name }} ({{ boot.type.name }})
 <script>
 
 function showbooking() {
-	date_idx = document.getElementById("id_res_date").selectedIndex+1;
-	time_idx = document.getElementById("id_res_start").selectedIndex;
-	dur_idx = document.getElementById("id_res_duration").selectedIndex;
-	
-	mark(date_idx, time_idx, dur_idx);	
-	
+    date_idx = document.getElementById("id_res_date").selectedIndex+1;
+    time_idx = document.getElementById("id_res_start").selectedIndex;
+    dur_idx = document.getElementById("id_res_duration").selectedIndex;
+
+    mark(date_idx, time_idx, dur_idx);
+
 }
 
 setx=1;
@@ -25,33 +25,33 @@ sety=1;
 setd=0;
 
 function mark(x, y, d) {
-	// unmark old
-	
-	for (i = 0; i <= setd; i++) { 
-		off=sety+i
-    	var cell = document.getElementById("cell_"+setx+"_"+off);
-    	if (cell != null)
-    		cell.style.border="1px solid #cccccc";
-	}
-	
-	setx=x;
-	sety=y;
-	setd=d;
+    // unmark old
 
-	// mark new
-	for (i = 0; i <= setd; i++) { 
-		off=sety+i
-    	var cell = document.getElementById("cell_"+setx+"_"+off);
-    	if (cell != null)
-    		cell.style.border="2px solid blue";
-	}
-	
+    for (i = 0; i <= setd; i++) {
+        off=sety+i
+        var cell = document.getElementById("cell_"+setx+"_"+off);
+        if (cell != null)
+            cell.style.border="1px solid #cccccc";
+    }
+
+    setx=x;
+    sety=y;
+    setd=d;
+
+    // mark new
+    for (i = 0; i <= setd; i++) {
+        off=sety+i
+        var cell = document.getElementById("cell_"+setx+"_"+off);
+        if (cell != null)
+            cell.style.border="2px solid blue";
+    }
+
 }
 
 </script>
 
 <p>
- <a href='/boote/boot/{{ boot.pk }}'>&lt; zurück zum {{ boot.name }}</a>
+<a href='/boote/boot/{{ boot.pk }}'>&lt; zurück zum {{ boot.name }}</a>
 </p>
 
 
@@ -59,22 +59,23 @@ function mark(x, y, d) {
 Möchtest du <b>"{{ boot.name }}"</b> verbindlich reservieren?
 </p>
 {% if boot.booking_remarks or boot.instructions %}
-<p style='border: 1px solid rgb(159, 159, 230); padding: 5px; background-color: rgb(199, 199, 255)'><b>Wichtige Hinweise</b>:
-	{% if boot.booking_remarks %}
-		{{ boot.booking_remarks }}
-	{% endif %}
-	{% if boot.instructions %}
-		Beachte bitte die <a href="{{ boot.instructions.url }}">Hinweise zur Bootsbenutzung (pdf)</a>.
-	{% endif %}
+<p style='border: 1px solid rgb(159, 159, 230); padding: 5px; background-color: rgb(199, 199, 255)'>
+    <b>Wichtige Hinweise</b>:
+    {% if boot.booking_remarks %}
+        {{ boot.booking_remarks }}
+    {% endif %}
+    {% if boot.instructions %}
+        Beachte bitte die <a href="{{ boot.instructions.url }}">Hinweise zur Bootsbenutzung (pdf)</a>.
+    {% endif %}
 </p>
 {% endif %}
 {% if error_list %}
 <div class='alert alert-block alert-danger'>
-	<ul>
-	{% for error in error_list %}
-		<li>{{ error }}</li>
-	{% endfor %}
-	</ul>
+    <ul>
+    {% for error in error_list %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
 </div>
 {% endif %}
 
@@ -86,7 +87,7 @@ Verfügbarkeit "{{ boot.name }}" in den kommenden 14 Tagen
 </h3>
 
 <TABLE id='boatslist'>
- <thead>
+    <thead>
         <tr>
             <th>Datum</th>
             <th class="date" colspan="2">08:00</th>
@@ -103,22 +104,22 @@ Verfügbarkeit "{{ boot.name }}" in den kommenden 14 Tagen
             <th class="date" colspan="2">19:00</th>
             <th class="date" colspan="2">20:00</th>
             <th class="date" colspan="2">21:00</th>
-         </tr>
- </thead>
+        </tr>
+    </thead>
 
 {% for weekday, date, overviewday in booking_overview %}
-  	{% with rowno=forloop.counter0 %}     
-  	<TR>
-		<TD style="font-size: 80%"> <b>{{ weekday }}</b> <br>({{ date }})</TD>
-   		{% for userid, usertag, type in overviewday %}
-			{% if userid %}
-      		<TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa-solid fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>
-      		{% else %}
-			<TD class='booked0' id='cell_{{ rowno }}_{{ forloop.counter }}'>&nbsp</TD>
-      		{% endif %}
-    	{% endfor %}
-	  </TR>
-	{% endwith %}
+    {% with rowno=forloop.counter0 %}
+    <TR>
+        <TD style="font-size: 80%"> <b>{{ weekday }}</b> <br>({{ date }})</TD>
+        {% for userid, usertag, type in overviewday %}
+            {% if userid %}
+            <TD class='{{ type }}' id='cell_{{ rowno }}_{{ forloop.counter }}'><i class="fa-solid fa-lock" title="Mitglied: {{ usertag }}"><br><span class="tinyfont">{{ type }}</span></TD>
+            {% else %}
+            <TD class='booked0' id='cell_{{ rowno }}_{{ forloop.counter }}'>&nbsp</TD>
+            {% endif %}
+        {% endfor %}
+    </TR>
+    {% endwith %}
 {% endfor %}
 </TABLE>
 
