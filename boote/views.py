@@ -197,7 +197,7 @@ def booking_boot(request, boot_pk):
     boot = Boat.objects.get(pk=boot_pk)
     user = request.user
 
-    num_days = 7
+    num_days = 14
     bookings = boot.get_detailed_bookings(num_days)
     overview = []
     d = datetime.now()
