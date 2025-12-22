@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 import uuid
 
@@ -66,43 +66,54 @@ class Boat(models.Model):
             result[offset] = 1
         return result
 
-    def getDetailedBookingsToday(self):
-        res = [["", "", ""] for x in range(28)]
-        d1 = datetime.now().replace(hour=7, minute=0)
-        d2 = d1.replace(hour=21)
-        for booking in Booking.objects.filter(
-            boat=self, date__lte=d2, date__gte=d1, status=1
-        ):
-            uid = booking.user.username
-            usertag = booking.user.first_name + " " + booking.user.last_name
-            startIdx = round(
-                (booking.time_from.hour - 8) * 2 + (booking.time_from.minute / 30)
-            )
-            endIdx = round(
-                (booking.time_to.hour - 8) * 2 + (booking.time_to.minute / 30)
-            )
-            for i in range(max(0, startIdx), min(28, endIdx)):
-                res[i] = [uid, usertag, booking.type]
-        return res
+    def get_detailed_bookings(self, num_days=1):
+        """Get detailed bookings for the next num_days.
 
-    def getDetailedBookings7Days(self):
-        res = [[[0, "", ""] for x in range(28)] for x in range(7)]
-        d1 = datetime.now()
-        d2 = d1 + timedelta(days=6)
+        The returned list is intended for usage in booking table templates.
+        It contains data for each half-hour slot from 8:00 to 22:00.
+
+        Args:
+            num_days (int): The number of days to get bookings for.
+
+        Returns:
+            list: A three-level nested list:
+                    - first level: days
+                    - second level: half-hour slots
+                    - third level: booking details (user id, display name, booking type)
+        """
+        start_hour = 8
+        end_hour = 22
+        # There are two half-hour slots per hour
+        num_slots = (end_hour - start_hour) * 2
+
+        # Initialize empty result structure [days][slots][booking data]
+        res = [[["", "", ""] for _ in range(num_slots)] for _ in range(num_days)]
+
+        start_date = date.today()
+        end_date = start_date + timedelta(days=num_days - 1)
+
         for booking in Booking.objects.filter(
-            boat=self, date__lte=d2, date__gte=d1, status=1
+            boat=self, date__lte=end_date, date__gte=start_date, status=1
         ):
-            offset = (booking.date - d1.date()).days
+            # Calculate index of the booking day relative to start_date
+            day_idx = (booking.date - start_date).days
+
             uid = booking.user.username
             usertag = booking.user.first_name + " " + booking.user.last_name
-            startIdx = round(
-                (booking.time_from.hour - 8) * 2 + (booking.time_from.minute / 30)
+
+            # Convert start and end times into half-hour slot indices
+            slot_start_idx = round(
+                (booking.time_from.hour - start_hour) * 2
+                + (booking.time_from.minute / 30)
             )
-            endIdx = round(
-                (booking.time_to.hour - 8) * 2 + (booking.time_to.minute / 30)
+            slot_end_idx = round(
+                (booking.time_to.hour - start_hour) * 2 + (booking.time_to.minute / 30)
             )
-            for i in range(max(0, startIdx), min(28, (endIdx))):
-                res[offset][i] = [uid, usertag, booking.type]
+
+            # Store booking data for corresponding half-hour slots
+            for i in range(max(0, slot_start_idx), min(num_slots, slot_end_idx)):
+                res[day_idx][i] = [uid, usertag, booking.type]
+
         return res
 
     def getNumberOfIssues(self):
