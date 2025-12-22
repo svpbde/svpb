@@ -17,23 +17,11 @@ from .models import Boat, Booking, BoatIssue
 
 
 def booking_today(request):
-    overview = []
-    for boat in Boat.objects.filter(club_boat=True, active=True):
-        overview.append([boat.name, boat.type.name, boat.pk, boat.getBookings7days()])
-
     bookings = []
     for boat in Boat.objects.filter(club_boat=True, active=True):
         bookings.append([boat, boat.getDetailedBookingsToday])
 
-    dates = []
-    d = datetime.now()
-    for i in range(0, 7):
-        dates.append([d.strftime("%A"), d.strftime("%d. %b")])
-        d = d + timedelta(days=1)
-
     context = {
-        "booking_overview": overview,
-        "booking_dates": dates,
         "bookings": bookings,
         "date": datetime.now().strftime("%A, %d. %b"),
     }
@@ -46,10 +34,6 @@ def booking_overview(request):
     for boat in Boat.objects.filter(club_boat=True, active=True):
         overview.append([boat.name, boat.type.name, boat.pk, boat.getBookings7days()])
 
-    bookings = []
-    for boat in Boat.objects.filter(club_boat=True, active=True):
-        bookings.append([boat, boat.getDetailedBookingsToday])
-
     dates = []
     d = datetime.now()
     for i in range(0, 7):
@@ -59,8 +43,6 @@ def booking_overview(request):
     context = {
         "booking_overview": overview,
         "booking_dates": dates,
-        "bookings": bookings,
-        "date": datetime.now().strftime("%A"),
     }
 
     return render(request, "boote/booking_overview.html", context)
@@ -80,17 +62,15 @@ def booking_today_public(request):
     bookings = []
     for boat in Boat.objects.filter(club_boat=True):
         bookings.append([boat, boat.getDetailedBookingsToday])
-  
-    tab = request.GET.get('tab', '1')  # Defaults to '1' if missing
 
-   # BOATS
+    # BOATS
     boat_types = {
         '1': 'Conger',
         '2': 'Mariner 19',
         '4': 'Bootskran'
     }  # Map tabs to boat types
 
-    tab = request.GET.get('tab', '1')  # Assuming tab comes from request
+    tab = request.GET.get('tab', '1')  # Tab comes from request, defaults to '1'
     target_type = boat_types.get(tab)
 
     if tab == '3':  # Option 3: show all boats EXCEPT the specific types
@@ -104,7 +84,6 @@ def booking_today_public(request):
             (boat, overviewday) for boat, overviewday in bookings
             if target_type is None or boat.type.name == target_type
         ]
-
 
     # Title
     tab_title = {
@@ -125,7 +104,7 @@ def booking_today_public(request):
     selected_image = tab_images.get(tab)
 
     context = {
-        "bookings": bookings, 
+        "bookings": bookings,
         "weekday": datetime.now().strftime("%A"),
         "date": datetime.now().strftime("%d. %b"),
         "time": datetime.now().strftime("%H:%M"),
