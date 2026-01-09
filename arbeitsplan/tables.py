@@ -693,7 +693,7 @@ class MeldungTable(RadioButtonTable):
         tmp = format_html(
             """<textarea class="textinput textInput"
             id="id_bemerkung_{0}" name="bemerkung_{0}"
-            placeholder="Bemerkung eingeben" rows=6>{1}</textarea>""",
+            placeholder="Bemerkung eingeben" rows=4>{1}</textarea>""",
             str(record['id']),
             record['bemerkung'] if record['bemerkung'] else ""
             )
