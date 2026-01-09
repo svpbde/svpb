@@ -359,18 +359,13 @@ class Meldung(models.Model):
         NO = -1, "Nein"
         YES = 1, "Ja"
 
-    PREFERENCES_STRING = "; ".join(
-        [f"{value}: {label}" for (value, label) in Preferences.choices]
-    )
     PREFERENCES_BUTTONS = {
         Preferences.NO: "btn-outline-secondary",
         Preferences.YES: "btn-outline-secondary",
     }
     MODELDEFAULTS = {
         "prefMitglied": Preferences.NO,
-        "prefVorstand": Preferences.YES,
         "bemerkung": "",
-        "bemerkungVorstand": "",
     }
 
     erstellt = models.DateField(auto_now_add=True)
@@ -388,13 +383,7 @@ class Meldung(models.Model):
         verbose_name="Präferenz",
         help_text="Welche Präferenz hast du für diese Aufgabe?",
     )
-    prefVorstand = models.IntegerField(
-        choices=Preferences.choices,
-        default=Preferences.YES,
-        help_text="Traust du diesem Mitglied die Aufgabe zu?",
-    )
     bemerkung = models.TextField(blank=True)
-    bemerkungVorstand = models.TextField(blank=True)
 
     def __str__(self):
         return (
