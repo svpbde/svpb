@@ -640,13 +640,14 @@ class MeldungEdit (FilteredListView):
                         if (m.prefMitglied ==
                             models.Meldung.MODELDEFAULTS['prefMitglied']):
                             mailcomment.append("Neue Meldung")
-                            messages.success(request,
-                                             "Sie haben sich für  Aufgabe {0} gemeldet. "
-                                             "Der Vorstand wird dies  "
-                                             "prüfen und ggf. einen Termin zusagen. "
-                                             "WICHITG: Sie können NICHT davon ausgehen, "
-                                             "dass Sie diese Aufgaben zugeteilt bekommen!".
-                                             format(m.aufgabe.aufgabe))
+                            messages.success(
+                                request,
+                                f"Du hast dich für die Aufgabe {m.aufgabe.aufgabe} "
+                                "gemeldet. Der Aufgabenverantwortliche wird dies prüfen"
+                                " und dich ggf. zuteilen. Falls du in den nächsten "
+                                "Tagen keine Zuteilung erhältst, melde dich bitte auch "
+                                "für andere Aufgaben."
+                            )
                         elif (int(value) ==
                               models.Meldung.MODELDEFAULTS['prefMitglied']):
                             # TODO: CHECK
@@ -659,17 +660,22 @@ class MeldungEdit (FilteredListView):
                                 # it exists! we have to recheck this and inform user
                                 mailcomment.append("Versuch eine Meldung zurückzuziehen, für die schon Zuteilung bestand. Versuch abgewiesen.")
                                 safeit = False # this is important! Reason to initialize safeit up front
-                                messages.error(request,
-                                               "Sie haben versucht, die Meldung für Aufgabe {0} zurückzuziehen."
-                                               "Allerdings wurde diese Aufgaben Ihnen bereits zugeteilt. "
-                                               "Leider können Sie daher die Meldung nicht mehr zurückziehen."
-                                               "Setzen Sie sich bitte mit dem Aufgabenverantwortlichen in Verbindung.".format(m.aufgabe.aufgabe)
+                                messages.error(
+                                    request,
+                                    "Du hast versucht, die Meldung für die Aufgabe "
+                                    f"{m.aufgabe.aufgabe} zurückzuziehen. Allerdings "
+                                    "wurde dir diese Aufgaben bereits zugeteilt. "
+                                    "Leider kannst du daher die Meldung nicht mehr "
+                                    "zurückziehen. Setze dich bitte mit dem "
+                                    "Aufgabenverantwortlichen in Verbindung."
                                 )
                             except models.Zuteilung.DoesNotExist:
                                 mailcomment.append("Meldung zurueckgezogen")
-                                messages.success(request,
-                                                 "Sie haben die Meldung für  Aufgabe {0} zurückgezogen. ".
-                                                 format(m.aufgabe.aufgabe))
+                                messages.success(
+                                    request,
+                                    "Du hast die Meldung für die Aufgabe "
+                                    f"{m.aufgabe.aufgabe} zurückgezogen."
+                                )
                                 safeit = True
                         else:
                             mailcomment.append("Praeferenz aktualisiert.")
@@ -769,36 +775,28 @@ class CreateMeldungenView (MeldungEdit):
     tableClass = MeldungTable
 
     intro_text = """
-    Tragen Sie bitte ein, an welchen Aufgaben Sie mitarbeiten möchten.
-    Wählen Sie dazu für die entsprechende Aufgabe eine entsprechende
-    Vorliebe in der letzen Spalte aus (oder lassen Sie die Vorliebe
-    auf `Nein'). Sie können noch zusätlich eine Bemerkung eingeben
-    (z.B., wenn Sie die Aufgaben mit einem Partner zusammenarbeiten
-    erledigen möchten oder nur zu bestimmten Uhrzeiten können).
     <p>
-    Aufgaben aus der Vergangenheit werden nicht angezeigt!
-    Wenn Sie sich im Laufe des Jahres für Aufgaben ohne Datum
-    eintragen wollen, sprechen Sie dies bitte mit dem zuständigen
-    Vorstand ab.
+    Trag bitte ein, an welchen Aufgaben du mitarbeiten möchtest.
+    Wähle dazu für die entsprechende Aufgabe in der letzten Spalte „Ja“ aus.
+    Du kannst zusätzlich noch eine Bemerkung eingeben (z.B. wenn du die Aufgabe mit
+    einem Partner zusammen erledigen möchtest oder nur zu bestimmten Uhrzeiten kannst).
     <p>
-    Sie können die Aufgabenliste eingrenzen, in dem Sie nach
-    Aufgabengruppen filtern (--- entfernt den Filter).
-    Zusätzlich können Sie (mit dem zweiten Filter)
-    die Liste der Aufgaben weiter einschränken auf Aufgaben,
-    für die Sie bereits eine Meldung abgegeben haben
-    (nützlich, um Quickmeldungen zu verfeinern)
-    oder keine Meldung (nützlich, um sich für weitere Aufgaben zu melden).
+    Aufgaben aus der Vergangenheit und bereits vergebene Aufgaben werden nicht
+    angezeigt!
+    <p>
+    Du kannst die Aufgabenliste eingrenzen, indem du nach Aufgabengruppen filterst
+    (--- entfernt den Filter).
+    Zusätzlich kannst du mit dem zweiten Filter die Liste der Aufgaben weiter
+    einschränken auf Aufgaben, für die du bereits eine Meldung abgegeben hast
+    (nützlich, um Quickmeldungen zu verfeinern) oder keine Meldung abgegeben hast
+    (nützlich, um sich für weitere Aufgaben zu melden).
     Die dritte und vierte Filtermöglichkeit grenzt das Datum der Aufgaben ein.
+    Klicke nach Auswahl der Filter auf „Filter anwenden“.
     <p>
-    Wählen Sie aus der jeweiligen  Liste aus und drücken
-    dann auf `Filter anwenden'.
+    Bewege die Maus über den Aufgabennamen, um die Aufgabenbeschreibung anzuzeigen.
     <p>
-    Zeigen Sie auf den Aufgabennamen um ggf. weitere Information
-    über die Aufgabe zu sehen.
-    <p>
-    <b> WICHTIG: Eine Meldung hier ist nur ein WUNSCH; es ist
-    nicht die automatische Zusgae, für die Aufgabe auch
-    eingeteilt zu werden.
+    <b> Beachte: Eine Meldung hier ist nur ein Wunsch, es ist nicht die automatische
+    Zusage, für die Aufgabe auch zugeteilt zu werden.
     </b>
     """
 
