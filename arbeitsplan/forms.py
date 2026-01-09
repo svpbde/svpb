@@ -294,39 +294,37 @@ class PersonAufgabengruppeFilterForm (NameFilterForm,
     pass
 
 
-class PraeferenzFilterForm (CrispyFilterMixin, forms.Form):
-
-    praeferenz = forms.MultipleChoiceField(choices=models.Meldung.Preferences.choices,
-                                           widget=forms.CheckboxSelectMultiple,
-                                           label="Vorliebe Mitglied",
-                                           required=False,
-                                           initial=[models.Meldung.Preferences.RELUCTANTLY,
-                                                    models.Meldung.Preferences.OK,
-                                                    models.Meldung.Preferences.GLADLY,
-                                                    ],
-                                             )
+class PraeferenzFilterForm(CrispyFilterMixin, forms.Form):
+    praeferenz = forms.MultipleChoiceField(
+        choices=models.Meldung.Preferences.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label="Vorliebe Mitglied",
+        required=False,
+        initial=[
+            models.Meldung.Preferences.YES,
+        ],
+    )
     __layout = Layout(
-        HTML('<br>'),
-        InlineCheckboxes('praeferenz'),
-        )
+        HTML("<br>"),
+        InlineCheckboxes("praeferenz"),
+    )
 
 
-class PraeferenzVorstandFilterForm (CrispyFilterMixin, forms.Form):
-
-    praeferenzVorstand = forms.MultipleChoiceField(choices=models.Meldung.Preferences.choices,
-                                           widget=forms.CheckboxSelectMultiple,
-                                           label="Vorliebe Vorstand",
-                                           required=False,
-                                           initial=[models.Meldung.Preferences.NEVER,
-                                                    models.Meldung.Preferences.RELUCTANTLY,
-                                                    models.Meldung.Preferences.OK,
-                                                    models.Meldung.Preferences.GLADLY,
-                                                    ],
-                                             )
+class PraeferenzVorstandFilterForm(CrispyFilterMixin, forms.Form):
+    praeferenzVorstand = forms.MultipleChoiceField(
+        choices=models.Meldung.Preferences.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label="Vorliebe Vorstand",
+        required=False,
+        initial=[
+            models.Meldung.Preferences.NO,
+            models.Meldung.Preferences.YES,
+        ],
+    )
     __layout = Layout(
-        HTML('<br>'),
-        InlineCheckboxes('praeferenzVorstand'),
-        )
+        HTML("<br>"),
+        InlineCheckboxes("praeferenzVorstand"),
+    )
 
 
 class PersonAufgGrpPraefernzFilterForm (NameFilterForm,

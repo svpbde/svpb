@@ -712,7 +712,7 @@ class MeldungenListeView (FilteredListView):
     def get_data(self):
         qs = (models.Meldung.objects.
               filter(melder=self.request.user).
-              exclude(prefMitglied=models.Meldung.Preferences.NEVER))
+              exclude(prefMitglied=models.Meldung.Preferences.NO))
         return qs
 
 
@@ -747,9 +747,9 @@ class CreateMeldungenView (MeldungEdit):
             meld = models.Meldung.objects.filter(melder=self.request.user)
 
             if gemeldet == "GA":
-              meld = meld.exclude(prefMitglied=models.Meldung.Preferences.NEVER)
+                meld = meld.exclude(prefMitglied=models.Meldung.Preferences.NO)
             else:
-                meld = meld.filter(prefMitglied=models.Meldung.Preferences.NEVER)
+                meld = meld.filter(prefMitglied=models.Meldung.Preferences.NO)
 
             # turn this into aufgaben IDs
             aufIDs = [m.aufgabe.id for m in meld]
@@ -1022,7 +1022,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                 """Only keep those users who have a meldung for an aufagebn in this gruppe"""
                 qs = [q for q in qs
                       if q.meldung_set
-                           .exclude(prefMitglied=models.Meldung.Preferences.NEVER)
+                           .exclude(prefMitglied=models.Meldung.Preferences.NO)
                            .filter(aufgabe__gruppe__gruppe=self.aufgabengruppe)
                            .count()]
 
@@ -1036,7 +1036,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
 
                     qs = [q for q in qs
                           if q.meldung_set
-                               .exclude(prefMitglied=models.Meldung.Preferences.NEVER)
+                               .exclude(prefMitglied=models.Meldung.Preferences.NO)
                                .filter(aufgabe=aufgabe)
                                .count()]
             except:
@@ -1160,10 +1160,10 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
             mQs = mQs.filter(aufgabe__in = aufgabenQs)
 
             # filter out all veto'ed meldungen
-            mQs = mQs.exclude(prefMitglied=models.Meldung.Preferences.NEVER)
+            mQs = mQs.exclude(prefMitglied=models.Meldung.Preferences.NO)
 
             # TODO: Melzian-Diskussion: Vorstands-Vetos ausfiltern??? 
-            # mQs = mQs.exclude(prefVorstand=models.Meldung.Preferences.NEVER)
+            # mQs = mQs.exclude(prefVorstand=models.Meldung.Preferences.NO)
             
             for m in mQs:
                 tag = unicodedata.normalize('NFKD',
