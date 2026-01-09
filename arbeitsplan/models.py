@@ -150,13 +150,13 @@ class Mitglied(models.Model):
 
     def gemeldeteAnzahlAufgaben(self):
         return self.user.meldung_set.exclude(
-            prefMitglied=Meldung.Preferences.NEVER
+            prefMitglied=Meldung.Preferences.NO
         ).count()
 
     def gemeldeteStunden(self):
         """Compute hours for which the Mitglied has entered a Meldung."""
         echteMeldungen = self.user.meldung_set.exclude(
-            prefMitglied=Meldung.Preferences.NEVER
+            prefMitglied=Meldung.Preferences.NO
         )
         return sum([m.aufgabe.stunden for m in echteMeldungen])
 
@@ -292,10 +292,10 @@ class Aufgabe(models.Model):
     bemerkung = models.TextField(blank=True)
 
     def numMeldungen(self):
-        """How many Meldungen of status better than NEVER
+        """How many Meldungen of status better than NO
         exist for this Aufgabe?
         """
-        return self.meldung_set.exclude(prefMitglied=Meldung.Preferences.NEVER).count()
+        return self.meldung_set.exclude(prefMitglied=Meldung.Preferences.NO).count()
 
     def has_Stundenplan(self):
         """Is there a Stundenplan for this Aufgabe?"""
@@ -356,23 +356,19 @@ class Stundenplan(models.Model):
 
 class Meldung(models.Model):
     class Preferences(models.IntegerChoices):
-        NEVER = -1, "Nein"
-        RELUCTANTLY = 0, "Wenn es sein muss"
-        OK = 1, "Ok"
-        GLADLY = 2, "Gerne!"
+        NO = -1, "Nein"
+        YES = 1, "Ja"
 
     PREFERENCES_STRING = "; ".join(
         [f"{value}: {label}" for (value, label) in Preferences.choices]
     )
     PREFERENCES_BUTTONS = {
-        Preferences.NEVER: "btn-outline-secondary",
-        Preferences.RELUCTANTLY: "btn-outline-secondary",
-        Preferences.OK: "btn-outline-secondary",
-        Preferences.GLADLY: "btn-outline-secondary",
+        Preferences.NO: "btn-outline-secondary",
+        Preferences.YES: "btn-outline-secondary",
     }
     MODELDEFAULTS = {
-        "prefMitglied": Preferences.NEVER,
-        "prefVorstand": Preferences.OK,
+        "prefMitglied": Preferences.NO,
+        "prefVorstand": Preferences.YES,
         "bemerkung": "",
         "bemerkungVorstand": "",
     }
@@ -388,14 +384,14 @@ class Meldung(models.Model):
 
     prefMitglied = models.IntegerField(
         choices=Preferences.choices,
-        default=Preferences.OK,
+        default=Preferences.NO,
         verbose_name="Präferenz",
-        help_text="Haben Sie Vorlieben für diese Aufgabe?",
+        help_text="Welche Präferenz hast du für diese Aufgabe?",
     )
     prefVorstand = models.IntegerField(
         choices=Preferences.choices,
-        default=Preferences.OK,
-        help_text="Trauen Sie diesem Mitglied die Aufgabe zu?",
+        default=Preferences.YES,
+        help_text="Traust du diesem Mitglied die Aufgabe zu?",
     )
     bemerkung = models.TextField(blank=True)
     bemerkungVorstand = models.TextField(blank=True)
