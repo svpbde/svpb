@@ -590,27 +590,32 @@ class ZuteilungTableVorstand(django_tables2.Table):
 
 
 class MeldungListeTable(django_tables2.Table):
-    """A table to only display all Meldungen of a user.
-    """
+    """A table to only display all Meldungen of a user."""
 
-    aufgabenGruppe = django_tables2.Column(accessor="aufgabe.gruppe.gruppe",
-                                           verbose_name="Aufgabengruppe")
-    aufgabeName = django_tables2.Column(accessor="aufgabe.aufgabe",
-                                        verbose_name="Aufgabe")
-    aufgabenDatum = django_tables2.Column(accessor="aufgabe.datum",
-                                          verbose_name="Datum")
+    aufgabenGruppe = django_tables2.Column(
+        accessor="aufgabe.gruppe.gruppe", verbose_name="Aufgabengruppe"
+    )
+    aufgabeName = django_tables2.Column(
+        accessor="aufgabe.aufgabe", verbose_name="Aufgabe"
+    )
+    aufgabenDatum = django_tables2.Column(
+        accessor="aufgabe.datum", verbose_name="Datum"
+    )
 
     class Meta:
         model = models.Meldung
-        fields = ("aufgabenGruppe",
-                  "aufgabeName",
-                  "aufgabenDatum",
-                  "prefMitglied",
-                  "bemerkung",
-                  )
-        exclude = ("id", "erstellt", "veraendert",
-                   "prefVorstand", "bemerkungVorstand",
-                   )
+        fields = (
+            "aufgabenGruppe",
+            "aufgabeName",
+            "aufgabenDatum",
+            "prefMitglied",
+            "bemerkung",
+        )
+        exclude = (
+            "id",
+            "erstellt",
+            "veraendert",
+        )
 
 
 class MeldungTable(RadioButtonTable):
@@ -710,67 +715,52 @@ class MeldungTable(RadioButtonTable):
         exclude = ("fehlende_zuteilungen", 'zuteilungen')
 
 
-class MeldungTableVorstand (RadioButtonTable):
+class MeldungTableVorstand(RadioButtonTable):
+    aufgabe = django_tables2.Column(accessor="aufgabe", verbose_name="Aufgabe")
 
-    aufgabe = django_tables2.Column(accessor="aufgabe",
-                                    verbose_name="Aufgabe")
+    gruppe = django_tables2.Column(
+        accessor="aufgabe.gruppe", verbose_name="Aufgabengruppe"
+    )
 
-    gruppe = django_tables2.Column(accessor="aufgabe.gruppe",
-                                   verbose_name="Aufgabengruppe")
+    datum = django_tables2.Column(accessor="aufgabe.datum", verbose_name="Datum")
 
-    datum = django_tables2.Column(accessor="aufgabe.datum",
-                                  verbose_name="Datum")
+    stunden = django_tables2.Column(
+        accessor="aufgabe.stunden", verbose_name="Umfang (h)"
+    )
 
-    stunden = django_tables2.Column(accessor="aufgabe.stunden",
-                                    verbose_name="Umfang (h)")
-
-    prefMitglied = django_tables2.Column(accessor="prefMitglied",
-                                         verbose_name="Vorlieben Melder",
-                                         empty_values=(),
-                                         )
-
-    bemerkung = django_tables2.Column(accessor="bemerkung",
-                                      verbose_name="Bemerkung Melder",
-                                      empty_values=(),
-                                      )
-
-    melder = KontaktColumn(accessor="melder",
-                           verbose_name="Melder",
-                           )
-
-    bemerkungVorstand = django_tables2.Column(
+    prefMitglied = django_tables2.Column(
+        accessor="prefMitglied",
+        verbose_name="Vorlieben Melder",
         empty_values=(),
-        verbose_name="Bemerkungen des Vorstandes")
+    )
 
-    prefVorstand = django_tables2.Column(
-        accessor="prefVorstand",
-        verbose_name="Vorlieben des Vorstandes",
+    bemerkung = django_tables2.Column(
+        accessor="bemerkung",
+        verbose_name="Bemerkung Melder",
         empty_values=(),
-        )
+    )
 
-    def render_prefVorstand(self, value, record):
-        return self.render_radio(
-            choices=models.Meldung.Preferences.choices,
-            buttontexts=models.Meldung.PREFERENCES_BUTTONS,
-            fieldname="prefVorstand",
-            record=record)
-
-    def render_bemerkungVorstand (self, value, record):
-        tmp =  format_html ('<textarea class="textinput textInput" id="id_bemerkungVorstand_{0}" name="bemerkungVorstand_{0}" placeholder="Bemerkung Vorstand" rows=6>{1}</textarea>',
-                            str(record.id),
-                            record.bemerkungVorstand if record.bemerkungVorstand else ""
-                            )
-        return tmp
-
+    melder = KontaktColumn(
+        accessor="melder",
+        verbose_name="Melder",
+    )
 
     class Meta(MeldungTable.Meta):
-        model = models.Meldung 
-        fields = ('gruppe', 'aufgabe', 'datum', 'stunden',
-                  # 'melder_last', 'melder_first',
-                  'melder',
-                  'bemerkung', 'prefMitglied',
-                  'bemerkungVorstand', 'prefVorstand')
-        exclude = ('melder_last', 'melder_first',)
+        model = models.Meldung
+        fields = (
+            "gruppe",
+            "aufgabe",
+            "datum",
+            "stunden",
+            "melder",
+            "bemerkung",
+            "prefMitglied",
+        )
+        exclude = (
+            "melder_last",
+            "melder_first",
+        )
+
 
 ##############################
 

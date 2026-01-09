@@ -588,9 +588,7 @@ class MeldungEdit (FilteredListView):
 
     def processUpdate(self, request):
         for k, value in request.POST.items():
-            if (k.startswith('bemerkung') or
-                k.startswith('prefMitglied') or
-                k.startswith('prefVorstand')):
+            if (k.startswith('bemerkung') or k.startswith('prefMitglied')):
 
                 key, id = k.split('_', 1)
 
@@ -621,16 +619,6 @@ class MeldungEdit (FilteredListView):
                         mailcomment.append("Neue Bemerkung")
                         messages.success(request,
                                          "Bei Aufgabe {0} wurde die Bemerkung aktualisiert".
-                                         format(m.aufgabe.aufgabe))
-
-                if (key == 'bemerkungVorstand'
-                    and isVorstand(self.request.user)):
-
-                    if m.bemerkungVorstand != value:
-                        m.bemerkungVorstand = value
-                        safeit = True
-                        messages.success(request,
-                                         "Bei Aufgabe {0} wurde die Bemerkung des Vorstandes aktualisiert".
                                          format(m.aufgabe.aufgabe))
 
                 if key == 'prefMitglied':
@@ -684,14 +672,6 @@ class MeldungEdit (FilteredListView):
                                              format(m.aufgabe.aufgabe))
 
                         m.prefMitglied = value
-
-                if key == 'prefVorstand' and isVorstand(self.request.user):
-                    if m.prefVorstand != int(value):
-                        m.prefVorstand = int(value)
-                        safeit = True
-                        messages.success(request,
-                                         "Bei Aufgabe {0} wurde die Präferenz des Vorstandes aktualisiert".
-                                         format(m.aufgabe.aufgabe))
 
                 if safeit:
                     m.save()
@@ -875,53 +855,31 @@ class CreateMeldungenView (MeldungEdit):
 
 class MeldungVorstandView(isVorstandMixin, MeldungEdit):
     """Display a (filtered) list of all Meldungen from all Users,
-    with all preferences.
-    Allow Vorstand to update its fields and store them.
-    """
+    with all preferences."""
 
-    title = "Meldungen für Aufgaben bewerten"
-    # filterform_class = forms.PersonAufgabengruppeFilterForm
-    filterform_class = forms.PersonAufgGrpPraefernzFilterForm
-    filtertitle = "Meldungen nach Person, Aufgabengruppen"
-    " oder Präferenz filtern"
-    tabletitle = "Meldungen bewerten"
+    title = "Meldungen für Aufgaben anzeigen"
+    filterform_class = forms.PersonAufgGrpPraeferenzFilterForm
+    filtertitle = "Meldungen nach Person oder Aufgabengruppe filtern"
+    tabletitle = "Meldungen anzeigen"
     # tableform ?
     filterconfig = [('aufgabengruppe', 'aufgabe__gruppe__gruppe'),
                     ('first_name', 'melder__first_name__icontains'),
                     ('last_name', 'melder__last_name__icontains'),
                     ('praeferenz', 'prefMitglied__in'),
-                    ('praeferenzVorstand', 'prefVorstand__in'),
                     ]
     tableClass = MeldungTableVorstand
     model = models.Meldung
 
-    tableform = {'name': "eintragen",
-                 'value': "Meldungen eintragen/ändern"}
-
     intro_text = """
-    Bewerten Sie die Meldungen der Mitglieder nach Eignung für eine Aufgabe.
-    <ul>
-    <li> Nutzen Sie die Einstufung in der rechten Spalte </li>
-    <li> Eine `Nein' entspricht einer Ablehnung der Meldung;
-    eine solche Meldung wird später bei den Zuteilungen
-    nicht angezeigt. </li>
-    <li> Geben Sie ggf. eine zusätzliche Bemerkung ein </li>
-    <li> Sie können die Liste filtern nach Name des Mitglieds,
-    nach Aufgabengruppe, nach den Präferenzen die das Mitglied
-     bei der Meldung angegeben hat (Kombinationen möglich). </li>
-    </ul>
+    <p>
+    Unten werden die Meldungen der Mitglieder angezeigt.
+    Du kannst die Liste filtern nach Name des Mitglieds und nach Aufgabengruppe.
+    <p>
+    <b>Früher konnten hier Meldungen bewertet werden. Diese Funktion entfällt, bitte
+    nimm direkt Zuteilungen vor!</b>
     """
 
-    ## todo_text = """
-    ## <li> Weitere Filter einbauen?Nach Verantwortlicher?
-    ## Nach Vorstandsvorlieben?  </li>
-    ## <li> </li>
-    ## """
-
-    def post(self, request, *args, **kwargs):
-        self.processUpdate(request)
-        # return redirect ('arbeitsplan-meldungVorstand')
-        return redirect(self.request.get_full_path())
+    pass
 
 
 class QuickMeldung(View):
@@ -1084,23 +1042,15 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
     # TODO: filter by preferences? show preferences in table?
 
     intro_text = """
-    In der Tabelle werden Boxen für die Meldungen der Mitglieder
-    angezeigt. Wählen Sie die Box an (ankreuzen), wenn Sie ein Mitglied
-     für eine Aufgabe einteilen wollen. Entfernen Sie ein Häkchen,
-      wenn das Mitglied die Aufgabe nicht mehr ausführen soll.
     <p>
-    Filtern Sie nach Mitgliedsnamen oder Aufgabengruppe. Zusätzlich können Sie nach Auslastung und Meldung der Mitglieder filtern: nur solche mit Meldungen für diese Aufgabengruppe (genauer: für irgendeine Aufgabe in der gewählten Gruppe), Mitglieder mit noch freier Arbeitskapazität, oder ausgelastete Mitglieder.
+    In der Tabelle werden Boxen angezeigt, wenn sich ein Mitglied für eine Aufgabe
+    gemeldet hat. Wähle die Box an (ankreuzen), wenn du ein Mitglied für eine Aufgabe
+    zuteilen möchtest. Entferne einen Haken, um die Zuteilung zu löschen.
     <p>
-    Hinweise:
-    <ul>
-    <li> In den Feldern der Tabelle wird (neben dem Auswahlkreuzchen) in Klammern die Präferenz des Mitglieds bzw. des Vorstands für diese Aufgabe angezeigt. </br> Präferenzen: {} </li>
-    </ul>
-    """.format(models.Meldung.PREFERENCES_STRING)
-
-    discuss_text = """
-    <li> mit -1 durch den Vorstand bewertete Meldungen ausfiltern!  </li>
-    <li> Weitere Filter einbauen? Nach Mitglieds-
-    oder Vorstandspräferenz?  </li>
+    Du kannst nach Mitgliedsnamen oder Aufgabengruppe filtern. Zusätzlich kannst du nach
+    Auslastung und Meldung der Mitglieder filtern: nur solche mit Meldungen für diese
+    Aufgabengruppe (genauer: für irgendeine Aufgabe in der gewählten Gruppe), Mitglieder
+    mit noch freier Arbeitskapazität, oder ausgelastete Mitglieder.
     """
 
     def get_data(self):
@@ -1160,23 +1110,16 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
             # filter out all veto'ed meldungen
             mQs = mQs.exclude(prefMitglied=models.Meldung.Preferences.NO)
 
-            # TODO: Melzian-Diskussion: Vorstands-Vetos ausfiltern??? 
-            # mQs = mQs.exclude(prefVorstand=models.Meldung.Preferences.NO)
-            
             for m in mQs:
                 tag = unicodedata.normalize('NFKD',
                                             m.aufgabe.aufgabe).encode('ASCII', 'ignore').decode()
 
-
-                tmp[tag] = (0,
-                            'box_'+  str(u.id)+"_"+str(m.aufgabe.id),
-                            (' ({0} / {1})'.format(m.prefMitglied,
-                                                  m.prefVorstand) +
-                             (("<br><small>" + m.bemerkung + "</small>") if m.bemerkung else "")
-                             ),
-
-                            )
-                statuslist[str(u.id)+"_"+str(m.aufgabe.id)]='0'
+                tmp[tag] = (
+                    0,
+                    f"box_{u.id}_{m.aufgabe.id}",
+                    ((f"<br><small>{m.bemerkung}</small>") if m.bemerkung else ""),
+                )
+                statuslist[f"{u.id}_{m.aufgabe.id}"] = "0"
 
             zQs =  models.Zuteilung.objects.filter(ausfuehrer=u)
             ## if self.aufgabengruppe <> None:
@@ -1190,13 +1133,16 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
                     aufgabe=z.aufgabe,
                     defaults= models.Meldung.MODELDEFAULTS,
                     )
-                tmp[tag] = (1,
-                            'box_'+ str(u.id)+"_"+str(z.aufgabe.id),
-                            (' ({0} / {1})'.format(meldung.prefMitglied,
-                                                  meldung.prefVorstand)  +
-                             ((" <br><small>" + meldung.bemerkung + "</small>") if meldung.bemerkung else ""))
-                            )
-                statuslist[str(u.id)+"_"+str(z.aufgabe.id)]='1'
+                tmp[tag] = (
+                    1,
+                    f"box_{u.id}_{z.aufgabe.id}",
+                    (
+                        f"<br><small>{meldung.bemerkung}</small>"
+                        if meldung.bemerkung
+                        else ""
+                    ),
+                )
+                statuslist[f"{u.id}_{z.aufgabe.id}"] = "1"
 
             # TODO: Add to tmp the amount of already zugeteilt work per user
             # This is wrong, have to take into account Stundenplanzuteilungen!

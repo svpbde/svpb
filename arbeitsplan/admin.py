@@ -31,7 +31,7 @@ class AufgabeAdmin(admin.ModelAdmin):
 
 class MeldungAdmin(admin.ModelAdmin):
     date_hierachy = 'erstellt'
-    list_display = 'melder', 'aufgabe', 'prefMitglied', 'prefVorstand'
+    list_display = 'melder', 'aufgabe', 'prefMitglied'
     # list_filter = ('melder', 'aufgabe')
     list_filter = ('aufgabe__gruppe__gruppe', )
     search_fields = ('melder__last_name', 'melder__first_name', 'aufgabe__aufgabe')
