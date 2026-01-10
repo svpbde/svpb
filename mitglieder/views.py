@@ -541,12 +541,12 @@ class ImpersonateListe(isVorstandMixin, FilteredListView):
     ]
 
     intro_text = """
-        Sie können die Identität eines anderen Nutzers annehmen,
+        Du kannst die Identität eines anderen Nutzers annehmen,
         beispielsweise um Meldungen oder Leistungen für diesen einzutragen.
         <p>
-        Bitte gehen Sie verantwortlich mit dieser Möglichkeit um!
+        Bitte gehe verantwortlich mit dieser Möglichkeit um!
         <p>
-        Beachten Sie: Diese Funktion funktioniert nicht bei Mitgliedern
+        Beachte: Diese Funktion funktioniert nicht bei Mitgliedern
         mit Sonderstatus (z.B. Adminstratoren dieser Webseite).
     """
 
