@@ -5,17 +5,17 @@
 
 {% block prefilter %}
 
-<h3>Zusammenfassung Ihrer Zuteilungen </h3>
+<h3>Zusammenfassung deiner Zuteilungen </h3>
 
-Sie sind bisher für insgesamt  {{ zuteilungSummary }} Stunden eingeteilt.
+Du bist bisher für insgesamt  {{ zuteilungSummary }} Stunden eingeteilt.
 <p>
 {% if zuteilungSummary < arbeitslast %}
 <div class="alert alert-warning">
-Damit können Sie noch nicht die vorgesehenen {{ arbeitslast }} Stunden Arbeitsleistung pro Jahr erbringen. Sie sollten
-den Vorstand kontaktieren und sich um weitere Zuteilungen bemühen.
+Damit kannst du noch nicht die vorgesehenen {{ arbeitslast }} Stunden Arbeitsleistung pro Jahr erbringen.
+Du solltest den Vorstand kontaktieren und dich um weitere Zuteilungen bemühen.
 </div>
 {% else %}
-Wenn Sie alle diese Arbeitsdienste entsprechend erbringen, können Sie damit Ihr vorgesehenes Pensum pro Jahr erfüllen. Bitte kontrollieren Sie aber auch, ob Ihre tatsächlich gemeldeten Arbeitszeiten richtig verbucht werden.
+Wenn du alle diese Arbeitsdienste entsprechend erbringst, kannst du damit dein vorgesehenes Pensum pro Jahr erfüllen. Bitte kontrolliere aber auch, ob deine tatsächlich gemeldeten Arbeitszeiten richtig verbucht werden.
 {% endif %}
 
 

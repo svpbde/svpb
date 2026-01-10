@@ -113,7 +113,7 @@ class MitgliederAddForm(forms.ModelForm):
             u = User.objects.get(username=mnr)
             raise ValidationError(
                 f"Ein Nutzer mit dieser Mitgliedsnummer existiert bereits!\
-                  ({u.first_name} {u.last_name}) Bitte wählen Sie eine andere Nummer.",
+                  ({u.first_name} {u.last_name}) Bitte wähle eine andere Nummer.",
                 code="invalid",
             )
         except User.DoesNotExist:

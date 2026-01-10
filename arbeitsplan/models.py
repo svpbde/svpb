@@ -539,7 +539,7 @@ class Leistung(models.Model):
     erstellt = models.DateTimeField(auto_now_add=True)
     veraendert = models.DateTimeField(auto_now=True)
     wann = models.DateField(
-        help_text="An welchem Tag haben Sie die Leistung erbracht?",
+        help_text="An welchem Tag hast du die Leistung erbracht?",
     )
     zeit = models.DecimalField(
         max_digits=3,

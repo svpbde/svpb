@@ -357,7 +357,8 @@ class AufgabeLoeschen(isVorstandMixin, DeleteView):
             from django.http import Http404
             # TODO: nicer error message
             messages.error(self.request,
-                           "Sie dürfen diese Aufgabe nicht löschen! Nur der verantworliche Vorstand darf das!")
+                           "Du darfst diese Aufgabe nicht löschen! Nur der "
+                           "verantwortliche Vorstand darf das!")
             raise Http404
         return obj
 
@@ -410,12 +411,12 @@ class ListAufgabenView (FilteredListView):
     Die Tabelle zeigt die anstehenden Aufgaben an.
     <ul>
     <li> Aufgaben ohne Datum sind an flexiblen Terminen zu erledigen. </li>
-    <li> Bei Aufgaben mit Datum erfolgt die Zeitabsprachen individuell oder nach Einteilung. </li>
+    <li> Bei Aufgaben mit Datum erfolgt die Zeitabsprache individuell oder nach Einteilung. </li>
     <li> Die Spalte Verantwortlicher benennt den Koordinator der Aufgabe. </li>
-    <li> Die Spalte Quickmeldung erlaubt eine vereinfachte Meldung für eine Aufgabe. Klicken Sie auf das Handsymbol; ein Haken in der Zeile markiert Aufgaben, für die Sie sich gemeldet haben.</li>
+    <li> Die Spalte Quickmeldung erlaubt eine vereinfachte Meldung für eine Aufgabe. Klicke dazu auf das Handsymbol. Ein Haken in der Zeile markiert Aufgaben, für die du dich gemeldet hast.</li>
     </ul>
     <p>
-    Sie können die angezeigten Aufgaben nach Aufgabengruppe filtern (--- entfernt den Filter). Zusätzlich können Sie nach dem Datum der Aufgabe filtern (Aufgaben mit Datum in der Vergangenheit werden aber grundsätzlich nicht angezeigt). Wählen Sie die Filter aus und klicken auf "Filter anwenden".
+    Du kannst die angezeigten Aufgaben nach Aufgabengruppe filtern (--- entfernt den Filter). Zusätzlich kannst du nach dem Datum der Aufgabe filtern (Aufgaben mit Datum in der Vergangenheit werden aber grundsätzlich nicht angezeigt). Wähle die Filter aus und klicke auf "Filter anwenden".
     """
     ## todo_text = """
     ## <li> Spalten klickbar machen: Aufgabe, Verantowrtlicher (direkt email senden?)  </li>
@@ -692,8 +693,11 @@ class MeldungenListeView (FilteredListView):
     # TODO: understand how to use reverse / reverse_lazy here
     # This is odd, why does reverse_lazy only return the object?
 
-    intro_text = format_html(("Ein Übersicht über alle von Ihnen eingegeben Meldungen. "
-                              'Editieren Sie bitte über die Funktion <a href="/arbeitsplan/meldung/">Melden</a> im Menü Meldung.'))
+    intro_text = format_html(
+        "Eine Übersicht über alle von dir abgegebenen Meldungen. "
+        "Benutze zum Editieren bitte die Funktion "
+        '<a href="/arbeitsplan/meldung/">Melden</a> im Menü Meldung.'
+    )
 
     def get_data(self):
         qs = (models.Meldung.objects.
@@ -901,13 +905,17 @@ class QuickMeldung(View):
                 meldung.bemerkung = "QUICKMELDUNG"
                 meldung.save()
 
-                messages.success(self.request,
-                                 "Danke! Sie haben sich für Aufgabe " +
-                                 aufgabe.aufgabe + " gemeldet. Der Vorstand wird dies prüfen und ggf. einen Termin zusagen.")
+                messages.success(
+                    self.request,
+                    f"Danke! Du hast dich für die Aufgabe {aufgabe.aufgabe} gemeldet. "
+                    "Der Vorstand wird dies prüfen und ggf. eine Zuteilung erstellen."
+                )
                 notifyVorstand(meldung, ["QUICKMELDUNG"])
             else:
-                messages.warning(self.request,
-                                 "Ihre Schnellmeldung wurde nicht eingetragen; vermutlich existiert bereits eine Meldung von Ihnen.")
+                messages.warning(
+                    self.request,
+                    "Deine Schnellmeldung wurde nicht eingetragen; vermutlich existiert"
+                    " bereits eine Meldung von dir.")
 
         except models.Aufgabe.DoesNotExist:
             messages.error(self.request,
@@ -941,7 +949,7 @@ class ListZuteilungenView(FilteredListView):
             self.intro_text = """
             Welche Zuteilung sind für Nutzer eingetragen?
             <p>
-            Filtern Sie nach Mitgliedernamen oder Aufgabengruppe.
+            Du kannst nach Mitgliedernamen oder Aufgabengruppe filtern.
             """
         else:
             qs = models.Zuteilung.objects.filter(ausfuehrer=self.request.user)
@@ -1368,8 +1376,7 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
 
 class StundenplaeneEdit(isVorstandMixin, FilteredListView):
 
-    title = """Weisen Sie einer Aufgabe Personen
-     zu den benötigten Zeitpunkten zu"""
+    title = "Weise einer Aufgabe Personen zu den benötigten Zeitpunkten zu"
     tableClassFactory = staticmethod(StundenplanEditFactory)
     tabletitle_template = "Zuweisung für Stunden eintragen"
     tabletitle = "Zuweisung für Stunden eintragen"
@@ -1377,7 +1384,7 @@ class StundenplaeneEdit(isVorstandMixin, FilteredListView):
                  'value': "Stundenzuteilung eintragen/ändern"}
 
     intro_text = """Hinweis: Wenn hier keine Nutzer angezeigt werden,
-    müssen Sie zunächst Nutzer dieser Aufgabe zuteilen. Das Zuweisen zu
+    musst du zunächst Nutzer dieser Aufgabe zuteilen. Das Zuweisen zu
     einzelnen Stunden ist erst der zweite Schritt.
 
     In der Tabelle werden Spalten pro Uhrzeit angezeigt.<br>
