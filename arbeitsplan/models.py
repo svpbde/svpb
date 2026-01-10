@@ -395,6 +395,14 @@ class Meldung(models.Model):
         )
 
     class Meta:
+        constraints = [
+            # Enforce uniqueness to ensure get_or_create works as intended, see
+            # https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create
+            models.UniqueConstraint(
+                fields=["aufgabe", "melder"],
+                name="unique_aufgabe_melder"
+            )
+        ]
         verbose_name_plural = "Meldungen"
         verbose_name = "Meldung"
 
@@ -469,6 +477,14 @@ class Zuteilung(models.Model):
         return r
 
     class Meta:
+        constraints = [
+            # Enforce uniqueness to ensure get_or_create works as intended, see
+            # https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create
+            models.UniqueConstraint(
+                fields=["aufgabe", "ausfuehrer"],
+                name="unique_aufgabe_ausfuehrer"
+            )
+        ]
         verbose_name_plural = "Zuteilungen"
         verbose_name = "Zuteilung"
 
@@ -489,6 +505,14 @@ class StundenZuteilung(models.Model):
         super(StundenZuteilung, self).delete(*args, **kwargs)
 
     class Meta:
+        constraints = [
+            # Enforce uniqueness to ensure get_or_create works as intended, see
+            # https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create
+            models.UniqueConstraint(
+                fields=["uhrzeit", "zuteilung"],
+                name="unique_uhrzeit_zuteilung"
+            )
+        ]
         verbose_name = "Zuteilung einer Stunde"
         verbose_name_plural = "Zuteilungen für einzelne Stunden"
 
