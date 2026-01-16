@@ -1,7 +1,6 @@
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, HTML
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.conf import settings
@@ -65,13 +64,3 @@ class SVPBAuthenticationForm(AuthenticationForm):
                 style="max-width: 330px; padding: 1rem",
             )
         )
-
-
-class MitgliederInactiveResetForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(MitgliederInactiveResetForm, self).__init__(*args, **kwargs)
-
-        self.helper = FormHelper()
-
-        self.helper.add_input(Submit("reset", "Passwörter zurücksetzen"))
-        self.helper.add_input(Submit("nono", "Lieber nicht!"))

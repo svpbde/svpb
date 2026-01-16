@@ -40,7 +40,6 @@ from mitglieder.forms import (
     PersonMitgliedsnummer,
 )
 from mitglieder.tables import FilteredMemberTable, MitgliederTable
-from svpb.forms import MitgliederInactiveResetForm
 from svpb.views import isVorstand, isVorstandMixin
 
 
@@ -447,52 +446,6 @@ class AccountList(SuccessMessageMixin, isVorstandMixin, FilteredListView):
         sich separat in der <a href="/arbeitsplan/salden/">Saldenübersicht</a>.
         """
     )
-
-
-class AccountInactiveReset(FormView):
-    """View to generate new passwords and create a letter for active user accounts."""
-
-    template_name = "inactive_reset.html"
-    form_class = MitgliederInactiveResetForm
-    success_url = "accounts/"
-
-    def form_valid(self, form):
-        """Handle valid form submission.
-
-        Function to handle valid form submission. If triggered via POST, create new
-        passwords for all active users and generate a PDF document.
-
-        Args:
-            form (Form): The submitted and validated form.
-
-        Returns:
-            HttpResponseRedirect: Redirect to the success URL after processing.
-        """
-        if "reset" in self.request.POST:
-            userQs = User.objects.filter(is_active=False)
-
-            try:
-                preparePassword(userQs)
-                # Copy the produced PDF to the SENDFILE_ROOT directory
-                messages.success(
-                    self.request,
-                    format_html(
-                        "Das Anschreiben mit dem Passwort kann "
-                        '<a href="{}">hier</a>'
-                        " heruntergeladen werden.",
-                        "letters.pdf",
-                    ),
-                )
-            except Exception as e:
-                print("Fehler beim Passwort: ", e) # TODO: Log exception
-                messages.error(
-                    self.request,
-                    "Das Passwort für den Nutzer konnte nicht gesetzt werden oder das "
-                    "Anschreiben nicht erzeugt werden. Bitte das neue Mitglied, "
-                    "sich über die Webseite selbst ein Passwort zu generieren.",
-                )
-
-        return redirect(self.success_url)
 
 
 class AccountDelete(SuccessMessageMixin, isVorstandMixin, DeleteView):
