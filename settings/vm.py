@@ -9,11 +9,11 @@ TEMPLATE_DEBUG = DEBUG
 SECRET_KEY = '26w5_t=fcjff6vk9$ee(03xa&+1c($ot1ixg)p-f(%v#ad$dqy'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+# See https://docs.djangoproject.com/en/5.2/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost'
-    ]
+]
 
 DATABASES = {
     'default': {
