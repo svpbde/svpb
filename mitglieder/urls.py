@@ -45,11 +45,6 @@ urlpatterns = [
         name="accountFilteredList"
         ),
 
-    re_path(r'^inaktiveReset/',
-        active_and_login_required(mitglieder.views.AccountInactiveReset.as_view()),
-        name="accountInactiveReset"
-        ),
-
     re_path(r'^letters.pdf',
         active_and_login_required(mitglieder.views.AccountLetters.as_view()),
         name="accountLetters"
