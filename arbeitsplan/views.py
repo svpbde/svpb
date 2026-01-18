@@ -901,7 +901,7 @@ class QuickMeldung(View):
                                                                     melder=self.request.user)
 
             if created | (meldung.bemerkung == ""):
-                meldung.prefMitglied = models.Meldung.Preferences.GLADLY
+                meldung.prefMitglied = models.Meldung.Preferences.YES
                 meldung.bemerkung = "QUICKMELDUNG"
                 meldung.save()
 
