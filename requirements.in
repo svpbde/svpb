@@ -3,34 +3,34 @@ crispy-bootstrap5==2025.6
 # https://docs.djangoproject.com/en/dev/releases/#final-releases
 Django==4.2.30
 # https://github.com/jazzband/django-axes/blob/master/CHANGES.rst
-django-axes[ipware]==8.0.0
+django-axes[ipware]==8.3.1
 # https://github.com/django-crispy-forms/django-crispy-forms/blob/main/CHANGELOG.md
 django-crispy-forms==2.5
 # https://github.com/django-extensions/django-extensions/releases
 django-extensions==4.1
 # https://pypi.org/project/django-impersonate/
 # https://hg.code.netlandish.com/~petersanchez/django-impersonate/browse/CHANGELOG?rev=tip
-django-impersonate==1.9.4
+django-impersonate==1.9.5
 # https://github.com/stefanfoulis/django-phonenumber-field/releases
-django-phonenumber-field[phonenumbers]==8.3.0
+django-phonenumber-field[phonenumbers]==8.4.0
 # https://github.com/ui/django-post_office/releases
 django-post-office==3.11.2
 # https://github.com/codingjoe/django-select2/releases
-django-select2==8.2.3
+django-select2==8.4.8
 # https://codeberg.org/moggers87/django-sendfile2/src/branch/main/CHANGELOG.rst
 django-sendfile2==0.7.2
 # https://github.com/jieter/django-tables2/blob/master/CHANGELOG.md
-django-tables2==2.7.5
+django-tables2==2.8.0
 # 6.6.0 is the latest Fontawesome 6 release. Fontawesome 7 is available, but won't get a
 # python package, see
 # https://docs.fontawesome.com/upgrade/whats-changed#official-python-django-plugin-support-dropped
 fontawesomefree==6.6.0
 # https://pillow.readthedocs.io/en/stable/releasenotes/index.html
-Pillow==11.3.0
+Pillow==12.2.0
 # https://www.psycopg.org/docs/news.html
 psycopg2-binary==2.9.11
 # https://www.sphinx-doc.org/en/master/changes/index.html#
-Sphinx==7.4.7
+Sphinx==9.1.0
 # https://sphinx-rtd-theme.readthedocs.io/en/stable/changelog.html
 sphinx-rtd-theme==3.1.0
 # https://uwsgi-docs.readthedocs.io/en/latest/#release-notes
