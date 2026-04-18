@@ -12,17 +12,13 @@ asgiref==3.8.1
     #   django-axes
 babel==2.17.0
     # via sphinx
-bleach[css]==6.2.0
-    # via django-post-office
 certifi==2025.1.31
     # via requests
 charset-normalizer==3.4.1
     # via requests
-colorama==0.4.6
-    # via sphinx
-crispy-bootstrap5==2024.10
+crispy-bootstrap5==2025.6
     # via -r requirements.in
-django==4.2.19
+django==4.2.30
     # via
     #   -r requirements.in
     #   crispy-bootstrap5
@@ -37,25 +33,25 @@ django==4.2.19
     #   django-tables2
 django-appconf==1.1.0
     # via django-select2
-django-axes[ipware]==7.0.1
+django-axes[ipware]==8.0.0
     # via -r requirements.in
-django-crispy-forms==2.3
+django-crispy-forms==2.5
     # via
     #   -r requirements.in
     #   crispy-bootstrap5
-django-extensions==3.2.3
+django-extensions==4.1
     # via -r requirements.in
 django-impersonate==1.9.4
     # via -r requirements.in
 django-ipware==7.0.1
     # via django-axes
-django-phonenumber-field[phonenumbers]==8.0.0
+django-phonenumber-field[phonenumbers]==8.3.0
     # via -r requirements.in
-django-post-office==3.9.1
+django-post-office==3.11.2
     # via -r requirements.in
-django-select2==8.1.2
+django-select2==8.2.3
     # via -r requirements.in
-django-sendfile2==0.7.1
+django-sendfile2==0.7.2
     # via -r requirements.in
 django-tables2==2.7.5
     # via -r requirements.in
@@ -75,13 +71,15 @@ jinja2==3.1.5
     # via sphinx
 markupsafe==3.0.2
     # via jinja2
+nh3==0.3.4
+    # via django-post-office
 packaging==24.2
     # via sphinx
 phonenumbers==8.13.55
     # via django-phonenumber-field
-pillow==11.1.0
+pillow==11.3.0
     # via -r requirements.in
-psycopg2-binary==2.9.10
+psycopg2-binary==2.9.11
     # via -r requirements.in
 pygments==2.19.1
     # via sphinx
@@ -96,7 +94,7 @@ sphinx==7.4.7
     #   -r requirements.in
     #   sphinx-rtd-theme
     #   sphinxcontrib-jquery
-sphinx-rtd-theme==3.0.2
+sphinx-rtd-theme==3.1.0
     # via -r requirements.in
 sphinxcontrib-applehelp==2.0.0
     # via sphinx
@@ -114,25 +112,17 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sqlparse==0.5.3
     # via django
-tinycss2==1.4.0
-    # via bleach
 tomli==2.2.1
     # via sphinx
 typing-extensions==4.12.2
     # via asgiref
-tzdata==2025.1
-    # via django
 urllib3==2.3.0
     # via requests
-uwsgi==2.0.28
+uwsgi==2.0.31
     # via -r requirements.in
-webencodings==0.5.1
-    # via
-    #   bleach
-    #   tinycss2
 xlsxcursor==0.1.8
     # via -r requirements.in
-xlsxwriter==3.2.0
+xlsxwriter==3.2.9
     # via
     #   -r requirements.in
     #   xlsxcursor
