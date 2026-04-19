@@ -48,38 +48,28 @@ coverage.xml
 # Django stuff:
 *.log
 *.pot
-# local version of the database, for testing: 
-svpbdata
 
 # Sphinx documentation
 docs/_build/
 
-# we do need media to propagate 
-!media
-post_office_attachments
-bla.py
-letters.aux
-letters.tex
-sanitized.json
-/static/
-notes
-backup
-svpb.sq
-emailSettings.py
-loginSVPB.html
-svpb-notes.org
-attic
-ansible
-testdata
-backup_svpb.sq
-years
-.idea
-leistungen.csv
-leistungen.cvs
-appTemplate
-old_sq
-tmp
+
+#######################
+# Our own ignores below
+
+# Files with credentials and secrets
 settings/production.py
-/www/
-/logs/
 scripts/cron/healthchecks.env
+# Temporary latex files
+letters.aux
+letters.out
+letters.tex
+# Test database
+svpb.sq
+# Directories with content created/managed by app
+/backup/
+/logs/
+/www/
+## Temporary directory for one-off scripts and files
+/tmp/
+# Output of command create_statistics_csv
+leistungen.csv
