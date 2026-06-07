@@ -9,13 +9,19 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
-from django.db.models import Q
-from django.db.models import Sum, F, Count
+from django.db import IntegrityError
+from django.db.models import Count, F, Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.http import urlencode
-from django.views.generic import UpdateView, DeleteView, TemplateView
-from django.views.generic import View, ListView, CreateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    ListView,
+    TemplateView,
+    UpdateView,
+    View,
+)
 from django_sendfile import sendfile
 from post_office import mail
 from post_office.models import EmailTemplate
@@ -1175,70 +1181,90 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
 
         return (ztlist, aufgabenQs)
 
-    def post (self,request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        # Check if status exists and is not an empty string
+        if request.POST.get("status"):
+            previous_state = dict(
+                [tuple(s.split("=")) for s in request.POST.get("status").split(";")]
+            )
+        else:
+            # Empty previous state means form is empty -> nothing to do
+            # Error logs show that users repeatedly submitted the empty form, so display
+            # a message to inform that everything is fine
+            messages.info(request, "Keine zu ändernden Einträge vorhanden.")
 
-        previousStatus = dict([ tuple(s.split('=') )
-                   for s in
-                    request.POST.get('status').split(';')
-                  ])
+            return redirect(self.request.get_full_path())
 
-        newState = dict([ (item[0][4:], item[1])
-                     for item in request.POST.items()
-                     if item[0][:4] == "box_"
-                    ])
+        new_state = dict(
+            [
+                (item[0][4:], item[1])
+                for item in request.POST.items()
+                if item[0][:4] == "box_"
+            ]
+        )
 
-        # find all items in  newState  that have a zero in prevState
-        # add that zuteilung
-        for k, v in newState.items():
-            if previousStatus[k] == '0':
-                user, aufgabe = k.split('_')
+        # Add created assignments:
+        # Find all items in new_state that have a 0 in previous_state
+        for k, v in new_state.items():
+            if previous_state[k] == "0":
+                user, aufgabe = k.split("_")
                 aufgabeObj = models.Aufgabe.objects.get(id=int(aufgabe))
                 ausfuehrerObj = models.User.objects.get(id=int(user))
-                ## z = models.Zuteilung(aufgabe=aufgabeObj,
-                ##                      ausfuehrer=ausfuehrerObj,
-                ##                      )
-                ## z.save()
+                try:
+                    models.Zuteilung.objects.create(
+                        aufgabe=aufgabeObj, ausfuehrer=ausfuehrerObj
+                    )
 
-                z, created = models.Zuteilung.objects.get_or_create(
-                    aufgabe=aufgabeObj,
-                    ausfuehrer=ausfuehrerObj)
+                    messages.success(
+                        request,
+                        "Aufgabe {0} an {1} zugeteilt.".format(
+                            aufgabeObj.aufgabe,
+                            ausfuehrerObj.get_full_name(),
+                        ),
+                    )
+                # Catch potential race conditions, e.g. if something was changed in
+                # another browser tab or by another user
+                except IntegrityError:
+                    messages.info(
+                        request,
+                        "Aufgabe {0} war bereits an {1} zugeteilt.".format(
+                            aufgabeObj.aufgabe,
+                            ausfuehrerObj.get_full_name(),
+                        ),
+                    )
 
-                if not created:
-                    messages.debug(request,
-                                   "warnung: Aufgabe {0} war bereits an {1} {2} zugeteilt"
-                                   .format(
-                                       aufgabeObj.aufgabe,
-                                       ausfuehrerObj.first_name,
-                                       ausfuehrerObj.last_name))
-
-                messages.success(request,
-                                 "Aufgabe {0} wurde an {1} {2} zugeteilt"
-                                 .format(
-                                     aufgabeObj.aufgabe,
-                                     ausfuehrerObj.first_name,
-                                     ausfuehrerObj.last_name))
-
-        # find all items in prevState with a 1 there that do no appear in newState
-        # remove that zuteilung
-        for k, v in previousStatus.items():
-            if v=='1' and k not in newState:
-                user, aufgabe = k.split('_')
+        # Remove deleted assignments:
+        # Find all items in previous_state with a 1 that do not appear in new_state
+        for k, v in previous_state.items():
+            if v == "1" and k not in new_state:
+                user, aufgabe = k.split("_")
                 aufgabeObj = models.Aufgabe.objects.get(id=int(aufgabe))
                 ausfuehrerObj = models.User.objects.get(id=int(user))
-                z = models.Zuteilung.objects.filter (aufgabe=aufgabeObj,
-                                                  ausfuehrer=ausfuehrerObj,
-                                                 )
-                for zz in z:
-                    zz.delete()
+                try:
+                    models.Zuteilung.objects.get(
+                        aufgabe=aufgabeObj,
+                        ausfuehrer=ausfuehrerObj,
+                    ).delete()
 
-                messages.success(request,
-                                 "Aufgabe {0} wird nicht mehr"
-                                 " von  {1} {2} durchgeführt."
-                                 .format(aufgabeObj.aufgabe,
-                                         ausfuehrerObj.first_name,
-                                         ausfuehrerObj.last_name))
+                    messages.success(
+                        request,
+                        "Zuteilung von Aufgabe {0} an {1} gelöscht.".format(
+                            aufgabeObj.aufgabe,
+                            ausfuehrerObj.get_full_name(),
+                        ),
+                    )
+                # Catch potential race conditions, e.g. if something was changed in
+                # another browser tab or by another user
+                except models.Zuteilung.DoesNotExist:
+                    messages.info(
+                        request,
+                        "Zuteilung von Aufgabe {0} an {1} war bereits gelöscht.".format(
+                            aufgabeObj.aufgabe,
+                            ausfuehrerObj.get_full_name(),
+                        ),
+                    )
 
-        # TODO: emails senden?
+        # Note that mails are handled via a flag in Zuteilung.save()/delete()
 
         return redirect(self.request.get_full_path())
 
