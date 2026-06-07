@@ -1,8 +1,9 @@
 import collections
+from collections import defaultdict
 import datetime
 import os
 import types
-from collections import defaultdict
+import unicodedata
 
 from django.conf import settings
 from django.contrib import messages
@@ -13,7 +14,10 @@ from django.db import IntegrityError
 from django.db.models import Count, F, Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.http import urlencode
+from django.utils.safestring import mark_safe
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -23,12 +27,11 @@ from django.views.generic import (
     View,
 )
 from django_sendfile import sendfile
+import django_tables2
 from post_office import mail
 from post_office.models import EmailTemplate
 
-# Arbeitsplan-Importe:
-from . import forms
-from .tables import *  # TODO: change import not to polute name space
+from arbeitsplan import forms, models, tables
 from svpb.views import isVorstand, isVorstandMixin
 
 
@@ -390,7 +393,7 @@ class ListAufgabenVorstandView (isVorstandMixin, FilteredListView):
                     ('bis', 'datum__lte'),
                     ]
     model = models.Aufgabe
-    tableClass = AufgabenTableVorstand
+    tableClass = tables.AufgabenTableVorstand
 
     intro_text = """
     Die Tabelle zeigt die existierenden Aufgaben an.
@@ -406,7 +409,7 @@ class ListAufgabenView (FilteredListView):
     title = "Aufgaben mit Arbeitsbedarf anzeigen"
     filtertitle = "Filter nach Aufgabengruppe oder Zeitintervall"
     tabletitle = "Aufgabenliste"
-    tableClass = AufgabenTable
+    tableClass = tables.AufgabenTable
 
     filterconfig = [('aufgabengruppe', 'gruppe__gruppe'),
                     ('von', 'datum__gte'),
@@ -564,7 +567,7 @@ class AufgabengruppeCreate(isVorstandMixin, SimpleCreateView):
 
 class AufgabengruppeList(isVorstandMixin, FilteredListView):
     title = "Aufgabegruppen"
-    tableClass = AufgabengruppeTable
+    tableClass = tables.AufgabengruppeTable
     intro_text = "Übersicht über alle Aufgabengruppen."
     model = models.Aufgabengruppe
 
@@ -693,7 +696,7 @@ class MeldungEdit (FilteredListView):
 
 class MeldungenListeView (FilteredListView):
     title = "Alle Meldungen anzeigen"
-    tableClass = MeldungListeTable
+    tableClass = tables.MeldungListeTable
     tabletitle = "Meine Meldungen"
 
     # TODO: understand how to use reverse / reverse_lazy here
@@ -762,7 +765,7 @@ class CreateMeldungenView (MeldungEdit):
                     ('gemeldet', gemeldeteAufgaben),
                     ]
     model = models.Aufgabe
-    tableClass = MeldungTable
+    tableClass = tables.MeldungTable
 
     intro_text = """
     <p>
@@ -877,7 +880,7 @@ class MeldungVorstandView(isVorstandMixin, MeldungEdit):
                     ('last_name', 'melder__last_name__icontains'),
                     ('praeferenz', 'prefMitglied__in'),
                     ]
-    tableClass = MeldungTableVorstand
+    tableClass = tables.MeldungTableVorstand
     model = models.Meldung
 
     intro_text = """
@@ -938,7 +941,7 @@ class QuickMeldung(View):
 class ListZuteilungenView(FilteredListView):
     title = "Alle Zuteilungen anzeigen"
     filterform_class = forms.PersonAufgabengruppeFilterForm
-    tableClass = ZuteilungTable
+    tableClass = tables.ZuteilungTable
     filtertitle = "Zuteilungen nach Personen oder Aufgabengruppen filtern"
     tabletitle = "Zuteilungen"
     filterconfig = [('aufgabengruppe', 'aufgabe__gruppe__gruppe'),
@@ -949,7 +952,7 @@ class ListZuteilungenView(FilteredListView):
     def get_queryset(self):
         if (("all" in self.request.path) and
             (isVorstand(self.request.user))):
-            self.tableClass = ZuteilungTableVorstand
+            self.tableClass = tables.ZuteilungTableVorstand
 
             qs = models.Zuteilung.objects.all()
             self.intro_text = """
@@ -979,7 +982,7 @@ class ManuelleZuteilungView (isVorstandMixin, FilteredListView):
     """
 
     title = "Aufgaben an Mitglieder zuteilen"
-    tableClassFactory = staticmethod(ZuteilungsTableFactory)
+    tableClassFactory = staticmethod(tables.ZuteilungsTableFactory)
     tabletitle = "Zuteilung eintragen"
     tableform = {'name': "eintragen",
                  'value': "Zuteilung eintragen/ändern"}
@@ -1293,7 +1296,7 @@ class ZuteilungLoeschenView(isVorstandMixin, DeleteView):
 
 class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
     title = "Übersicht der Aufgaben und Zuteilungen"
-    tableClassFactory = staticmethod(StundenplanTableFactory)
+    tableClassFactory = staticmethod(tables.StundenplanTableFactory)
     tabletitle = "Aufgaben mit benötigten/zugeteilten Personen"
 
     show_stundenplan = False
@@ -1403,7 +1406,7 @@ class ZuteilungUebersichtView(isVorstandMixin, FilteredListView):
 class StundenplaeneEdit(isVorstandMixin, FilteredListView):
 
     title = "Weise einer Aufgabe Personen zu den benötigten Zeitpunkten zu"
-    tableClassFactory = staticmethod(StundenplanEditFactory)
+    tableClassFactory = staticmethod(tables.StundenplanEditFactory)
     tabletitle_template = "Zuweisung für Stunden eintragen"
     tabletitle = "Zuweisung für Stunden eintragen"
     tableform = {'name': "eintragen",
@@ -1646,7 +1649,7 @@ class ListLeistungView (FilteredListView):
     title = "Arbeitsleistung auflisten"
     template_name = "arbeitsplan_listLeistung.html"
 
-    tableClass = LeistungTable
+    tableClass = tables.LeistungTable
     tabletitle = "Eingetragene Leistungen"
 
     intro_text = """
@@ -1684,7 +1687,7 @@ class LeistungBearbeitenView(isVorstandMixin, FilteredListView):
     """
 
     title = "Gemeldete Leistungen bearbeiten"
-    tableClass = LeistungBearbeitenTable
+    tableClass = tables.LeistungBearbeitenTable
     tabletitle = "Leistungen akzeptieren, ablehnen, oder rückfragen"
     tableform = {"name": "submit", "value": "Leistungen ändern"}
     filtertitle = "Nach Mitglied, Aufgabe, Datum oder Status filtern"
@@ -1807,7 +1810,7 @@ class Salden(isVorstandMixin, FilteredListView):
     filterFormClass = forms.NameFilterForm
     title = "Saldenüberblick über geleistete Arbeit"
 
-    tableClassFactory = staticmethod(SaldenTableFactory)
+    tableClassFactory = staticmethod(tables.SaldenTableFactory)
     tabletitle = "Saldenübersicht"
 
     filtertitle = "Salden nach Vor- oder Nachnamen filtern"
@@ -2043,7 +2046,7 @@ class MeldungNoetigEmailView(FilteredEmailCreateView):
 
     model = models.Mitglied
 
-    tableClass = MeldungsAufforderungsEmailTable
+    tableClass = tables.MeldungsAufforderungsEmailTable
     filterform_class = None
     filterconfig = []
     emailTemplate = "meldungsAufforderung"
@@ -2111,7 +2114,7 @@ class ZuteilungEmailView(FilteredEmailCreateView):
 
     model = models.Mitglied
 
-    tableClass = ZuteilungEmailTable
+    tableClass = tables.ZuteilungEmailTable
     filterform_class = forms.ZuteilungEmailFilter
 
     intro_text = (
