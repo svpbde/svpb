@@ -595,20 +595,21 @@ class AufgabengruppeUpdate(isVorstandMixin, SimpleUpdateView):
 
 class MeldungEdit (FilteredListView):
 
-
     def processUpdate(self, request):
+        mailcomments = {}
+
         for k, value in request.POST.items():
             if (k.startswith('bemerkung') or k.startswith('prefMitglied')):
 
-                key, id = k.split('_', 1)
+                key, meldungs_id = k.split('_', 1)
 
-                id = int(id)
+                meldungs_id = int(meldungs_id)
 
                 safeit = False
                 mailcomment = []
 
                 try:
-                    m = models.Meldung.objects.get(id=id)
+                    m = models.Meldung.objects.get(id=meldungs_id)
                 except models.Meldung.DoesNotExist:
                     print("consistency of database destroyed")
                     # TODO: display error
@@ -687,11 +688,18 @@ class MeldungEdit (FilteredListView):
                     m.save()
 
                 if mailcomment:
-                    notifyVorstand(m, mailcomment)
+                    # Combine the mail comments for fields belonging to the same Meldung.
+                    # This is important because we want to generate one notification per
+                    # Meldung, even if multiple fields were changed.
+                    mailcomments.setdefault(meldungs_id, []).extend(mailcomment)
 
             else:
                 # not interested in those keys
                 pass
+
+        # Send one notification per Meldung after collecting all changed fields.
+        for meldungs_id, mailcomment in mailcomments.items():
+            notifyVorstand(models.Meldung.objects.get(id=meldungs_id), mailcomment)
 
 
 class MeldungenListeView (FilteredListView):

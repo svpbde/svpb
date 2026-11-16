@@ -1,12 +1,14 @@
 """Tests of arbeitsplan views."""
 
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.core import mail
 from django.core.management import call_command
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from arbeitsplan.models import Aufgabe, Mitglied, StundenZuteilung, Zuteilung
+from arbeitsplan.models import Aufgabe, Mitglied, Meldung, StundenZuteilung, Zuteilung
 
 
 class SimpleTest(TestCase):
@@ -37,6 +39,39 @@ class SimpleTest(TestCase):
     def test_login_works(self):
         cl, response = self.login_user(self.superuser)
         self.assertNotIn("login", response.request["PATH_INFO"])
+
+    def test_meldung_changes_send_one_notification(self):
+        """Regression test for issue #63: https://github.com/svpbde/svpb/issues/63
+
+        Submitting a remark and a preference change together should send only one
+        email to the person responsible for the task.
+        """
+        # Create a Meldung that will receive both updates.
+        melder = User.objects.get(username="Mitglied")
+        meldung = Meldung.objects.create(
+            aufgabe=Aufgabe.objects.get(pk=1),
+            melder=melder,
+        )
+        self.client.force_login(melder)
+
+        # Submit a remark and preference change together while observing notifications.
+        # Patch the notifyVorstand function to check how many times it is called and with what arguments.
+        with patch("arbeitsplan.views.notifyVorstand") as notify:
+            response = self.client.post(
+                reverse("arbeitsplan-meldung"),
+                {
+                    f"bemerkung_{meldung.pk}": "Ich kann helfen.",
+                    f"prefMitglied_{meldung.pk}": str(Meldung.Preferences.YES),
+                },
+            )
+
+        # Confirm both changes resulted in one notification with both comments.
+        self.assertEqual(response.status_code, 302)
+        notify.assert_called_once()
+        self.assertEqual(
+            notify.call_args.args[1],
+            ["Neue Bemerkung", "Neue Meldung"],
+        )
 
     def test_leistung_bearbeiten(self):
         """Test if leistungenBearbeiten page loads."""
